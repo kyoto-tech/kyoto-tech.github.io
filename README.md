@@ -1,6 +1,6 @@
 # Kyoto Tech Meetup Website
 
-This repository holds the Astro-powered marketing site for the Kyoto Tech Meetup community. 
+This repository holds the Astro-powered marketing site for the Kyoto Tech Meetup community.
 
 Everything here is maintained by community members; contributions that make the experience clearer, more accessible, or easier to maintain are welcome.
 
@@ -43,10 +43,9 @@ Everything here is maintained by community members; contributions that make the 
 | `npm run preview`  | Serves the production build locally.                                    |
 | `npm run build`    | Produces the static site in `dist/`.                                    |
 
-
 ## Project Structure
 
-```
+```txt
 src/
 ├─ pages/        # Astro pages (currently the main landing page)
 ├─ layouts/      # Shared shells and metadata
