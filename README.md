@@ -1,46 +1,83 @@
-# Astro Starter Kit: Basics
+# Kyoto Tech Meetup Website
 
-```sh
-npm create astro@latest -- --template basics
+This repository holds the Astro-powered marketing site for the Kyoto Tech Meetup community. 
+
+Everything here is maintained by community members; contributions that make the experience clearer, more accessible, or easier to maintain are welcome.
+
+## Tech Stack
+
+- [Astro 5](https://astro.build/) with React islands for dynamic UI.
+- [Tailwind CSS 4 (via `@tailwindcss/vite`)](https://tailwindcss.com/) for utility-first styling plus a small layer of global CSS.
+- [Marked](https://marked.js.org/) for rendering Markdown copy inside Astro components.
+- ESLint (flat config), TypeScript, Knip, and Astro Check keep the project tidy.
+
+## Getting Started
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the local dev server:
+
+   ```bash
+   npm run dev
+   ```
+
+   Visit `http://localhost:4321` to view the site. Astro enables hot module replacement, so edits appear immediately.
+
+3. Build for production:
+
+   ```bash
+   npm run build
+   npm run preview
+   ```
+
+## Useful Scripts
+
+| Command            | Purpose                                                                 |
+| ------------------ | ----------------------------------------------------------------------- |
+| `npm run dev`      | Launches Astro in development mode.                                     |
+| `npm run check`    | Runs lint, type-check, Astro check, and Knip in sequence.               |
+| `npm run preview`  | Serves the production build locally.                                    |
+| `npm run build`    | Produces the static site in `dist/`.                                    |
+
+
+## Project Structure
+
+```
+src/
+├─ pages/        # Astro pages (currently the main landing page)
+├─ layouts/      # Shared shells and metadata
+├─ components/   # Reusable sections (WhyJoin, WhatWeDo, etc.)
+├─ styles/       # Global CSS entry point and Tailwind import
+└─ assets/       # Static assets bundled by Astro
+public/          # Files served as-is (favicon, images)
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Contributing
 
-## 🚀 Project Structure
+1. Fork or clone the repo and create a feature branch.
+2. Make your changes with clear, accessible copy. Favor data-driven component props when adding new sections.
+3. Run `npm run check` before opening a pull request to ensure lint, type, and Astro diagnostics all pass.
+4. Describe what you changed and, if applicable, attach screenshots of UI updates for quicker reviews.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Ideas for Contributions
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+- Expand homepage content (additional recurring events, partner highlights, FAQs).
+- Build an email newsletter signup form.
+- Improve accessibility (ARIA labeling, color contrast, keyboard navigation checks).
+- Add tests or visual regression tooling for future redesigns.
+- Internationalization or localization improvements for Japanese/English visitors.
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Interacting with the community
 
-## 🧞 Commands
+- **Want to report a bug or suggest a feature?**
+  - [Open an issue on GitHub](https://github.com/kyoto-tech/site/issues).
+- **Need help getting started?**
+  - [Join the Kyoto Tech Meetup Discord](https://discord.gg/mXFWEHDKeu).
 
-All commands are run from the root of the project, from a terminal:
+---
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Thanks for helping keep Kyoto’s tech community visible!
