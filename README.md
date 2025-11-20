@@ -58,10 +58,14 @@ public/          # Files served as-is (favicon, images)
 
 ## Contributing
 
-1. Fork or clone the repo and create a feature branch.
-2. Make your changes with clear, accessible copy. Favor data-driven component props when adding new sections.
-3. Run `npm run check` before opening a pull request to ensure lint, type, and Astro diagnostics all pass.
-4. Describe what you changed and, if applicable, attach screenshots of UI updates for quicker reviews.
+1. Fork or clone the repo, then branch from `main`.
+2. Make your changes and commit on your branch.
+3. Before submitting a pull request:
+    1. Ensure your local branch is up to date with `main`.
+    2. Run `npm run check` to ensure lint, type, and Astro diagnostics all pass.
+4. Push your branch to the remote repository.
+5. Open a pull request, describing what you changed.
+6. Request a review.
 
 ## Ideas for Contributions
 
@@ -70,6 +74,12 @@ public/          # Files served as-is (favicon, images)
 - Improve accessibility (ARIA labeling, color contrast, keyboard navigation checks).
 - Add tests or visual regression tooling for future redesigns.
 - Internationalization or localization improvements for Japanese/English visitors.
+
+## Deployment
+
+- The site is deployed automatically to [GitHub Pages](https://kyoto-tech.github.io) via the workflow in `.github/workflows/deploy.yml`.
+- Any push to `main` triggers `npm ci`, `npm run build`, and then publishes the `dist/` directory using `actions/deploy-pages`.
+- To test a production build locally, use `npm run build && npm run preview`.
 
 ## Interacting with the community
 
