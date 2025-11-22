@@ -3,6 +3,11 @@ import Layout from "../layouts/Layout.astro";
 import WhyJoin from "../components/WhyJoin.astro";
 import WhatWeDo from "../components/WhatWeDo.astro";
 import { FaGithub, FaDiscord, FaMeetup } from "react-icons/fa";
+import { useTranslations } from '../i18n/utils';
+import LanguagePicker from '../components/LanguagePicker.astro';
+
+const { lang = 'en' } = Astro.props;
+const t = useTranslations(lang);
 
 type ActivityContent =
 	| {
@@ -22,54 +27,51 @@ type Activity = {
 
 const benefits = [
 	{
-		title: "Conversation, not conferences",
-		description:
-			"Small, high-signal gatherings where people actually talk to each other about what they’re building, learning, and struggling with. No stage, no slide decks, no pressure."
+		title: t("home.benefit1.title"),
+		description: t("home.benefit1.description")
 	},
 	{
-		title: "Community",
-		description:
-			"Meet a mix of locals and visitors: software engineers, founders, designers, researchers, and remote workers from all over the world. It's a uniquely international, high-signal environment."
+		title: t("home.benefit2.title"),
+		description: t("home.benefit2.description")
 	},
 	{
-		title: "Collaboration",
-		description:
-			"Use the meetup to find co-founders, collaborators, study buddies, or just people who care about the same weird tech rabbit holes you do."
+		title: t("home.benefit3.title"),
+		description: t("home.benefit3.description")
 	}
 ];
 
 const activities: Activity[] = [
 	{
-		title: "Morning Tech Coffee",
+		title: t("home.activity1.title"),
 		content: [
 			{
 				type: "paragraph",
-				text: "A relaxed, conversation-first meetup in central Kyoto."
+				text: t("home.activity1.content1")
 			},
 			{
 				type: "paragraph",
-				text: "We grab coffee, grab a table, and talk about whatever people are building or exploring: AI workflows, indie apps, creative coding, career paths in Japan, or day-to-day life in Kyoto. No agenda, no presentations."
+				text: t("home.activity1.content2")
 			},
 			{
 				type: "paragraph",
-				text: "It’s simple, friendly, and a great way to start the day before work."
+				text: t("home.activity1.content3")
 			}
 		]
 	},
 	{
-		title: "Community Hack Day",
+		title: t("home.activity2.title"),
 		content: [
 			{
 				type: "paragraph",
-				text: "A collaborative working session where we ship projects."
+				text: t("home.activity2.content1")
 			},
 			{
 				type: "paragraph",
-				text: "Bring an idea, help someone else, or join a team on something that interests you. Projects stay intentionally small and shippable, and everything lives openly in the [Kyoto Tech Meetup GitHub organization](https://github.com/kyoto-tech)."
+				text: t("home.activity2.content2")
 			},
 			{
 				type: "paragraph",
-				text: "It’s creative, practical, and a great way to contribute to the local ecosystem."
+				text: t("home.activity2.content3")
 			}
 		]
 	}
@@ -106,6 +108,7 @@ const activities: Activity[] = [
 				Join the next meetup
 			</a>
 		</div>
+		<LanguagePicker />
 	</header>
 
 	<main class="space-y-0">

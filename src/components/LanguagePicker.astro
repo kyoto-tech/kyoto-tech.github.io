@@ -1,0 +1,11 @@
+---
+import { languages } from '../i18n/ui';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+---
+<ul>
+    {Object.entries(languages).map(([lang, label]) => (
+            <li>
+                <a href={getRelativeLocaleUrl(lang, "/")}>{label}</a>
+            </li>
+    ))}
+</ul>

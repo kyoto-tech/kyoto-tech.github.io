@@ -11,6 +11,11 @@ export default defineConfig({
   site: "https://kyoto-tech.github.io",
   integrations: [react(), sitemap(), mdx()],
 
+  i18n: {
+    locales: ["en", "ja"],
+    defaultLocale: "en",
+  },
+
   vite: {
     plugins: [tailwindcss()]
   }
