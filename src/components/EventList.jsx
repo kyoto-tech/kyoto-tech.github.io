@@ -1,4 +1,8 @@
 export default function EventList({ events }) {
+  if (!events || events.length === 0) {
+    return <p className=" mt3 text-gray-500 italic">Check back soon for events! <a href="https://www.meetup.com/ja-JP/kyoto-tech-meetup"> Join our meetup group here to get updates.</a></p>;
+  }
+
   return (
     <ul className="space-y-6">
       {events.map(event => (
