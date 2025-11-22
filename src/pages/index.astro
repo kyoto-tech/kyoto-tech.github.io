@@ -92,12 +92,12 @@ const activities: Activity[] = [
 			<div class="absolute inset-0 bg-black/40"></div>
 		</div>
 		<div class="mx-auto max-w-3xl text-center md:ml-[5%] md:text-left">
-			<p class="text-xs font-semibold uppercase tracking-[0.3em] text-white/80">Kyoto Tech Meetup</p>
+			<p class="text-xs font-semibold uppercase tracking-[0.3em] text-white/80">{t("home.header.tagline")}</p>
 			<h1 class="mt-4 text-4xl font-semibold leading-tight text-white md:text-5xl">
-				Connect, learn, and build together in Japan&apos;s cultural heart
+				{t("home.header.title")}
 			</h1>
 			<p class="mt-4 text-lg text-white/90">
-				Gatherings for developers, designers, researchers, and founders exploring technology in Kyoto.
+				{t("home.header.subtitle")}
 			</p>
 			<a
 				class="mt-8 inline-flex items-center justify-center rounded-full bg-(--accent) px-6 py-3 text-base font-semibold text-white! shadow-xl shadow-black/30 transition hover:-translate-y-0.5 hover:bg-(--accent-dark) hover:text-white!"
@@ -105,7 +105,7 @@ const activities: Activity[] = [
 				target="_blank"
 				rel="noreferrer"
 			>
-				Join the next meetup
+				{t("home.header.cta")}
 			</a>
 		</div>
 		<LanguagePicker />
@@ -114,16 +114,16 @@ const activities: Activity[] = [
 	<main class="space-y-0">
 		<section id="why-join" class="bg-white/95 px-6 py-16 md:px-12">
 			<div class="mx-auto max-w-5xl">
-				<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Why Join?</p>
-				<h2 class="mt-3 text-3xl font-semibold text-slate-900">Small, intentional gatherings</h2>
+				<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">{t("home.whyJoin.label")}</p>
+				<h2 class="mt-3 text-3xl font-semibold text-slate-900">{t("home.whyJoin.title")}</h2>
 				<WhyJoin items={benefits} />
 			</div>
 		</section>
 
 		<section id="whats-happening" class="bg-white/70 px-6 py-16 md:px-12">
 			<div class="mx-auto max-w-5xl">
-				<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">What's happening?</p>
-				<h2 class="mt-3 text-3xl font-semibold text-slate-900">Two core sessions each month</h2>
+				<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">{t("home.whatsHappening.label")}</p>
+				<h2 class="mt-3 text-3xl font-semibold text-slate-900">{t("home.whatsHappening.title")}</h2>
 				<WhatWeDo activities={activities} />
 			</div>
 		</section>
@@ -131,31 +131,31 @@ const activities: Activity[] = [
 		<section id="who-comes" class="bg-white/95 px-6 py-16 md:px-12">
 			<div class="mx-auto flex max-w-5xl flex-col gap-10 lg:flex-row">
 				<div class="flex-1">
-					<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Who Comes?</p>
-					<h2 class="mt-3 text-3xl font-semibold text-slate-900">People who like to build in public</h2>
-					<p class="mt-4 text-slate-600">You’ll probably like it here if you are:</p>
+					<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">{t("home.whoComes.label")}</p>
+					<h2 class="mt-3 text-3xl font-semibold text-slate-900">{t("home.whoComes.title")}</h2>
+					<p class="mt-4 text-slate-600">{t("home.whoComes.intro")}</p>
 					<ul class="mt-6 list-disc space-y-3 pl-5 text-base leading-relaxed text-slate-600">
-						<li>A software engineer or researcher working with web, AI, or creative tech</li>
-						<li>A founder or early-stage startup person</li>
-						<li>A designer, PM, or DX / DevRel person who likes talking product</li>
-						<li>A grad student or visiting researcher looking for a local tech community</li>
-						<li>A remote worker in Kyoto who misses nerding out with coworkers</li>
+						<li>{t("home.whoComes.item1")}</li>
+						<li>{t("home.whoComes.item2")}</li>
+						<li>{t("home.whoComes.item3")}</li>
+						<li>{t("home.whoComes.item4")}</li>
+						<li>{t("home.whoComes.item5")}</li>
 					</ul>
 				</div>
 				<div class="flex-1 space-y-4">
 					<div class="rounded-2xl bg-white/90 p-6 shadow-lg shadow-stone-900/10 ring-1 ring-white/70">
-						<h3 class="text-xl font-semibold text-slate-900">Languages</h3>
+						<h3 class="text-xl font-semibold text-slate-900">{t("home.languages.title")}</h3>
 						<p class="mt-3 text-base leading-relaxed text-slate-600">
-							The meetup is English-friendly with a natural mix of English and Japanese. Come as you are; we’ll make space.
+							{t("home.languages.description")}
 						</p>
 					</div>
 					<div class="rounded-2xl bg-white/90 p-6 shadow-lg shadow-stone-900/10 ring-1 ring-white/70">
-						<h3 class="text-xl font-semibold text-slate-900">Locations</h3>
+						<h3 class="text-xl font-semibold text-slate-900">{t("home.locations.title")}</h3>
 						<p class="mt-3 text-base leading-relaxed text-slate-600">
-							We meet at cafés and shared spaces in central Kyoto.
+							{t("home.locations.description1")}
 						</p>
 						<p class="mt-2 text-base leading-relaxed text-slate-600">
-							Exact time and place are in each event invite and reminder email.
+							{t("home.locations.description2")}
 						</p>
 					</div>
 				</div>
@@ -165,7 +165,7 @@ const activities: Activity[] = [
 
 	<footer class="bg-stone-950 px-6 py-12 text-slate-100 md:px-12">
 		<div class="mx-auto flex max-w-5xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
-			<p class="text-sm text-slate-300">© {new Date().getFullYear()} Kyoto Tech Meetup. Crafted by volunteers in Kyoto.</p>
+			<p class="text-sm text-slate-300">© {new Date().getFullYear()} {t("home.footer.copyright")}</p>
 			<ul class="flex flex-wrap gap-4 text-sm font-medium text-slate-200">
 				<li>
 					<a
@@ -174,7 +174,7 @@ const activities: Activity[] = [
 						target="_blank"
 						rel="noreferrer"
 					>
-						<FaGithub className="text-lg" /> GitHub
+						<FaGithub className="text-lg" /> {t("home.footer.github")}
 					</a>
 				</li>
 				<li>
@@ -184,7 +184,7 @@ const activities: Activity[] = [
 						target="_blank"
 						rel="noreferrer"
 					>
-						<FaDiscord className="text-lg" /> Discord
+						<FaDiscord className="text-lg" /> {t("home.footer.discord")}
 					</a>
 				</li>
 				<li>
@@ -194,7 +194,7 @@ const activities: Activity[] = [
 						target="_blank"
 						rel="noreferrer"
 					>
-						<FaMeetup className="text-lg" /> Meetup
+						<FaMeetup className="text-lg" /> {t("home.footer.meetup")}
 					</a>
 				</li>
 			</ul>

@@ -1,11 +1,26 @@
 ---
 import { languages } from '../i18n/ui';
 import { getRelativeLocaleUrl } from 'astro:i18n';
+
+const langsToFlags = {
+    en: 'GB.svg',
+    ja: 'JP.svg',
+};
+
+const activeLang = Astro.currentLocale;
+const visibleLangs = Object.entries(languages).filter(([lang]) => lang !== activeLang);
+
 ---
-<ul>
-    {Object.entries(languages).map(([lang, label]) => (
+<ul class="absolute top-4 right-4 md:top-6 md:right-6 z-20 flex gap-2">
+    {visibleLangs.map(([lang, label]) => (
             <li>
-                <a href={getRelativeLocaleUrl(lang, "/")}>{label}</a>
+                <a
+                    href={getRelativeLocaleUrl(lang, "/")}
+                    class="block p-2 md:p-3 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors shadow-lg ring-1 ring-white/30"
+                    title={label}
+                >
+                    <img src={`/flags/${langsToFlags[lang]}`} alt={label} width="24" height="16" class="w-6 h-4 md:w-8 md:h-5" />
+                </a>
             </li>
     ))}
 </ul>

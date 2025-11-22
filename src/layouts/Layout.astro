@@ -1,10 +1,10 @@
 ---
 import "../styles/global.css";
-const lang = Astro.params.lang;
+const activeLang = Astro.currentLocale;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={activeLang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
