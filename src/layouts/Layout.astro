@@ -1,17 +1,10 @@
 ---
 import "../styles/global.css";
-<<<<<<< HEAD
 import { useTranslations } from '../i18n/utils';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
 const activeLang = Astro.currentLocale;
 const t = useTranslations(activeLang || 'en');
-=======
-import { useTranslations } from "../i18n/utils";
-
-const activeLang = Astro.currentLocale as keyof typeof import("../i18n/ui").ui;
-const t = useTranslations(activeLang);
->>>>>>> main
 ---
 
 <!doctype html>
