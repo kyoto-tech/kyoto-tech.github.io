@@ -1,9 +1,10 @@
 ---
 import "../styles/global.css";
-import { useTranslations } from "../i18n/utils";
+import { useTranslations } from '../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 
-const activeLang = Astro.currentLocale as keyof typeof import("../i18n/ui").ui;
-const t = useTranslations(activeLang);
+const activeLang = Astro.currentLocale;
+const t = useTranslations(activeLang || 'en');
 ---
 
 <!doctype html>
@@ -15,32 +16,32 @@ const t = useTranslations(activeLang);
 		<meta name="generator" content={Astro.generator} />
 		<meta
 			name="description"
-			content="Gatherings for developers, designers, researchers, and founders exploring technology in Kyoto. Conversation-first meetups, community hack days, and collaborations in the city’s tech scene."
+			content={t("meta.description")}
 		/>
 		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="Kyoto Tech Meetup" />
-		<meta property="og:title" content="Kyoto Tech Meetup — Connect, learn, and build together in Japan's cultural heart" />
+		<meta property="og:site_name" content={t("meta.siteName")} />
+		<meta property="og:title" content={t("meta.title")} />
 		<meta
 			property="og:description"
-			content="Gatherings for developers, designers, researchers, and founders exploring technology in Kyoto. Conversation-first meetups, community hack days, and collaborations in the city’s tech scene."
+			content={t("meta.description")}
 		/>
-		<meta property="og:url" content="https://kyoto-tech.github.io/" />
+		<meta property="og:url" content=`https://kyoto-tech.github.io${getRelativeLocaleUrl(activeLang, "/")}` />
 		<meta property="og:image" content="https://kyoto-tech.github.io/og/kyoto-tech-meetup.png" />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
-		<meta property="og:image:alt" content="Community meetup in Kyoto for builders and technologists" />
+		<meta property="og:image:alt" content={t("meta.imageAlt")} />
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="Kyoto Tech Meetup — Connect, learn, and build together in Japan's cultural heart" />
+		<meta name="twitter:title" content={t("meta.title")} />
 		<meta
 			name="twitter:description"
-			content="Gatherings for developers, designers, researchers, and founders exploring technology in Kyoto. Conversation-first meetups, community hack days, and collaborations in the city’s tech scene."
+			content={t("meta.description")}
 		/>
 		<meta name="twitter:image" content="https://kyoto-tech.github.io/og/kyoto-tech-meetup.png" />
-		<meta name="twitter:image:alt" content="Community meetup in Kyoto for builders and technologists" />
-		<title>Kyoto Tech Meetup</title>
-		</head>
-		<body>
-			<a class="skip-link" href="#main-content">{t("a11y.skipToMain")}</a>
-			<slot />
-		</body>
-	</html>
+		<meta name="twitter:image:alt" content={t("meta.imageAlt")} />
+		<title>{t("meta.siteName")}</title>
+	</head>
+	<body>
+		<a class="skip-link" href="#main-content">{t("a11y.skipToMain")}</a>
+		<slot />
+	</body>
+</html>
