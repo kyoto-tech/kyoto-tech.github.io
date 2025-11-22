@@ -11,7 +11,7 @@ const parsed = xml2js(rssText, { compact: true });
 let eventNames = [];
 
 if (Array.isArray(parsed.rss.channel.item)) {
-  console.log(parsed.rss.channel.item[0]);
+
   const items = parsed.rss.channel.item.map(evt => ({
     title: evt.title._cdata,
     link: evt.link._text,
@@ -24,10 +24,10 @@ if (Array.isArray(parsed.rss.channel.item)) {
   
 } else {
   // handle the case where it's a single item object
-  console.log(parsed.rss.channel.item.title);
+  eventNames= [];
 }
 
-console.log(eventNames);
+console.log("hello" + eventNames);
 
 ---
 
