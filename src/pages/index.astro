@@ -2,6 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import WhyJoin from "../components/WhyJoin.astro";
 import WhatWeDo from "../components/WhatWeDo.astro";
+import Calendar from "../components/Calendar.astro";
+import EventList from "../components/EventList.jsx";
 import { FaGithub, FaDiscord, FaMeetup } from "react-icons/fa";
 import { useTranslations } from '../i18n/utils';
 import LanguagePicker from '../components/LanguagePicker.astro';
@@ -130,6 +132,19 @@ const activities: Activity[] = [
 				<h2 class="mt-3 text-3xl font-semibold text-slate-900">{t("home.whatsHappening.title")}</h2>
 				<WhatWeDo activities={activities} />
 			</div>
+		</section>
+
+		<section id="calendar" class="bg-white px-6 py-16 md:px-12">
+  			<div class="mx-auto max-w-5xl">
+   				<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
+      			Upcoming Meetups
+    			</p>
+    			<h2 class="mt-3 text-3xl font-semibold text-slate-900">
+      			Kyoto Tech Meetup Calendar
+    			</h2>
+
+    			<Calendar />
+  			</div>
 		</section>
 
 		<section id="who-comes" class="bg-white/95 px-6 py-16 md:px-12">

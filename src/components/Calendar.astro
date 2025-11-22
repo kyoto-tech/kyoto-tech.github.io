@@ -1,0 +1,39 @@
+---
+import EventList from '../components/EventList.jsx';
+const RSS_URL = "https://www.meetup.com/Kyoto-Tech-Meetup/events/rss/";
+
+const rssResponse = await fetch(RSS_URL);
+const rssText = await rssResponse.text();
+
+// Minimal XML → JS parser
+import { xml2js } from "xml-js";
+const parsed = xml2js(rssText, { compact: true });
+let eventNames = [];
+
+if (Array.isArray(parsed.rss.channel.item)) {
+
+  const items = parsed.rss.channel.item.map(evt => ({
+    title: evt.title._cdata,
+    link: evt.link._text,
+    pubDate: evt.pubDate._text,
+    description: evt.description?._text ?? "",
+    }));
+
+    
+  eventNames = items;
+  
+} else {
+  // handle the case where it's a single item object
+  eventNames= [];
+}
+
+console.log("hello" + eventNames);
+
+---
+
+<section class="p-6">
+
+  <EventList client:load events={eventNames} />
+
+</section>
+
