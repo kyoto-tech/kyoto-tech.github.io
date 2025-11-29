@@ -13,6 +13,8 @@ const t = useTranslations(lang);
 const meetupUrl = lang === "ja"
 	? "https://www.meetup.com/ja-JP/kyoto-tech-meetup/"
 	: "https://www.meetup.com/kyoto-tech-meetup/";
+const discordUrl = "https://discord.gg/mXFWEHDKeu";
+const githubUrl = "https://github.com/kyoto-tech";
 
 type ActivityContent =
 	| {
@@ -104,14 +106,32 @@ const activities: Activity[] = [
 			<p class="mt-4 text-lg text-white/90">
 				{t("home.header.subtitle")}
 			</p>
-			<a
-				class="mt-8 inline-flex items-center justify-center rounded-full bg-(--accent) px-6 py-3 text-base font-semibold text-white! shadow-xl shadow-black/30 transition hover:-translate-y-0.5 hover:bg-(--accent-dark) hover:text-white!"
-				href={meetupUrl}
-				target="_blank"
-				rel="noreferrer"
-			>
-				{t("home.header.cta")}
-			</a>
+			<div class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center md:justify-start">
+				<a
+					class="inline-flex items-center justify-center gap-2 rounded-full bg-(--accent) px-6 py-3 text-base font-semibold text-white! shadow-xl shadow-black/30 transition hover:-translate-y-0.5 hover:bg-(--accent-dark) hover:text-white!"
+					href={meetupUrl}
+					target="_blank"
+					rel="noreferrer"
+				>
+					<FaMeetup className="text-lg" /> {t("home.header.cta")}
+				</a>
+				<a
+					class="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 bg-gray-900/40 px-6 py-3 text-base font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/20"
+					href={discordUrl}
+					target="_blank"
+					rel="noreferrer"
+				>
+					<FaDiscord className="text-lg" /> {t("home.header.discordCta")}
+				</a>
+				<a
+					class="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 bg-gray-900/40 px-6 py-3 text-base font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/20"
+					href={githubUrl}
+					target="_blank"
+					rel="noreferrer"
+				>
+					<FaGithub className="text-lg" /> {t("home.header.githubCta")}
+				</a>
+			</div>
 		</div>
 		<LanguagePicker />
 	</header>

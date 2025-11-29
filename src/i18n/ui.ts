@@ -13,6 +13,8 @@ export const ui = {
         "home.header.title": "Connect, learn, and build together in Japan's cultural heart",
         "home.header.subtitle": "Gatherings for developers, designers, researchers, and founders exploring technology in Kyoto.",
         "home.header.cta": "Join the next meetup",
+        "home.header.discordCta": "Join our Discord",
+        "home.header.githubCta": "View our GitHub",
 
         "home.whyJoin.label": "Why Join?",
         "home.whyJoin.title": "Small, intentional gatherings",
@@ -72,7 +74,9 @@ export const ui = {
         "home.header.tagline": "Kyoto Tech Meetup",
         "home.header.title": "日本の文化都市・京都でつながり、学び、ものづくりをしよう",
         "home.header.subtitle": "京都でテクノロジーを探求するデベロッパー、デザイナー、研究者、創業者のための集まりです。",
-        "home.header.cta": "次のミートアップに参加する",
+        "home.header.cta": "イベントに参加する",
+        "home.header.discordCta": "Discordでチャットする",
+        "home.header.githubCta": "GitHubでコードを見る",
 
         "home.whyJoin.label": "参加する理由",
         "home.whyJoin.title": "小規模で意図のある集まり",
