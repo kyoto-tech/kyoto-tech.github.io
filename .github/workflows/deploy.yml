@@ -6,6 +6,8 @@ on:
       - main
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "0 */3 * * *"  # every 3 hours
 
 permissions:
   contents: read
@@ -41,7 +43,8 @@ jobs:
           path: dist
 
   deploy:
-    if: github.event_name == 'push'
+    # only run deploy when we're effectively on main
+    if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     environment:
