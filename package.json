@@ -9,7 +9,7 @@
     "check": "npm run lint; npm run tsc; npm run astrocheck; npm run knip",
     "dev": "astro dev",
     "knip": "knip",
-    "lint": "eslint \"**/*.{js,mjs,ts,tsx,astro}\" --ignore-pattern tmp/** --ignore-pattern scripts/** --ignore-pattern dist/** --no-warn-ignored",
+    "lint": "eslint . --ext .js,.mjs,.ts,.tsx,.astro --no-warn-ignored",
     "preview": "astro preview",
     "tsc": "tsc --noEmit"
   },
