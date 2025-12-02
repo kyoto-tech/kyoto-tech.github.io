@@ -6,8 +6,10 @@
     "astro": "astro",
     "astrocheck": "astro check",
     "build": "astro build",
-    "check": "npm run lint; npm run tsc; npm run astrocheck; npm run knip",
+    "check": "npm run lint; npm run tsc; npm run astrocheck; npm run images:check; npm run knip",
     "dev": "astro dev",
+    "images:optimize": "node scripts/optimize-images.mjs",
+    "images:check": "node scripts/optimize-images.mjs --check",
     "knip": "knip",
     "lint": "eslint . --ext .js,.mjs,.ts,.tsx,.astro --no-warn-ignored",
     "preview": "astro preview",
@@ -36,6 +38,7 @@
     "eslint-plugin-astro": "^1.5.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "knip": "^5.70.1",
+    "sharp": "^0.34.5",
     "typescript": "^5.9.3"
   }
 }
