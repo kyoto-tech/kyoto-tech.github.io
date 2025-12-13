@@ -4,8 +4,11 @@ import WhyJoin from "../components/WhyJoin.astro";
 import WhatWeDo from "../components/WhatWeDo.astro";
 import Calendar from "../components/Calendar.astro";
 import { FaGithub, FaDiscord, FaMeetup } from "react-icons/fa";
+import { FaRegClock, FaRegCalendarAlt } from "react-icons/fa";
 import { useTranslations } from "../i18n/utils";
 import LanguagePicker from "../components/LanguagePicker.astro";
+import memberFeeds from "../data/member-feeds.json";
+import compositeFeed from "../data/composite-feed.json";
 
 const { lang = "en" } = Astro.props;
 const t = useTranslations(lang);
@@ -30,6 +33,27 @@ type ActivityContent =
 type Activity = {
 	title: string;
 	content: ActivityContent[];
+};
+
+type MemberFeed = {
+	name: string;
+	siteUrl: string;
+	feedUrl: string;
+};
+
+type CompositeItem = {
+	id: string;
+	title: string;
+	link: string;
+	publishedAt: string;
+	summary?: string;
+	image?: string | null;
+	source: MemberFeed;
+};
+
+type CompositeFeed = MemberFeed & {
+	items: CompositeItem[];
+	error?: string;
 };
 
 const benefits = [
@@ -83,6 +107,62 @@ const activities: Activity[] = [
 		]
 	}
 ];
+
+const locale = lang === "ja" ? "ja-JP" : "en-US";
+
+const memberFeedList = (memberFeeds as MemberFeed[]) ?? [];
+const compositeFeedEntries = Array.isArray(compositeFeed?.feeds)
+	? (compositeFeed.feeds as CompositeFeed[])
+	: [];
+const feedsWithItems = memberFeedList.map((feed) => {
+	const match =
+		compositeFeedEntries.find(
+			(entry) =>
+				entry.feedUrl === feed.feedUrl ||
+				entry.siteUrl === feed.siteUrl ||
+				entry.name === feed.name
+		) ?? null;
+	return {
+		...feed,
+		items: match?.items ?? [],
+		error: match?.error
+	};
+});
+
+const formatDate = (value: string) => {
+	const date = new Date(value);
+	if (Number.isNaN(date.valueOf())) return null;
+	return date.toLocaleDateString(locale, {
+		timeZone: "Asia/Tokyo",
+		month: "short",
+		day: "numeric",
+		year: "numeric"
+	});
+};
+
+const formatTime = (value: string | Date) => {
+	const date = value instanceof Date ? value : new Date(value);
+	if (Number.isNaN(date.valueOf())) return null;
+	return date.toLocaleTimeString(locale, {
+		timeZone: "Asia/Tokyo",
+		hour12: false,
+		hour: "2-digit",
+		minute: "2-digit"
+	});
+};
+
+const lastUpdated =
+	compositeFeed?.generatedAt && formatTime(compositeFeed.generatedAt);
+const updateIntervalHours = 3;
+const nextUpdate =
+	compositeFeed?.generatedAt
+		? (() => {
+				const dt = new Date(compositeFeed.generatedAt);
+				if (Number.isNaN(dt.valueOf())) return null;
+				dt.setHours(dt.getHours() + updateIntervalHours);
+				return formatTime(dt);
+		  })()
+		: null;
 ---
 
 <Layout>
@@ -137,6 +217,150 @@ const activities: Activity[] = [
 	</header>
 
 	<main id="main-content" class="space-y-0">
+		<section id="whats-happening" class="bg-white/70 px-6 py-16 md:px-12">
+			<div class="mx-auto max-w-5xl">
+				<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">{t("home.whatsHappening.label")}</p>
+				<h2 class="mt-3 text-3xl font-semibold text-slate-900">{t("home.whatsHappening.title")}</h2>
+				<WhatWeDo activities={activities} />
+			</div>
+		</section>
+
+		<section id="calendar" class="bg-white px-6 py-16 md:px-12">
+  			<div class="mx-auto max-w-5xl">
+   			<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
+      			Upcoming Meetups
+    			</p>
+    			<h2 class="mt-3 text-3xl font-semibold text-slate-900">
+      			Kyoto Tech Meetup Calendar
+    			</h2>
+
+    			<Calendar />
+  			</div>
+		</section>
+
+		<section id="community-feed" class="bg-white px-6 py-16 md:px-12">
+			<div class="mx-auto max-w-5xl space-y-8">
+				<div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+					<div>
+						<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
+							{t("home.communityFeed.label")}
+						</p>
+						<h2 class="mt-3 text-3xl font-semibold text-slate-900">
+							{t("home.communityFeed.title")}
+						</h2>
+						<p class="mt-3 text-slate-600">
+							{t("home.communityFeed.description")}
+						</p>
+						{lastUpdated ? (
+							<div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+								<span class="inline-flex items-center gap-1">
+									<FaRegClock className="text-(--accent)" aria-hidden="true" />
+									<span>{t("home.communityFeed.updated")}: {lastUpdated}</span>
+								</span>
+								{nextUpdate ? (
+									<span class="inline-flex items-center gap-1">
+										<FaRegCalendarAlt className="text-(--accent)" aria-hidden="true" />
+										<span>{t("home.communityFeed.nextUpdate")}: {nextUpdate}</span>
+									</span>
+								) : null}
+							</div>
+						) : null}
+					</div>
+				</div>
+
+				<div class="flex flex-col gap-5">
+
+					<div class="space-y-5">
+						{feedsWithItems.map((feed) => (
+								<article
+									class="flex h-full flex-col overflow-visible rounded-2xl border border-slate-200/70 bg-white/95 p-5 shadow-lg shadow-stone-900/5 ring-1 ring-white/80"
+									key={feed.feedUrl}
+								>
+									<div class="flex flex-wrap items-center gap-3">
+										<h4 class="text-lg font-semibold text-slate-900">
+											{feed.name}
+										</h4>
+										<div class="ml-auto flex items-center gap-2">
+											{feed.error ? (
+												<span class="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
+													{t("home.communityFeed.fetchError")}
+												</span>
+											) : null}
+											{feed.siteUrl ? (
+												<a
+													class="inline-flex items-center rounded-full border border-(--accent) bg-(--accent)/10 px-3 py-1 text-xs font-semibold text-(--accent)"
+													href={feed.siteUrl}
+													target="_blank"
+													rel="noreferrer"
+												>
+													{feed.siteUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+												</a>
+											) : null}
+										</div>
+									</div>
+
+								<div class="mt-4">
+									{feed.items.length ? (
+										<div class="relative flex gap-3 pb-1" style="overflow-x: auto; overflow-y: visible;">
+											{feed.items.map((item) => (
+												<div
+													class="group relative z-0 min-w-[280px] max-w-md flex-1 rounded-xl border border-slate-100 bg-slate-50/70 p-3 pb-10 transition hover:border-(--accent) hover:bg-white hover:z-10 after:clear-both after:block after:content-['']"
+													key={item.id}
+												>
+													{item.image ? (
+														<div class="float-right ml-3 mb-2 h-24 w-28 overflow-hidden rounded-lg border border-slate-100 bg-slate-100">
+															<img
+																src={item.image}
+																alt={item.title}
+																loading="lazy"
+																decoding="async"
+																class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+															/>
+														</div>
+													) : null}
+													<div class="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+														<span class="text-(--accent)">{formatDate(item.publishedAt)}</span>
+													</div>
+													<a
+														href={item.link}
+														target="_blank"
+														rel="noreferrer"
+														class="mt-1 block text-base font-semibold text-slate-900 transition hover:text-(--accent)"
+													>
+														{item.title}
+													</a>
+													{item.summary ? (
+														<p class="mt-1 text-sm text-slate-600">
+															{item.summary}
+														</p>
+													) : null}
+													<div class="absolute bottom-3 right-3 text-sm text-(--accent)">
+														<a
+															href={item.link}
+															target="_blank"
+															rel="noreferrer"
+															class="inline-flex items-center gap-1 font-semibold"
+														>
+															{t("home.communityFeed.readMore")}
+															<span aria-hidden="true">↗</span>
+														</a>
+													</div>
+												</div>
+											))}
+										</div>
+									) : (
+										<p class="rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-4 text-sm text-slate-600">
+											{t("home.communityFeed.emptyFeed")}
+										</p>
+									)}
+								</div>
+							</article>
+						))}
+					</div>
+				</div>
+			</div>
+		</section>
+
 		<section id="why-join" class="bg-white/95 px-6 py-16 md:px-12">
 			<div class="mx-auto max-w-5xl">
 				<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">{t("home.whyJoin.label")}</p>
@@ -162,27 +386,6 @@ const activities: Activity[] = [
 					</figcaption>
 				</figure>
 			</div>
-		</section>
-
-		<section id="whats-happening" class="bg-white/70 px-6 py-16 md:px-12">
-			<div class="mx-auto max-w-5xl">
-				<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">{t("home.whatsHappening.label")}</p>
-				<h2 class="mt-3 text-3xl font-semibold text-slate-900">{t("home.whatsHappening.title")}</h2>
-				<WhatWeDo activities={activities} />
-			</div>
-		</section>
-
-		<section id="calendar" class="bg-white px-6 py-16 md:px-12">
-  			<div class="mx-auto max-w-5xl">
-   				<p class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">
-      			Upcoming Meetups
-    			</p>
-    			<h2 class="mt-3 text-3xl font-semibold text-slate-900">
-      			Kyoto Tech Meetup Calendar
-    			</h2>
-
-    			<Calendar />
-  			</div>
 		</section>
 
 		<section id="who-comes" class="bg-white/95 px-6 py-16 md:px-12">

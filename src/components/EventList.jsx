@@ -87,7 +87,7 @@ export default function EventList({ events }) {
                           className="absolute left-4 top-3 z-10 inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.1em] shadow-md"
                           style={{ backgroundColor: "var(--accent)", color: "white", pointerEvents: "none" }}
                         >
-                          <span className="inline-block h-2 w-2 rounded-full bg-white animate-pulse" aria-hidden="true" />
+                          <span className="inline-block h-2 w-2 rounded-full bg-white" aria-hidden="true" />
                           Live Now
                         </span>
                       ) : null}
