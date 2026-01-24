@@ -70,6 +70,7 @@ export const ui = {
         "home.locations.title": "Locations",
         "home.locations.description1": "We meet at cafés and shared spaces in central Kyoto.",
         "home.locations.description2": "Exact time and place are in each event invite and reminder email.",
+        "home.locations.description3": "Most of our events take place at the cafés shown on the map below.",
 
         "home.footer.copyright": "Kyoto Tech Meetup. Crafted by volunteers in Kyoto.",
         "home.footer.socialNavLabel": "Social links",
@@ -147,6 +148,7 @@ export const ui = {
         "home.locations.title": "開催場所",
         "home.locations.description1": "京都中心部のカフェやシェアスペースで集まっています。",
         "home.locations.description2": "具体的な場所と時間は、各イベントの案内メールやリマインダーでお知らせします。",
+        "home.locations.description3": "ほとんどのイベントは、以下の地図に示されているカフェで開催されています。",
 
         "home.footer.copyright": "Kyoto Tech Meetup — 京都在住のボランティアによるコミュニティ運営。",
         "home.footer.socialNavLabel": "ソーシャルリンク",
