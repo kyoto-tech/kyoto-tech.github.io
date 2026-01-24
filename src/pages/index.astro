@@ -1,5 +1,7 @@
 ---
+/* eslint-disable max-lines */
 import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
 import WhyJoin from "../components/WhyJoin.astro";
 import WhatWeDo from "../components/WhatWeDo.astro";
 import Calendar from "../components/Calendar.astro";
@@ -7,7 +9,6 @@ import Footer from "../components/Footer.astro";
 import { FaGithub, FaDiscord, FaMeetup, FaEnvelope } from "react-icons/fa";
 import { FaRegClock, FaRegCalendarAlt } from "react-icons/fa";
 import { useTranslations } from "../i18n/utils";
-import LanguagePicker from "../components/LanguagePicker.astro";
 import memberFeeds from "../data/member-feeds.json";
 import compositeFeed from "../data/composite-feed.json";
 import eventLocations from "../data/event-locations.json";
@@ -196,35 +197,11 @@ const nextUpdate = compositeFeed?.generatedAt
 ---
 
 <Layout>
-  <header
-    class="relative isolate flex min-h-[70vh] items-center px-6 py-20 text-white sm:py-28 md:px-16"
-  >
-    <div class="absolute inset-0 -z-10">
-      <img
-        src="https://images.unsplash.com/photo-1570463723985-41c39db0343d?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=2000&q=80"
-        alt=""
-        loading="lazy"
-        fetchpriority="high"
-        decoding="async"
-        class="h-full w-full object-cover"
-      />
-      <div class="absolute inset-0 bg-black/40"></div>
-    </div>
-    <div class="mx-auto max-w-3xl text-center md:ml-[5%] md:text-left">
-      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-white/80">
-        {t("home.header.tagline")}
-      </p>
-      <h1
-        class="mt-4 text-4xl font-semibold leading-tight text-white md:text-5xl"
-      >
-        {t("home.header.title")}
-      </h1>
-      <p class="mt-4 text-lg text-white/90">
-        {t("home.header.subtitle")}
-      </p>
-    </div>
-    <LanguagePicker />
-  </header>
+  <Hero
+    tagline={t("home.header.tagline")}
+    title={t("home.header.title")}
+    subtitle={t("home.header.subtitle")}
+  />
 
   <main id="main-content" class="space-y-0">
     <section id="quick-links" class="bg-white/90 px-6 py-12 md:px-12">
@@ -348,7 +325,6 @@ const nextUpdate = compositeFeed?.generatedAt
               feedsWithItems.map((feed) => (
                 <article
                   class="flex h-full flex-col overflow-visible rounded-2xl border border-slate-200/70 bg-white/95 p-5 shadow-lg shadow-stone-900/5 ring-1 ring-white/80"
-                  key={feed.feedUrl}
                 >
                   <div class="flex flex-wrap items-center gap-3">
                     <h4 class="text-lg font-semibold text-slate-900">
@@ -384,7 +360,6 @@ const nextUpdate = compositeFeed?.generatedAt
                         {feed.items.map((item) => (
                           <div
                             class="group relative z-0 min-w-[280px] max-w-md flex-1 rounded-xl border border-slate-100 bg-slate-50/70 p-3 pb-10 transition hover:border-(--accent) hover:bg-white hover:z-10 after:clear-both after:block after:content-['']"
-                            key={item.id}
                           >
                             {item.image ? (
                               <div class="float-right ml-3 mb-2 h-24 w-28 overflow-hidden rounded-lg border border-slate-100 bg-slate-100">

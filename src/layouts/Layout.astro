@@ -12,6 +12,13 @@ const hrefEn = `${SITE_URL}/`;
 const hrefJa = `${SITE_URL}/ja/`;
 const ogLocale = activeLang === "ja" ? "ja_JP" : "en_US";
 const ogLocaleAlternate = activeLang === "ja" ? "en_US" : "ja_JP";
+const gtmId = "GTM-5SB4S7NJ";
+const gtmScript = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":
+new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src=
+"https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,"script","dataLayer","${gtmId}");`;
+const gtmNoscriptSrc = `https://www.googletagmanager.com/ns.html?id=${gtmId}`;
 const orgDescription =
 	activeLang === "ja"
 		? "京都でテクノロジーを探求するデベロッパー、デザイナー、研究者、ファウンダーのための集まり。"
@@ -139,11 +146,7 @@ const ldData = {
 		<meta name="generator" content={Astro.generator} />
 
 		<!-- Google Tag Manager -->
-		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-		})(window,document,'script','dataLayer','GTM-5SB4S7NJ');</script>
+		<script is:inline set:html={gtmScript}></script>
 		<!-- End Google Tag Manager -->
 
 		<meta
@@ -182,8 +185,15 @@ const ldData = {
 	<body>
 
 		<!-- Google Tag Manager (noscript) -->
-		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5SB4S7NJ"
-		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<noscript>
+			<iframe
+				src={gtmNoscriptSrc}
+				height="0"
+				width="0"
+				style="display:none;visibility:hidden"
+				title="Google Tag Manager"
+			></iframe>
+		</noscript>
 		<!-- End Google Tag Manager (noscript) -->
 
 		<a class="skip-link" href="#main-content">{t("a11y.skipToMain")}</a>
