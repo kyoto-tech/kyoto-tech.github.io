@@ -131,6 +131,10 @@ const ldData = {
 	]
 };
 
+//used for language
+const enHomePath = getRelativeLocaleUrl("en", "/");
+const jaHomePath = getRelativeLocaleUrl("ja", "/");
+
 ---
 
 <!doctype html>
@@ -181,6 +185,29 @@ const ldData = {
 		<link rel="canonical" href={canonicalUrl} />
 		<script type="application/ld+json" is:inline set:html={JSON.stringify(ldData)}></script>
 		<title>{t("meta.title")}</title>
+		 <script is:inline define:vars={{ enHomePath, jaHomePath }}>
+    		const path = location.pathname;
+			const isJapanese =
+        			(navigator.language?.toLowerCase().startsWith("ja")) ||
+        			(navigator.languages?.some(l => l.toLowerCase().startsWith("ja")));
+					
+   	 		// Only the English home page should auto-redirect.
+    		if (path === enHomePath || path.endsWith("/index.html")) {
+      			console.log(isJapanese);
+      			if (isJapanese) {
+       			 // Handles both user/ org pages and project pages
+        			location.replace(path.replace(/(index\.html)?$/, "") + "ja/");
+      			}
+   			 }
+			 //to change lang from Japanese to English
+			else if (path === jaHomePath || path.endsWith("/ja/index.html")) {
+				if (!isJapanese) {
+					console.log(!isJapanese);
+       			 // Handles both user/ org pages and project pages
+        			location.replace(enHomePath);
+      			}
+			}
+  		</script>
 	</head>
 	<body>
 
