@@ -1,0 +1,66 @@
+---
+import { useTranslations } from "../i18n/utils";
+
+type Props = {
+  lang?: "en" | "ja";
+};
+
+const { lang = "en" } = Astro.props as Props;
+const t = useTranslations(lang);
+
+const meetupUrl =
+  lang === "ja"
+    ? "https://www.meetup.com/ja-JP/kyoto-tech-meetup/"
+    : "https://www.meetup.com/kyoto-tech-meetup/";
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 px-4 py-4">
+  <div class="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-slate-100 bg-white px-4 py-2 shadow-lg shadow-black/5">
+    <div class="flex items-center gap-6">
+      <a href="#" class="flex items-center gap-2" aria-label={t("home.header.tagline")}>
+        <span class="font-medium text-slate-900">
+          {t("home.header.tagline")}
+        </span>
+      </a>
+      <div class="hidden items-center gap-1 md:flex">
+        <a href="#whats-happening" class="rounded-full px-3 py-1 text-sm text-slate-600 transition hover:text-slate-900">{t("nav.about")}</a>
+        <a href="#calendar" class="rounded-full px-3 py-1 text-sm text-slate-600 transition hover:text-slate-900">{t("nav.events")}</a>
+        <a href="#community-feed" class="rounded-full px-3 py-1 text-sm text-slate-600 transition hover:text-slate-900">{t("nav.communityFeed")}</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="hidden items-center rounded-full bg-slate-50 p-1 shadow-sm sm:inline-flex">
+        <a
+          href="/"
+          class:list={[
+            "rounded-full px-3 py-1 text-sm transition",
+            lang === "en"
+              ? "border border-slate-200 bg-white text-slate-900 shadow"
+              : "text-slate-600 hover:text-slate-900",
+          ]}
+        >
+          English
+        </a>
+        <a
+          href="/ja/"
+          class:list={[
+            "rounded-full px-3 py-1 text-sm transition",
+            lang === "ja"
+              ? "border border-slate-200 bg-white text-slate-900 shadow"
+              : "text-slate-600 hover:text-slate-900",
+          ]}
+        >
+          日本語
+        </a>
+      </div>
+      <a
+        href={meetupUrl}
+        target="_blank"
+        rel="noreferrer"
+        class="rounded-full bg-slate-900 px-5 py-2 text-sm text-white transition hover:bg-slate-800"
+      >
+        {t("home.header.cta")}
+      </a>
+    </div>
+  </div>
+</nav>

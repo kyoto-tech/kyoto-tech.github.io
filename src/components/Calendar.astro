@@ -1,6 +1,9 @@
 ---
 import EventList from "../components/EventList.jsx";
+import { useTranslations } from "../i18n/utils";
 
+const { lang = "en" } = Astro.props;
+const t = useTranslations(lang);
 const EVENTS_URL = "https://www.meetup.com/kyoto-tech-meetup/events/";
 
 async function fetchMeetupEvents() {
@@ -131,6 +134,17 @@ const events = await fetchMeetupEvents();
 
 <section class="pt-6 pb-6">
 
-  <EventList client:load events={events} />
+  <EventList
+    client:load
+    events={events}
+    lang={lang}
+    labels={{
+      empty: t("home.eventCard.empty"),
+      emptyLink: t("home.eventCard.emptyLink"),
+      liveNow: t("home.eventCard.liveNow"),
+      venueTba: t("home.eventCard.venueTba"),
+      going: t("home.eventCard.going"),
+    }}
+  />
 
 </section>

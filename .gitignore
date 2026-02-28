@@ -25,3 +25,5 @@ pnpm-debug.log*
 
 # tmp
 tmp/
+
+.vscode/settings.json

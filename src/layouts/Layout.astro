@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import { useTranslations } from "../i18n/utils";
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { ClientRouter } from "astro:transitions";
 
 const activeLang = (Astro.currentLocale ?? "en") as "en" | "ja";
 const t = useTranslations(activeLang);
@@ -208,6 +209,7 @@ const jaHomePath = getRelativeLocaleUrl("ja", "/");
       			}
 			}
   		</script>
+		<ClientRouter />
 	</head>
 	<body>
 

@@ -1,5 +1,6 @@
 ---
 import { languages } from "../i18n/ui";
+import { useTranslations } from "../i18n/utils";
 import { getRelativeLocaleUrl } from "astro:i18n";
 
 const langsToFlags = {
@@ -8,6 +9,7 @@ const langsToFlags = {
 } as const;
 
 const activeLang = Astro.currentLocale as "en" | "ja" | undefined;
+const t = useTranslations(activeLang ?? "en");
 const allLangs = Object.entries(languages) as [keyof typeof languages, string][];
 
 ---
@@ -22,7 +24,7 @@ const allLangs = Object.entries(languages) as [keyof typeof languages, string][]
 					href={getRelativeLocaleUrl(lang, "/")}
 					class="flex min-h-11 min-w-[3rem] items-center gap-2 rounded-lg bg-white/20 px-3 py-2 md:px-3.5 md:py-2.5 backdrop-blur-sm hover:bg-white/30 transition-colors shadow-lg ring-1 ring-white/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
 					title={label}
-					aria-label={`Switch language to ${label}`}
+					aria-label={t("a11y.switchLang").replace("{label}", label)}
 					aria-current={isActive ? "true" : undefined}
 				>
 					<span class="sr-only">{label}</span>

@@ -1,4 +1,12 @@
-export default function EventList({ events }) {
+export default function EventList({ events, lang = "en", labels = {} }) {
+  const dateLocale = lang === "ja" ? "ja-JP" : "en-US";
+  const l = {
+    empty: labels.empty || "Check back soon for events!",
+    emptyLink: labels.emptyLink || "Join our meetup group here to get updates.",
+    liveNow: labels.liveNow || "Live Now",
+    venueTba: labels.venueTba || "Venue TBA",
+    going: labels.going || "going",
+  };
   const now = new Date();
   const LIVE_GRACE_MS = 4 * 60 * 60 * 1000; // match the server-side in-progress window
 
@@ -12,13 +20,13 @@ export default function EventList({ events }) {
   };
 
   if (!events || events.length === 0) {
-    return <p className=" mt3 text-gray-500 italic">Check back soon for events! <a href="https://www.meetup.com/ja-JP/kyoto-tech-meetup"> Join our meetup group here to get updates.</a></p>;
+    return <p className=" mt3 text-gray-500 italic">{l.empty} <a href="https://www.meetup.com/ja-JP/kyoto-tech-meetup"> {l.emptyLink}</a></p>;
   }
 
   // Group by month string (using Tokyo timezone for consistency)
   const groups = events.reduce((acc, evt) => {
     const d = new Date(evt.start);
-    const monthLabel = d.toLocaleString("en-US", {
+    const monthLabel = d.toLocaleString(dateLocale, {
       timeZone: "Asia/Tokyo",
       month: "long",
       year: "numeric"
@@ -31,7 +39,7 @@ export default function EventList({ events }) {
   const orderedMonths = events
     .map(evt => {
       const d = new Date(evt.start);
-      const monthLabel = d.toLocaleString("en-US", {
+      const monthLabel = d.toLocaleString(dateLocale, {
         timeZone: "Asia/Tokyo",
         month: "long",
         year: "numeric"
@@ -88,7 +96,7 @@ export default function EventList({ events }) {
                           style={{ backgroundColor: "var(--accent)", color: "white", pointerEvents: "none" }}
                         >
                           <span className="inline-block h-2 w-2 rounded-full bg-white" aria-hidden="true" />
-                          Live Now
+                          {l.liveNow}
                         </span>
                       ) : null}
                       {event.image ? (
@@ -107,7 +115,7 @@ export default function EventList({ events }) {
                         </div>
                         <p className="text-sm text-gray-500 mt-1 space-x-2">
                           <span>
-                            {new Date(event.start).toLocaleString("en-US", {
+                            {new Date(event.start).toLocaleString(dateLocale, {
                               timeZone: "Asia/Tokyo",
                               month: "long",
                               day: "numeric",
@@ -116,14 +124,14 @@ export default function EventList({ events }) {
                           </span>
                           <span className="text-gray-400">•</span>
                           <span>
-                            {new Date(event.start).toLocaleTimeString("en-US", {
+                            {new Date(event.start).toLocaleTimeString(dateLocale, {
                               timeZone: "Asia/Tokyo",
                               hour12: false,
                               hour: "2-digit",
                               minute: "2-digit"
                             })}
                             {event.endTime
-                              ? ` – ${new Date(event.endTime).toLocaleTimeString("en-US", {
+                              ? ` – ${new Date(event.endTime).toLocaleTimeString(dateLocale, {
                                   timeZone: "Asia/Tokyo",
                                   hour12: false,
                                   hour: "2-digit",
@@ -134,14 +142,14 @@ export default function EventList({ events }) {
                         </p>
                         <div className="text-sm text-gray-700 mt-2 space-y-1">
                           <div className="font-medium text-slate-900">
-                            {event.venue?.name ?? "Venue TBA"}
+                            {event.venue?.name ?? l.venueTba}
                           </div>
                           {event.venue?.address ? (
                             <div className="text-gray-600">{event.venue.address}</div>
                           ) : null}
                         </div>
                         <div className="flex flex-wrap items-center gap-3 mt-3 text-sm text-gray-600">
-                          <span>{event.goingCount ?? 0} going</span>
+                          <span>{event.goingCount ?? 0} {l.going}</span>
                         </div>
                       </div>
                     </a>

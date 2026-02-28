@@ -15,18 +15,7 @@ body {
 	font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
 	color: #1f1f1f;
 	line-height: 1.6;
-	background: linear-gradient(180deg, #f5f3ef 0%, #fffdfa 100%);
 }
-
-a {
-	color: var(--accent);
-	text-decoration: none;
-	transition: color 150ms ease;
-}
-
-	a:hover {
-		color: var(--accent-dark);
-	}
 
 .skip-link {
 	position: absolute;
