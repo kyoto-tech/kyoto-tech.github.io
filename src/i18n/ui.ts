@@ -17,6 +17,7 @@ export const ui = {
       "Connect, learn, and build together in Japan's cultural heart",
     "home.header.subtitle":
       "Gatherings for developers, designers, researchers, and founders exploring technology in Kyoto.",
+    "home.header.badge": "100+ Members & Growing",
     "home.header.cta": "Join Us",
     "home.header.discordCta": "Join our Discord",
     "home.header.githubCta": "View our GitHub",
@@ -124,7 +125,13 @@ export const ui = {
 
     "home.hackDay.imageAlt": "Our first Community Hack Day where we built this very site!",
     "home.hackDay.caption": "Our first Community Hack Day where we built this very site!",
+    "home.hackDay.groupTitle": "Community Hack Days",
+    "home.hackDay2.imageAlt": "Our second Community Hack Day",
+    "home.hackDay2.caption": "Our second Community Hack Day",
     "home.hackDay.repoLink": "repo here",
+    "home.morningCoffee.groupTitle": "Morning Tech & Coffee",
+    "home.morningCoffee.imageAlt": "Morning Tech & Coffee meetup",
+    "home.morningCoffee.caption": "Morning Tech & Coffee",
 
     "home.footer.copyright":
       "Kyoto Tech Meetup. Crafted by volunteers in Kyoto.",
@@ -152,6 +159,7 @@ export const ui = {
       "日本の文化都市・京都でつながり、学び、ものづくりをしよう",
     "home.header.subtitle":
       "京都でテクノロジーを探求するデベロッパー、デザイナー、研究者、創業者のための集まりです。",
+    "home.header.badge": "メンバー100人以上＆拡大中",
     "home.header.cta": "参加する",
     "home.header.discordCta": "Discordでチャットする",
     "home.header.githubCta": "GitHubでコードを見る",
@@ -261,7 +269,13 @@ export const ui = {
 
     "home.hackDay.imageAlt": "初めてのCommunity Hack Day。このサイトもここで作りました！",
     "home.hackDay.caption": "初めてのCommunity Hack Day。このサイトもここで作りました！",
+    "home.hackDay.groupTitle": "Community Hack Days",
+    "home.hackDay2.imageAlt": "2回目のCommunity Hack Day",
+    "home.hackDay2.caption": "2回目のCommunity Hack Day",
     "home.hackDay.repoLink": "リポジトリはこちら",
+    "home.morningCoffee.groupTitle": "Morning Tech & Coffee",
+    "home.morningCoffee.imageAlt": "Morning Tech & Coffeeミートアップ",
+    "home.morningCoffee.caption": "Morning Tech & Coffee",
 
     "home.footer.copyright":
       "Kyoto Tech Meetup — 京都在住のボランティアによるコミュニティ運営。",

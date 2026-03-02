@@ -54,32 +54,32 @@ const quickLinks = [
 
 const photoGroups = [
   {
-    title: "Community Hack Days",
+    titleKey: "home.hackDay.groupTitle",
     photos: [
       {
         src: "/images/kyoto-tech-meetup-hack-day.jpg",
-        alt: "Our first Community Hack Day where we built this very site!",
-        caption: "Our first Community Hack Day where we built this very site!",
+        altKey: "home.hackDay.imageAlt",
+        captionKey: "home.hackDay.caption",
         repoUrl: "https://github.com/kyoto-tech/kyoto-tech.github.io",
       },
       {
         src: "/images/kyoto-tech-meetup-hack-day_2.jpg",
-        alt: "Our second Community Hack Day",
-        caption: "Our second Community Hack Day",
+        altKey: "home.hackDay2.imageAlt",
+        captionKey: "home.hackDay2.caption",
         repoUrl: null,
       },
     ],
   },
   {
-    title: "Morning Tech & Coffee",
+    titleKey: "home.morningCoffee.groupTitle",
     photos: [
       {
         src: "/images/kyoto-tech-morning-tech-&-coffee.jpg",
-        alt: "Morning Tech & Coffee meetup",
-        caption: "Morning Tech & Coffee",
+        altKey: "home.morningCoffee.imageAlt",
+        captionKey: "home.morningCoffee.caption",
         repoUrl: null,
         content: "bottom",
-      }
+      },
     ],
   },
 ] as const;
@@ -238,6 +238,7 @@ const nextUpdate = compositeFeed?.generatedAt
       subtitle={t("home.header.subtitle")}
       ctaUrl={meetupUrl}
       ctaLabel={t("home.header.cta")}
+      badge={t("home.header.badge")}
     />
   </div>
 
@@ -470,7 +471,7 @@ const nextUpdate = compositeFeed?.generatedAt
         {photoGroups.map((group) => (
           <div class="mt-10">
             <h3 class="mb-4 text-base font-semibold uppercase tracking-widest text-slate-500">
-              {group.title}
+              {t(group.titleKey)}
             </h3>
         
             <div
@@ -484,7 +485,7 @@ const nextUpdate = compositeFeed?.generatedAt
                 >
                   <img
                     src={photo.src}
-                    alt={photo.alt}
+                    alt={t(photo.altKey)}
                     loading="lazy"
                     decoding="async"
                     class={`w-full h-[280px] rounded-3xl object-cover transition-transform duration-300 ${
@@ -495,7 +496,7 @@ const nextUpdate = compositeFeed?.generatedAt
                   />
         
                   <figcaption class="px-5 py-4 text-center text-sm font-medium text-slate-700">
-                    {photo.caption}
+                    {t(photo.captionKey)}
                     {photo.repoUrl && (
                       <>
                         <br />
