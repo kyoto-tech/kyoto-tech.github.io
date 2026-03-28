@@ -5,6 +5,11 @@ on:
     - cron: "*/15 * * * *"
   workflow_dispatch:
     inputs:
+      demo_mode:
+        description: "Post at most 3 items, then seed the rest of the current backlog"
+        required: false
+        type: boolean
+        default: false
       dry_run:
         description: "Check feeds without posting or updating gist state"
         required: false
@@ -49,10 +54,14 @@ jobs:
           GH_GIST_TOKEN: ${{ secrets.GH_GIST_TOKEN }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           COMMUNITY_FEED_GENERIC_WEBHOOK_URL: ${{ secrets.COMMUNITY_FEED_GENERIC_WEBHOOK_URL }}
+          WORKFLOW_DEMO_MODE: ${{ github.event.inputs.demo_mode || 'false' }}
           WORKFLOW_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           WORKFLOW_ALLOW_INITIAL_POSTS: ${{ github.event.inputs.allow_initial_posts || 'false' }}
         run: |
           args=()
+          if [ "$WORKFLOW_DEMO_MODE" = "true" ]; then
+            args+=("--max-deliveries" "3" "--suppress-remaining-after-limit")
+          fi
           if [ "$WORKFLOW_DRY_RUN" = "true" ]; then
             args+=("--dry-run")
           fi
