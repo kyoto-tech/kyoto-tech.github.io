@@ -23,6 +23,18 @@ export default [
 		}
 	},
 	{
+		files: ["src/pages/api/**/*.ts"],
+		languageOptions: {
+			parser: tsParser,
+			globals: {
+				Request: "readonly",
+				Response: "readonly",
+				fetch: "readonly",
+				console: "readonly",
+			}
+		}
+	},
+	{
 		files: ["scripts/**/*.{js,ts,tsx}", "tmp/**/*.{js,ts,tsx}"],
 		rules: {
 			"no-console": "off"
