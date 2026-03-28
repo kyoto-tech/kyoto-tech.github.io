@@ -17,10 +17,11 @@
     "knip": "knip",
     "lint": "eslint . --ext .js,.mjs,.ts,.tsx,.astro --no-warn-ignored",
     "preview": "astro preview",
-    "tsc": "tsc --noEmit"
+    "tsc": "astro sync && tsc --noEmit"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
+    "@astrojs/cloudflare": "^12.6.13",
     "@astrojs/mdx": "^4.3.10",
     "@astrojs/react": "^4.4.2",
     "@astrojs/sitemap": "^3.6.0",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-28T09:11:45.481Z",
+  "generatedAt": "2026-03-28T07:29:25.968Z",
   "itemsPerFeed": 3,
   "feeds": [
     {
@@ -8,43 +8,43 @@
       "siteUrl": "https://www.ashryan.io/",
       "items": [
         {
-          "id": "69964e9ff37e170001ebf954",
-          "title": "Kyoto Tech Meetup links for February 19, 2026",
-          "link": "https://www.ashryan.io/kyoto-tech-meetup-links-for-february-19-2026/",
-          "publishedAt": "2026-02-19T01:09:43.000Z",
+          "id": "69bb304d91aea700019d55f0",
+          "title": "Kyoto Tech Meetup links for March 19, 2026",
+          "link": "https://www.ashryan.io/kyoto-tech-meetup-links-for-march-19-2026/",
+          "publishedAt": "2026-03-19T01:26:21.000Z",
           "source": {
             "name": "Ash Ryan Arnwine",
             "siteUrl": "https://www.ashryan.io/",
             "feedUrl": "https://www.ashryan.io/rss/"
           },
-          "summary": "\"Humans are hard\" edition",
-          "image": "https://images.unsplash.com/photo-1504630083234-14187a9df0f5?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDQzfHxjb2ZmZWV8ZW58MHx8fHwxNzcxNDYyNjE4fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000"
+          "summary": "As a non-large language model, I have no idea how to summarize the sheer breadth of these links.",
+          "image": "https://images.unsplash.com/photo-1503481766315-7a586b20f66d?crop&#x3D;entropy&amp;cs&#x3D;tinysrgb&amp;fit&#x3D;max&amp;fm&#x3D;jpg&amp;ixid&#x3D;M3wxMTc3M3wwfDF8c2VhcmNofDcwfHxjb2ZmZWV8ZW58MHx8fHwxNzczODgzNTI4fDA&amp;ixlib&#x3D;rb-4.1.0&amp;q&#x3D;80&amp;w&#x3D;2000"
         },
         {
-          "id": "698fc74489aedc0001210e2d",
-          "title": "Kyoto Tech Meetup links for Feb 14, 2026",
-          "link": "https://www.ashryan.io/kyoto-tech-meetup-links-for-feb-14-2026/",
-          "publishedAt": "2026-02-14T02:27:09.000Z",
+          "id": "69b4b40c68dbec00018c8e81",
+          "title": "Kyoto Tech Meetup links for March 14, 20206",
+          "link": "https://www.ashryan.io/kyoto-tech-meetup-links-for-march-14-20206/",
+          "publishedAt": "2026-03-14T01:43:48.000Z",
           "source": {
             "name": "Ash Ryan Arnwine",
             "siteUrl": "https://www.ashryan.io/",
             "feedUrl": "https://www.ashryan.io/rss/"
           },
-          "summary": "It's AI all the way down.",
-          "image": "https://images.unsplash.com/photo-1541167760496-1628856ab772?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDV8fGNvZmZlZXxlbnwwfHx8fDE3NzEwMTI3NTl8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000"
+          "summary": "MCPs? Skills? Tools? Raw LLM? What's today's AI weather?",
+          "image": "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDI1fHxjb2ZmZWV8ZW58MHx8fHwxNzczNDUyNDgwfDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000"
         },
         {
-          "id": "6980152b82e86e0001227784",
-          "title": "Kyoto Tech Meetup: January 2026 wrap-up",
-          "link": "https://www.ashryan.io/kyoto-tech-meetup-january-2026-wrap-up/",
-          "publishedAt": "2026-02-03T00:12:50.000Z",
+          "id": "69a8c9851f47ac000159a1d2",
+          "title": "Kyoto Tech Meetup links for March 5, 2026",
+          "link": "https://www.ashryan.io/kyoto-tech-meetup-links-for-march-5-2026/",
+          "publishedAt": "2026-03-05T02:05:48.000Z",
           "source": {
             "name": "Ash Ryan Arnwine",
             "siteUrl": "https://www.ashryan.io/",
             "feedUrl": "https://www.ashryan.io/rss/"
           },
-          "summary": "Updates from our morning coffee and hack day events last month. Also, this month's schedule.",
-          "image": "https://www.ashryan.io/content/images/2026/02/IMG_5665--1--1.jpeg"
+          "summary": "Time management, OpenClaw, cherry blossoms, and more",
+          "image": "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDV8fGNvZmZlZXxlbnwwfHx8fDE3NzI2NzYzMjh8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000"
         }
       ]
     },
@@ -100,43 +100,43 @@
       "siteUrl": "https://www.youtube.com/@meremortaldev",
       "items": [
         {
-          "id": "yt:video:qWBRjtwUhKQ",
-          "title": "Git Worktree environments for AI agents in the OpenAI Codex app",
-          "link": "https://www.youtube.com/watch?v=qWBRjtwUhKQ",
-          "publishedAt": "2026-02-20T10:28:12.000Z",
+          "id": "yt:video:Y6h5OqNgNiU",
+          "title": "Do this if their MCP doesn’t support your coding agent",
+          "link": "https://www.youtube.com/watch?v=Y6h5OqNgNiU",
+          "publishedAt": "2026-03-15T05:53:45.000Z",
           "source": {
             "name": "Mere Mortal Dev",
             "siteUrl": "https://www.youtube.com/@meremortaldev",
             "feedUrl": "https://www.youtube.com/@meremortaldev"
           },
           "summary": "",
-          "image": "https://i.ytimg.com/vi/qWBRjtwUhKQ/hqdefault.jpg"
+          "image": "https://i.ytimg.com/vi/Y6h5OqNgNiU/hqdefault.jpg"
         },
         {
-          "id": "yt:video:KHkGzQ2YGE0",
-          "title": "Prepping for Codex Git Worktrees video",
-          "link": "https://www.youtube.com/watch?v=KHkGzQ2YGE0",
-          "publishedAt": "2026-02-12T13:57:29.000Z",
+          "id": "yt:video:XDSmnk4WnIg",
+          "title": "Accessing the OpenClaw Dashboard remotely",
+          "link": "https://www.youtube.com/watch?v=XDSmnk4WnIg",
+          "publishedAt": "2026-03-07T08:37:02.000Z",
           "source": {
             "name": "Mere Mortal Dev",
             "siteUrl": "https://www.youtube.com/@meremortaldev",
             "feedUrl": "https://www.youtube.com/@meremortaldev"
           },
           "summary": "",
-          "image": "https://i.ytimg.com/vi/KHkGzQ2YGE0/hqdefault.jpg"
+          "image": "https://i.ytimg.com/vi/XDSmnk4WnIg/hqdefault.jpg"
         },
         {
-          "id": "yt:video:j106xpGv0AI",
-          "title": "OpenAI Codex app and git worktrees",
-          "link": "https://www.youtube.com/watch?v=j106xpGv0AI",
-          "publishedAt": "2026-02-12T03:42:59.000Z",
+          "id": "yt:video:UDEhlZGbza0",
+          "title": "Putting OpenClaw on a Raspberry Pi",
+          "link": "https://www.youtube.com/watch?v=UDEhlZGbza0",
+          "publishedAt": "2026-03-01T01:45:29.000Z",
           "source": {
             "name": "Mere Mortal Dev",
             "siteUrl": "https://www.youtube.com/@meremortaldev",
             "feedUrl": "https://www.youtube.com/@meremortaldev"
           },
           "summary": "",
-          "image": "https://i.ytimg.com/vi/j106xpGv0AI/hqdefault.jpg"
+          "image": "https://i.ytimg.com/vi/UDEhlZGbza0/hqdefault.jpg"
         }
       ]
     }

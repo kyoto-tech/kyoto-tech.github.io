@@ -54,6 +54,7 @@ jobs:
           GH_GIST_TOKEN: ${{ secrets.GH_GIST_TOKEN }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           COMMUNITY_FEED_GENERIC_WEBHOOK_URL: ${{ secrets.COMMUNITY_FEED_GENERIC_WEBHOOK_URL }}
+          COMMUNITY_FEED_GENERIC_WEBHOOK_SECRET: ${{ secrets.COMMUNITY_FEED_GENERIC_WEBHOOK_SECRET }}
           WORKFLOW_DEMO_MODE: ${{ github.event.inputs.demo_mode || 'false' }}
           WORKFLOW_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
           WORKFLOW_ALLOW_INITIAL_POSTS: ${{ github.event.inputs.allow_initial_posts || 'false' }}

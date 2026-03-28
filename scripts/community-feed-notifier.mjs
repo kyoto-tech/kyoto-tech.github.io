@@ -391,13 +391,16 @@ async function sendDiscordNotification(item) {
 
 async function sendGenericWebhookNotification(item) {
   const webhookUrl = process.env.COMMUNITY_FEED_GENERIC_WEBHOOK_URL;
+  const webhookSecret = process.env.COMMUNITY_FEED_GENERIC_WEBHOOK_SECRET;
+  const headers = { "Content-Type": "application/json" };
+  if (webhookSecret) {
+    headers["x-webhook-secret"] = webhookSecret;
+  }
   const response = await fetchWithTimeout(
     webhookUrl,
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
         event: "community_feed_item",
         item,
