@@ -1,0 +1,91 @@
+{
+  "members": [
+    {
+      "id": "ashwin-anil",
+      "name": "Ashwin Anil",
+      "website": "https://ashwin.im"
+    },
+    {
+      "id": "mere-mortal",
+      "name": "Mere Mortal",
+      "website": "https://meremortal.dev"
+    },
+    {
+      "id": "sam-chen",
+      "name": "Sam Chen",
+      "website": "https://samchen.dev"
+    },
+    {
+      "id": "yuki-tanaka",
+      "name": "Yuki Tanaka",
+      "website": "https://yukitanaka.io"
+    },
+    {
+      "id": "hiroshi-saito",
+      "name": "Hiroshi Saito",
+      "website": "https://hiroshisaito.com"
+    }
+  ],
+  "posts": [
+    {
+      "member": "ashwin-anil",
+      "title": "Approach for building MVPs",
+      "url": "https://ashwin.im/blog/approach-for-building-mvps/",
+      "type": "blog",
+      "date": "2026-03-17",
+      "description": "Notes on building an MVP extremely quickly without losing the momentum. Covers the mindset, tooling choices, and iteration patterns that work best for solo founders.",
+      "thumbnail": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=80",
+      "tags": ["startups"]
+    },
+    {
+      "member": "mere-mortal",
+      "title": "Putting OpenClaw on a Raspberry Pi",
+      "url": "https://www.youtube.com/watch?v=UDEhlZGbza0",
+      "type": "video",
+      "date": "2026-03-01",
+      "description": "Getting the OpenClaw controller running on a Raspberry Pi with full GPIO integration.",
+      "thumbnail": "https://i.ytimg.com/vi/UDEhlZGbza0/hqdefault.jpg",
+      "tags": ["open-source", "creative-coding"]
+    },
+    {
+      "member": "sam-chen",
+      "title": "KyotoMap",
+      "url": "https://kyotomap.app",
+      "type": "project",
+      "date": "2026-02-20",
+      "description": "Interactive map of tech-friendly cafes and coworking spaces in Kyoto. Built for the community, by the community.",
+      "thumbnail": "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80",
+      "tags": ["web-dev", "life-in-japan"],
+      "repoUrl": "https://github.com/samchen/kyotomap",
+      "techStack": ["React", "Mapbox", "Supabase"]
+    },
+    {
+      "member": "yuki-tanaka",
+      "title": "Understanding the state of AI agents in 2026",
+      "url": "https://yukitanaka.io/blog/ai-agents-2026",
+      "type": "blog",
+      "date": "2026-02-10",
+      "description": "A deep dive into the current landscape of AI agents, their capabilities, limitations, and what builders should know before integrating them.",
+      "thumbnail": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80",
+      "tags": ["ai"]
+    },
+    {
+      "member": "hiroshi-saito",
+      "title": "Building accessible React components from scratch",
+      "url": "https://hiroshisaito.com/blog/accessible-react",
+      "type": "blog",
+      "date": "2026-01-28",
+      "description": "Practical patterns for building React components that work for everyone. Covers ARIA, keyboard navigation, and screen reader testing.",
+      "tags": ["web-dev", "open-source"]
+    },
+    {
+      "member": "mere-mortal",
+      "title": "Creative coding with p5.js in Kyoto",
+      "url": "https://www.youtube.com/watch?v=example123",
+      "type": "video",
+      "date": "2026-01-15",
+      "description": "Generative art session from our Kyoto meetup, creating visualizations inspired by traditional Japanese patterns.",
+      "tags": ["creative-coding"]
+    }
+  ]
+}

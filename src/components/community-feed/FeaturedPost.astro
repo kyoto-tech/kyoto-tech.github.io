@@ -1,0 +1,120 @@
+---
+import { useTranslations } from "../../i18n/utils";
+import { getMemberById } from "../../utils/community-feed";
+import { TAG_LABELS, type TagId } from "../../types/community-feed";
+import type { Post } from "../../types/community-feed";
+
+type Props = {
+  post: Post;
+  lang: "en" | "ja";
+};
+
+const { post, lang } = Astro.props;
+const t = useTranslations(lang);
+const member = getMemberById(post.member);
+const firstTag = post.tags[0] as TagId;
+const tagLabel = TAG_LABELS[firstTag]?.[lang] ?? firstTag;
+
+const dateFormatted = new Date(post.date).toLocaleDateString(
+  lang === "ja" ? "ja-JP" : "en-US",
+  { year: "numeric", month: "long", day: "numeric" }
+);
+
+const FALLBACK_GRADIENTS: Record<string, string> = {
+  blog: "linear-gradient(135deg, #f5f0eb, #e8e0d8)",
+  video: "linear-gradient(135deg, #2a2a35, #1a1a25)",
+  project: "linear-gradient(135deg, #eaf2ed, #d8e8df)",
+};
+const FALLBACK_EMOJI: Record<string, string> = {
+  blog: "\u{1F4DD}",
+  video: "\u{1F3AC}",
+  project: "\u{1F680}",
+};
+
+const hasThumbnail = !!post.thumbnail;
+const fallbackGradient = FALLBACK_GRADIENTS[post.type];
+const fallbackEmoji = FALLBACK_EMOJI[post.type];
+---
+
+<article class="mb-10">
+  <a href={post.url} target="_blank" rel="noopener noreferrer" class="group block">
+    <div
+      class="relative overflow-hidden rounded-2xl"
+      style={!hasThumbnail ? `background: ${fallbackGradient}` : undefined}
+    >
+      {hasThumbnail ? (
+        <img
+          src={post.thumbnail}
+          alt=""
+          class="h-[250px] w-full object-cover transition-transform duration-400 group-hover:scale-[1.02] md:h-[400px]"
+          loading="eager"
+        />
+      ) : (
+        <div class="flex h-[250px] items-center justify-center text-6xl md:h-[400px]">
+          {fallbackEmoji}
+        </div>
+      )}
+      <span class="absolute top-4 left-4 flex items-center gap-1.5 rounded-full bg-[#c4703c] px-4 py-1.5 text-sm font-semibold text-white shadow-lg">
+        <span>&#9733;</span> {t("communityFeed.new")}
+      </span>
+    </div>
+  </a>
+
+  <div class="mt-4 flex items-center gap-3">
+    <span class="rounded bg-[#f0ece8] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#6b6560]">
+      {tagLabel}
+    </span>
+    <span class="text-sm text-slate-400">{dateFormatted}</span>
+  </div>
+
+  <a href={post.url} target="_blank" rel="noopener noreferrer" class="group">
+    <h2 class="mt-3 text-2xl font-bold text-slate-900 transition-colors group-hover:text-[#c4703c] md:text-[28px]">
+      {post.title}
+    </h2>
+  </a>
+
+  {post.description && (
+    <p class="mt-3 leading-relaxed text-[#444]" style="line-height: 1.6;">
+      {post.description}
+    </p>
+  )}
+
+  <div class="mt-4 flex items-center gap-3">
+    {member && (
+      <a
+        href={member.website}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-slate-700"
+      >
+        <span class="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs text-slate-400">
+          {member.name.charAt(0)}
+        </span>
+        {member.name}
+      </a>
+    )}
+  </div>
+
+  {post.type === "project" && (
+    <div class="mt-3 flex flex-wrap items-center gap-3">
+      <a
+        href={post.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sm font-medium text-[#c4703c] hover:text-[#a85d30]"
+      >
+        &#128279; {t("communityFeed.liveDemo")}
+      </a>
+      {post.repoUrl && (
+        <a
+          href={post.repoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-medium text-[#c4703c] hover:text-[#a85d30]"
+        >
+          &#128230; {t("communityFeed.github")}
+        </a>
+      )}
+    </div>
+  )}
+</article>

@@ -1,0 +1,22 @@
+---
+import { useTranslations } from "../../i18n/utils";
+
+type Props = {
+  lang: "en" | "ja";
+};
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<header class="mb-10">
+  <p class="mb-3 text-xs font-semibold uppercase tracking-[1.5px] text-[#c4703c]">
+    {t("communityFeed.eyebrow")}
+  </p>
+  <h1 class="mb-3 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
+    {t("communityFeed.title")}
+  </h1>
+  <p class="text-base text-slate-500">
+    {t("communityFeed.subtitle")}
+  </p>
+</header>
