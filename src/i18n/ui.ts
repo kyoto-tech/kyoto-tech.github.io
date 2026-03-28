@@ -147,6 +147,15 @@ export const ui = {
     "meta.description":
       "Gatherings for developers, designers, researchers, and founders exploring technology in Kyoto. Conversation-first meetups, community hack days, and collaborations in the city's tech scene.",
     "meta.imageAlt": "Community meetup in Kyoto for builders and technologists",
+
+    "members.title": "Community Members",
+    "members.subtitle": "The people behind Kyoto Tech Meetup — engineers, designers, researchers, and founders based in Kyoto.",
+    "members.map.title": "Member Map",
+    "members.map.filterAll": "All roles",
+    "members.map.legendTitle": "Role",
+    "members.map.website": "Website",
+    "members.map.unknownMember": "Member",
+    "nav.members": "Members",
   },
   ja: {
     "a11y.skipToMain": "メインコンテンツへスキップ",
@@ -292,5 +301,14 @@ export const ui = {
       "京都でテクノロジーを探求するデベロッパー、デザイナー、研究者、ファウンダーのための集まり。会話重視のミートアップ、コミュニティハックデー、コラボレーションを通じて、京都のテックシーンを盛り上げています。",
     "meta.imageAlt":
       "京都で開催される、テクノロジーに関心のある人たちのコミュニティミートアップ",
+
+    "members.title": "コミュニティメンバー",
+    "members.subtitle": "京都在住のエンジニア、デザイナー、研究者、ファウンダーなど、Kyoto Tech Meetupを支える人たち。",
+    "members.map.title": "メンバーマップ",
+    "members.map.filterAll": "すべてのロール",
+    "members.map.legendTitle": "ロール",
+    "members.map.website": "ウェブサイト",
+    "members.map.unknownMember": "メンバー",
+    "nav.members": "メンバー",
   },
 } as const;

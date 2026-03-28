@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import MemberMap from "../components/MemberMap.jsx";
+import { useTranslations } from "../i18n/utils";
+import membersGeoJSON from "../data/members.json";
+
+const lang = "en";
+const t = useTranslations(lang);
+
+const mapLabels = {
+  filterAll: t("members.map.filterAll"),
+  legendTitle: t("members.map.legendTitle"),
+  website: t("members.map.website"),
+  unknownMember: t("members.map.unknownMember"),
+};
+---
+
+<Layout>
+  <Header lang={lang} />
+
+  <main class="mx-auto max-w-5xl px-6 pb-20 pt-28 md:px-12">
+    <!-- Page heading -->
+    <header class="mb-10">
+      <p class="mb-2 text-sm font-semibold uppercase tracking-widest text-slate-400">
+        {t("members.map.title")}
+      </p>
+      <h1 class="mb-3 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+        {t("members.title")}
+      </h1>
+      <p class="max-w-2xl text-slate-600">{t("members.subtitle")}</p>
+    </header>
+
+    <!-- Interactive member map (all features enabled) -->
+    <MemberMap
+      client:load
+      geojson={membersGeoJSON}
+      features={["clusters", "roleFilter", "fitBounds", "legend"]}
+      lang={lang}
+      labels={mapLabels}
+    />
+  </main>
+
+  <Footer lang={lang} />
+</Layout>
