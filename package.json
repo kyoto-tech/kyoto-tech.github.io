@@ -17,7 +17,7 @@
     "knip": "knip",
     "lint": "eslint . --ext .js,.mjs,.ts,.tsx,.astro --no-warn-ignored",
     "preview": "astro preview",
-    "tsc": "tsc --noEmit"
+    "tsc": "astro sync && tsc --noEmit"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
