@@ -155,6 +155,9 @@ export const ui = {
     "members.map.legendTitle": "Role",
     "members.map.website": "Website",
     "members.map.unknownMember": "Member",
+    "members.stats.members": "Members",
+    "members.stats.events": "Events Hosted",
+    "members.stats.countries": "Countries",
     "nav.members": "Members",
   },
   ja: {
@@ -309,6 +312,9 @@ export const ui = {
     "members.map.legendTitle": "ロール",
     "members.map.website": "ウェブサイト",
     "members.map.unknownMember": "メンバー",
+    "members.stats.members": "メンバー数",
+    "members.stats.events": "開催イベント数",
+    "members.stats.countries": "参加国数",
     "nav.members": "メンバー",
   },
 } as const;

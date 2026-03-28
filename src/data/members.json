@@ -7,6 +7,7 @@
       "properties": {
         "name": "Ash",
         "role": "Founder",
+        "country": "United States",
         "tags": ["community", "organizer"],
         "bio": "Organiser of Kyoto Tech Meetup. Building community in Kyoto.",
         "github": "ashmortar",
@@ -19,6 +20,7 @@
       "properties": {
         "name": "Yuki Tanaka",
         "role": "Software Engineer",
+        "country": "Japan",
         "tags": ["web", "TypeScript", "React"],
         "bio": "Frontend engineer exploring modern web tooling and open-source.",
         "github": null,
@@ -31,6 +33,7 @@
       "properties": {
         "name": "Sofia Rossi",
         "role": "Researcher",
+        "country": "Italy",
         "tags": ["AI", "NLP", "academia"],
         "bio": "PhD candidate at Kyoto University researching large language models.",
         "github": null,
@@ -43,6 +46,7 @@
       "properties": {
         "name": "Kenji Mori",
         "role": "Designer",
+        "country": "Japan",
         "tags": ["UX", "product", "Figma"],
         "bio": "Product designer focused on human-centred interfaces for mobile apps.",
         "github": null,
@@ -55,6 +59,7 @@
       "properties": {
         "name": "Lena Braun",
         "role": "Software Engineer",
+        "country": "Germany",
         "tags": ["backend", "Rust", "distributed-systems"],
         "bio": "Remote backend engineer building reliable infrastructure from Kyoto.",
         "github": null,
@@ -67,6 +72,7 @@
       "properties": {
         "name": "Hiroshi Nakamura",
         "role": "Founder",
+        "country": "Japan",
         "tags": ["startup", "fintech", "product"],
         "bio": "Early-stage fintech founder iterating on a personal finance app.",
         "github": null,
@@ -79,6 +85,7 @@
       "properties": {
         "name": "Priya Sharma",
         "role": "Software Engineer",
+        "country": "India",
         "tags": ["AI", "Python", "MLOps"],
         "bio": "ML engineer working on applied AI products and developer tooling.",
         "github": null,
@@ -91,6 +98,7 @@
       "properties": {
         "name": "Tom Nguyen",
         "role": "Designer",
+        "country": "Vietnam",
         "tags": ["creative-coding", "generative-art", "p5.js"],
         "bio": "Creative technologist blending design and code for interactive experiences.",
         "github": null,
@@ -103,6 +111,7 @@
       "properties": {
         "name": "Aiko Fujita",
         "role": "Researcher",
+        "country": "Japan",
         "tags": ["HCI", "robotics", "academia"],
         "bio": "Postdoc at NAIST working on human-robot interaction interfaces.",
         "github": null,
@@ -115,6 +124,7 @@
       "properties": {
         "name": "Marco Bianchi",
         "role": "Software Engineer",
+        "country": "Italy",
         "tags": ["web", "Go", "DevOps"],
         "bio": "Full-stack engineer and remote worker who moved to Kyoto for the lifestyle.",
         "github": null,
