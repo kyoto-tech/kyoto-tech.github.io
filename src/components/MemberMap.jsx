@@ -22,8 +22,6 @@ import Map from "./Map.jsx";
 const ROLE_COLOURS = {
   "Software Engineer": "#3B82F6",
   Designer: "#8B5CF6",
-  Researcher: "#10B981",
-  Founder: "#F59E0B",
   Other: "#6B7280",
 };
 
@@ -110,8 +108,11 @@ export default function MemberMap({
   // Legend entries from the role colour map (stable reference)
   const legendEntries = useMemo(
     () =>
-      Object.entries(ROLE_COLOURS).map(([label, colour]) => ({ label, colour })),
-    [],
+      Object.entries(ROLE_COLOURS).map(([key, colour]) => ({
+        label: labels.roles?.[key] ?? key,
+        colour,
+      })),
+    [labels.roles],
   );
 
   // Callbacks for <Map> - Map stores them in refs so stale closure is not an issue
@@ -155,6 +156,7 @@ export default function MemberMap({
           {allRoles.map((role) => {
             const active = activeRoles.has(role);
             const colour = roleColour(role);
+            const roleLabel = labels.roles?.[role] ?? role;
             return (
               <button
                 key={role}
@@ -174,7 +176,7 @@ export default function MemberMap({
                   className="inline-block h-2 w-2 rounded-full"
                   style={{ background: active ? "#fff" : colour }}
                 />
-                {role}
+                {roleLabel}
               </button>
             );
           })}

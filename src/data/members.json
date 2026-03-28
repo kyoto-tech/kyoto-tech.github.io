@@ -6,7 +6,7 @@
       "geometry": { "type": "Point", "coordinates": [135.7625, 34.9953] },
       "properties": {
         "name": "Ash",
-        "role": "Founder",
+        "role": "Other",
         "country": "United States",
         "tags": ["community", "organizer"],
         "bio": "Organiser of Kyoto Tech Meetup. Building community in Kyoto.",
@@ -32,7 +32,7 @@
       "geometry": { "type": "Point", "coordinates": [135.7588, 34.9858] },
       "properties": {
         "name": "Sofia Rossi",
-        "role": "Researcher",
+        "role": "Other",
         "country": "Italy",
         "tags": ["AI", "NLP", "academia"],
         "bio": "PhD candidate at Kyoto University researching large language models.",
@@ -71,7 +71,7 @@
       "geometry": { "type": "Point", "coordinates": [135.7698, 35.0080] },
       "properties": {
         "name": "Hiroshi Nakamura",
-        "role": "Founder",
+        "role": "Other",
         "country": "Japan",
         "tags": ["startup", "fintech", "product"],
         "bio": "Early-stage fintech founder iterating on a personal finance app.",
@@ -110,7 +110,7 @@
       "geometry": { "type": "Point", "coordinates": [135.7540, 35.0020] },
       "properties": {
         "name": "Aiko Fujita",
-        "role": "Researcher",
+        "role": "Other",
         "country": "Japan",
         "tags": ["HCI", "robotics", "academia"],
         "bio": "Postdoc at NAIST working on human-robot interaction interfaces.",
