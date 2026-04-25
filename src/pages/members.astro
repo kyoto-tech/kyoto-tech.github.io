@@ -1,0 +1,135 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import MemberMap from "../components/MemberMap.jsx";
+import { useTranslations } from "../i18n/utils";
+import membersGeoJSON from "../data/members.json";
+import { FaUsers, FaCalendarAlt, FaGlobe } from "react-icons/fa";
+
+const { lang = "en" } = Astro.props;
+const t = useTranslations(lang);
+
+// ── Stats derived from members.json ──────────────────────────────────────────
+const memberCount = membersGeoJSON.features.length;
+const countryCount = new Set(
+  membersGeoJSON.features
+    .map((f) => (f.properties as any)?.country)
+    .filter(Boolean),
+).size;
+
+// ── Hosted-events count: reads GroupEventConnection.totalCount for PAST events
+// from the Meetup group home page Apollo state — single request, authoritative.
+async function fetchHostedEventsCount(): Promise<number> {
+  const GROUP_URL = "https://www.meetup.com/kyoto-tech-meetup/";
+  const headers = {
+    "cache-control": "no-cache",
+    pragma: "no-cache",
+    "accept-language": "en-US,en;q=0.9",
+    "user-agent":
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  };
+
+  try {
+    const html = await fetch(GROUP_URL, { headers }).then((r) => r.text());
+
+    const match = html.match(
+      /<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/,
+    );
+    if (!match?.[1]) return 0;
+
+    const data = JSON.parse(match[1]);
+    const apolloState = data?.props?.pageProps?.__APOLLO_STATE__;
+    if (!apolloState) return 0;
+
+    // The Apollo state stores event connections as keyed fields on the Group
+    // object, e.g. `events({"filter":{"status":["PAST"]},"first":4,...})`.
+    // Each has a `totalCount` that Meetup itself uses — much more reliable
+    // than counting raw Event: cache keys (which are paginated / incomplete).
+    for (const [key, value] of Object.entries(apolloState)) {
+      if (!key.startsWith("Group:")) continue;
+      for (const [field, conn] of Object.entries(
+        value as Record<string, unknown>,
+      )) {
+        if (
+          field.startsWith("events(") &&
+          field.includes('"PAST"') &&
+          !field.includes('"ACTIVE"') && // exclude mixed-status queries
+          !field.includes('"CANCELLED"') &&
+          typeof (conn as any)?.totalCount === "number"
+        ) {
+          return (conn as any).totalCount as number;
+        }
+      }
+    }
+
+    return 0;
+  } catch {
+    return 0;
+  }
+}
+
+const hostedEventsCount = await fetchHostedEventsCount();
+
+const mapLabels = {
+  filterAll: t("members.map.filterAll"),
+  legendTitle: t("members.map.legendTitle"),
+  website: t("members.map.website"),
+  unknownMember: t("members.map.unknownMember"),
+  roles: {
+    "Software Engineer": t("members.map.role.softwareEngineer"),
+    "Designer": t("members.map.role.designer"),
+    "Other": t("members.map.role.other"),
+  },
+};
+---
+
+<Layout>
+  <Header lang={lang} />
+
+  <main class="mx-auto max-w-5xl px-6 pb-20 pt-28 md:px-12">
+    <!-- Page heading -->
+    <header class="mb-10">
+      <p class="mb-2 text-sm font-semibold uppercase tracking-widest text-slate-400">
+        {t("members.map.title")}
+      </p>
+      <h1 class="mb-3 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+        {t("members.title")}
+      </h1>
+      <p class="max-w-2xl text-slate-600">{t("members.subtitle")}</p>
+    </header>
+
+    <!-- Interactive member map (all features enabled) -->
+    <MemberMap
+      client:load
+      geojson={membersGeoJSON}
+      features={["clusters", "roleFilter", "fitBounds", "legend"]}
+      lang={lang}
+      labels={mapLabels}
+    />
+
+    <!-- Community stats -->
+    <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <!-- Members -->
+      <div class="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-8 shadow-sm text-center">
+        <FaUsers className="text-3xl text-(--accent)" aria-hidden="true" />
+        <span class="text-4xl font-bold tracking-tight text-slate-900">{memberCount}</span>
+        <span class="text-sm font-semibold uppercase tracking-widest text-slate-400">{t("members.stats.members")}</span>
+      </div>
+      <!-- Events hosted -->
+      <div class="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-8 shadow-sm text-center">
+        <FaCalendarAlt className="text-3xl text-(--accent)" aria-hidden="true" />
+        <span class="text-4xl font-bold tracking-tight text-slate-900">{hostedEventsCount || "—"}</span>
+        <span class="text-sm font-semibold uppercase tracking-widest text-slate-400">{t("members.stats.events")}</span>
+      </div>
+      <!-- Countries -->
+      <div class="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white px-6 py-8 shadow-sm text-center">
+        <FaGlobe className="text-3xl text-(--accent)" aria-hidden="true" />
+        <span class="text-4xl font-bold tracking-tight text-slate-900">{countryCount}</span>
+        <span class="text-sm font-semibold uppercase tracking-widest text-slate-400">{t("members.stats.countries")}</span>
+      </div>
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Layout>

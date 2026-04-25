@@ -1,0 +1,136 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7625, 34.9953] },
+      "properties": {
+        "name": "Ash",
+        "role": "Other",
+        "country": "United States",
+        "tags": ["community", "organizer"],
+        "bio": "Organiser of Kyoto Tech Meetup. Building community in Kyoto.",
+        "github": "ashmortar",
+        "website": "https://kyototechmeetup.com"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7760, 35.0116] },
+      "properties": {
+        "name": "Yuki Tanaka",
+        "role": "Software Engineer",
+        "country": "Japan",
+        "tags": ["web", "TypeScript", "React"],
+        "bio": "Frontend engineer exploring modern web tooling and open-source.",
+        "github": null,
+        "website": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7588, 34.9858] },
+      "properties": {
+        "name": "Sofia Rossi",
+        "role": "Other",
+        "country": "Italy",
+        "tags": ["AI", "NLP", "academia"],
+        "bio": "PhD candidate at Kyoto University researching large language models.",
+        "github": null,
+        "website": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7811, 35.0262] },
+      "properties": {
+        "name": "Kenji Mori",
+        "role": "Designer",
+        "country": "Japan",
+        "tags": ["UX", "product", "Figma"],
+        "bio": "Product designer focused on human-centred interfaces for mobile apps.",
+        "github": null,
+        "website": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7484, 35.0142] },
+      "properties": {
+        "name": "Lena Braun",
+        "role": "Software Engineer",
+        "country": "Germany",
+        "tags": ["backend", "Rust", "distributed-systems"],
+        "bio": "Remote backend engineer building reliable infrastructure from Kyoto.",
+        "github": null,
+        "website": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7698, 35.0080] },
+      "properties": {
+        "name": "Hiroshi Nakamura",
+        "role": "Other",
+        "country": "Japan",
+        "tags": ["startup", "fintech", "product"],
+        "bio": "Early-stage fintech founder iterating on a personal finance app.",
+        "github": null,
+        "website": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7650, 35.0200] },
+      "properties": {
+        "name": "Priya Sharma",
+        "role": "Software Engineer",
+        "country": "India",
+        "tags": ["AI", "Python", "MLOps"],
+        "bio": "ML engineer working on applied AI products and developer tooling.",
+        "github": null,
+        "website": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7720, 34.9950] },
+      "properties": {
+        "name": "Tom Nguyen",
+        "role": "Designer",
+        "country": "Vietnam",
+        "tags": ["creative-coding", "generative-art", "p5.js"],
+        "bio": "Creative technologist blending design and code for interactive experiences.",
+        "github": null,
+        "website": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7540, 35.0020] },
+      "properties": {
+        "name": "Aiko Fujita",
+        "role": "Other",
+        "country": "Japan",
+        "tags": ["HCI", "robotics", "academia"],
+        "bio": "Postdoc at NAIST working on human-robot interaction interfaces.",
+        "github": null,
+        "website": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [135.7785, 35.0037] },
+      "properties": {
+        "name": "Marco Bianchi",
+        "role": "Software Engineer",
+        "country": "Italy",
+        "tags": ["web", "Go", "DevOps"],
+        "bio": "Full-stack engineer and remote worker who moved to Kyoto for the lifestyle.",
+        "github": null,
+        "website": null
+      }
+    }
+  ]
+}
+
