@@ -1,8 +1,17 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import Parser from "rss-parser";
+import {
+  fetchFeedItems,
+  fetchJson,
+  fetchWithTimeout,
+  loadMemberFeeds,
+} from "./lib/community-feed-reader.mjs";
+import {
+  buildDiscordPayload,
+  buildMessage,
+  defaultState,
+  parseState,
+  upsertStateRecord,
+} from "./lib/community-feed-notifier-state.mjs";
 
-const MEMBER_FEEDS_PATH = path.resolve("src/data/member-feeds.json");
 const GITHUB_API_ROOT = "https://api.github.com";
 const DEFAULT_STATE_FILENAME = "community-feed-state.json";
 const DEFAULT_MAX_ITEMS_PER_FEED = Number(
@@ -14,12 +23,6 @@ const REQUEST_TIMEOUT_MS = Number(
 );
 const USER_AGENT =
   "Kyoto Tech Meetup community notifier (+https://kyototechmeetup.com)";
-const YOUTUBE_HOSTNAMES = new Set([
-  "youtube.com",
-  "www.youtube.com",
-  "m.youtube.com",
-]);
-const YOUTUBE_CHANNEL_ID_PATTERN = /^UC[\w-]{22}$/;
 
 function parseArgs(argv) {
   const args = {
@@ -58,204 +61,6 @@ function getStateFilename() {
   return process.env.COMMUNITY_FEED_STATE_GIST_FILENAME || DEFAULT_STATE_FILENAME;
 }
 
-async function loadMemberFeeds() {
-  const content = await fs.readFile(MEMBER_FEEDS_PATH, "utf8");
-  const parsed = JSON.parse(content);
-  if (!Array.isArray(parsed)) {
-    throw new Error(`Expected an array in ${MEMBER_FEEDS_PATH}`);
-  }
-
-  return parsed.map((item) => {
-    if (!item?.name || !item?.feedUrl || !item?.siteUrl) {
-      throw new Error(
-        `Missing required fields in member feed entry: ${JSON.stringify(item)}`,
-      );
-    }
-
-    return {
-      name: String(item.name),
-      feedUrl: String(item.feedUrl),
-      siteUrl: String(item.siteUrl),
-    };
-  });
-}
-
-function parseDate(rawItem) {
-  const raw =
-    rawItem.isoDate ||
-    rawItem.pubDate ||
-    rawItem.published ||
-    rawItem.updated ||
-    null;
-
-  if (!raw) return null;
-  const date = new Date(raw);
-  return Number.isNaN(date.valueOf()) ? null : date;
-}
-
-function stripHtml(value) {
-  if (!value || typeof value !== "string") return "";
-  return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function truncate(value, max = 280) {
-  if (!value) return "";
-  return value.length > max ? `${value.slice(0, max - 3).trimEnd()}...` : value;
-}
-
-function fetchWithTimeout(url, options = {}, timeoutMs = REQUEST_TIMEOUT_MS) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-  return fetch(url, {
-    ...options,
-    signal: controller.signal,
-    headers: {
-      "user-agent": USER_AGENT,
-      ...(options.headers || {}),
-    },
-  }).finally(() => {
-    clearTimeout(timeout);
-  });
-}
-
-async function fetchJson(url, options = {}, timeoutMs = REQUEST_TIMEOUT_MS) {
-  const response = await fetchWithTimeout(url, options, timeoutMs);
-  if (!response.ok) {
-    throw new Error(`Request failed for ${url}: HTTP ${response.status}`);
-  }
-  return response.json();
-}
-
-async function fetchText(url, options = {}, timeoutMs = REQUEST_TIMEOUT_MS) {
-  const response = await fetchWithTimeout(url, options, timeoutMs);
-  if (!response.ok) {
-    throw new Error(`Request failed for ${url}: HTTP ${response.status}`);
-  }
-  return response.text();
-}
-
-function parseYoutubeChannelId(html) {
-  if (!html) return null;
-
-  const patterns = [
-    /"externalId":"(UC[\w-]{22})"/,
-    /"channelId":"(UC[\w-]{22})"/,
-    /youtube\.com\/channel\/(UC[\w-]{22})/,
-  ];
-
-  for (const pattern of patterns) {
-    const match = html.match(pattern);
-    if (match?.[1] && YOUTUBE_CHANNEL_ID_PATTERN.test(match[1])) {
-      return match[1];
-    }
-  }
-
-  return null;
-}
-
-async function resolveFeedUrl(feedUrl) {
-  let parsed;
-
-  try {
-    parsed = new URL(feedUrl);
-  } catch {
-    return feedUrl;
-  }
-
-  if (!YOUTUBE_HOSTNAMES.has(parsed.hostname)) return feedUrl;
-
-  const handleMatch = parsed.pathname.match(/^\/@([A-Za-z0-9._-]+)\/?$/);
-  if (!handleMatch) return feedUrl;
-
-  const channelPageHtml = await fetchText(feedUrl, {}, FEED_TIMEOUT_MS);
-  const channelId = parseYoutubeChannelId(channelPageHtml);
-  if (!channelId) {
-    throw new Error(`Could not resolve YouTube channel id from handle URL: ${feedUrl}`);
-  }
-
-  return `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-}
-
-function normalizeItem(rawItem, source) {
-  const publishedAt = parseDate(rawItem);
-  if (!publishedAt) return null;
-
-  const rawId =
-    rawItem.guid ||
-    rawItem.id ||
-    rawItem.link ||
-    `${rawItem.title || "untitled"}#${publishedAt.toISOString()}`;
-
-  const summary =
-    rawItem.contentSnippet ||
-    stripHtml(rawItem["content:encoded"]) ||
-    stripHtml(rawItem.content) ||
-    stripHtml(rawItem.summary) ||
-    stripHtml(rawItem.description) ||
-    "";
-
-  return {
-    id: `${source.feedUrl}::${String(rawId)}`,
-    sourceItemId: String(rawId),
-    title: rawItem.title || "Untitled",
-    link: rawItem.link || source.siteUrl,
-    publishedAt: publishedAt.toISOString(),
-    summary: truncate(summary),
-    source,
-  };
-}
-
-async function fetchFeedItems(source, parser, maxItemsPerFeed) {
-  const resolvedFeedUrl = await resolveFeedUrl(source.feedUrl);
-  const xml = await fetchText(resolvedFeedUrl, {}, FEED_TIMEOUT_MS);
-  const parsed = await parser.parseString(xml);
-  const rawItems = parsed?.items || [];
-  const seenIds = new Set();
-
-  return rawItems
-    .map((rawItem) => normalizeItem(rawItem, source))
-    .filter(Boolean)
-    .filter((item) => {
-      if (seenIds.has(item.id)) return false;
-      seenIds.add(item.id);
-      return true;
-    })
-    .sort(
-      (a, b) =>
-        new Date(b.publishedAt).valueOf() - new Date(a.publishedAt).valueOf(),
-    )
-    .slice(0, Math.max(1, maxItemsPerFeed));
-}
-
-function defaultState() {
-  return {
-    version: 1,
-    initializedAt: null,
-    updatedAt: null,
-    items: {},
-  };
-}
-
-function parseState(content) {
-  const parsed = JSON.parse(content);
-
-  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-    return defaultState();
-  }
-
-  return {
-    version: Number(parsed.version) || 1,
-    initializedAt:
-      typeof parsed.initializedAt === "string" ? parsed.initializedAt : null,
-    updatedAt: typeof parsed.updatedAt === "string" ? parsed.updatedAt : null,
-    items:
-      parsed.items && typeof parsed.items === "object" && !Array.isArray(parsed.items)
-        ? parsed.items
-        : {},
-  };
-}
-
 async function readStateFromGist(gistId, token) {
   const headers = {
     Accept: "application/vnd.github+json",
@@ -269,6 +74,7 @@ async function readStateFromGist(gistId, token) {
     `${GITHUB_API_ROOT}/gists/${gistId}`,
     { headers },
     REQUEST_TIMEOUT_MS,
+    USER_AGENT,
   );
   const stateFile = gist?.files?.[getStateFilename()];
 
@@ -304,6 +110,7 @@ async function writeStateToGist(gistId, token, state) {
       body: JSON.stringify(payload),
     },
     REQUEST_TIMEOUT_MS,
+    USER_AGENT,
   );
 
   if (!response.ok) {
@@ -312,59 +119,6 @@ async function writeStateToGist(gistId, token, state) {
       `Failed to update gist state: HTTP ${response.status} ${body}`.trim(),
     );
   }
-}
-
-function upsertStateRecord(state, item, seenAt, options = {}) {
-  const existing = state.items[item.id];
-  const record = {
-    id: item.id,
-    sourceItemId: item.sourceItemId,
-    title: item.title,
-    link: item.link,
-    publishedAt: item.publishedAt,
-    summary: item.summary || null,
-    source: item.source,
-    firstSeenAt: existing?.firstSeenAt || seenAt,
-    lastSeenAt: seenAt,
-    suppressed:
-      typeof existing?.suppressed === "boolean"
-        ? existing.suppressed
-        : Boolean(options.suppressed),
-    channels:
-      existing?.channels && typeof existing.channels === "object"
-        ? existing.channels
-        : {},
-  };
-
-  state.items[item.id] = record;
-  return record;
-}
-
-function buildMessage(item) {
-  return [`New community post from ${item.source.name}`, item.title, item.link].join(
-    "\n",
-  );
-}
-
-function buildDiscordPayload(item) {
-  return {
-    content: `New community post from **${item.source.name}**`,
-    embeds: [
-      {
-        title: item.title,
-        url: item.link,
-        description: item.summary || undefined,
-        timestamp: item.publishedAt,
-        author: {
-          name: item.source.name,
-          url: item.source.siteUrl,
-        },
-        footer: {
-          text: item.source.siteUrl,
-        },
-      },
-    ],
-  };
 }
 
 async function sendDiscordNotification(item) {
@@ -379,6 +133,7 @@ async function sendDiscordNotification(item) {
       body: JSON.stringify(buildDiscordPayload(item)),
     },
     REQUEST_TIMEOUT_MS,
+    USER_AGENT,
   );
 
   if (!response.ok) {
@@ -408,6 +163,7 @@ async function sendGenericWebhookNotification(item) {
       }),
     },
     REQUEST_TIMEOUT_MS,
+    USER_AGENT,
   );
 
   if (!response.ok) {
@@ -522,13 +278,16 @@ async function main() {
   }
 
   const memberFeeds = await loadMemberFeeds();
-  const parser = new Parser();
   const fetchFailures = [];
   const allItems = [];
 
   for (const source of memberFeeds) {
     try {
-      const items = await fetchFeedItems(source, parser, args.maxItemsPerFeed);
+      const items = await fetchFeedItems(source, {
+        feedTimeoutMs: FEED_TIMEOUT_MS,
+        maxItemsPerFeed: args.maxItemsPerFeed,
+        userAgent: USER_AGENT,
+      });
       allItems.push(...items);
     } catch (error) {
       fetchFailures.push({

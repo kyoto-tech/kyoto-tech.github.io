@@ -2,6 +2,16 @@ import fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import Parser from "rss-parser";
+import {
+  fetchRawFeedItems,
+  fetchText,
+  isYoutubeUrl,
+  loadMemberFeeds,
+  normalizeAndLimitFeedItems,
+  parseDate,
+  stripHtml,
+  truncate,
+} from "./lib/community-feed-reader.mjs";
 
 const DEFAULT_OUTPUT_PATH = path.resolve(
   process.env.COMPOSITE_FEED_OUTPUT || "src/data/composite-feed.json",
@@ -15,13 +25,6 @@ const ITEM_PAGE_TIMEOUT_MS = Number(
 );
 const USER_AGENT =
   "Kyoto Tech Meetup feed aggregator (+https://kyototechmeetup.com)";
-const MEMBER_FEEDS_PATH = path.resolve("src/data/member-feeds.json");
-const YOUTUBE_HOSTNAMES = new Set([
-  "youtube.com",
-  "www.youtube.com",
-  "m.youtube.com",
-]);
-const YOUTUBE_CHANNEL_ID_PATTERN = /^UC[\w-]{22}$/;
 
 function parseArgs(argv) {
   const args = {
@@ -44,58 +47,6 @@ function parseArgs(argv) {
   }
 
   return args;
-}
-
-async function loadMemberFeeds() {
-  const content = await fs.readFile(MEMBER_FEEDS_PATH, "utf8");
-  const parsed = JSON.parse(content);
-  if (!Array.isArray(parsed)) {
-    throw new Error(`Expected an array in ${MEMBER_FEEDS_PATH}`);
-  }
-  return parsed.map((item) => {
-    if (!item?.name || !item?.feedUrl || !item?.siteUrl) {
-      throw new Error(
-        `Missing required fields in member feed entry: ${JSON.stringify(item)}`,
-      );
-    }
-    return {
-      name: String(item.name),
-      feedUrl: String(item.feedUrl),
-      siteUrl: String(item.siteUrl),
-    };
-  });
-}
-
-function parseDate(rawItem) {
-  const raw =
-    rawItem.isoDate ||
-    rawItem.pubDate ||
-    rawItem.published ||
-    rawItem.updated ||
-    null;
-  if (!raw) return null;
-  const date = new Date(raw);
-  return Number.isNaN(date.valueOf()) ? null : date;
-}
-
-function stripHtml(value) {
-  if (!value || typeof value !== "string") return "";
-  return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function truncate(value, max = 320) {
-  if (!value) return "";
-  return value.length > max ? `${value.slice(0, max - 3).trimEnd()}...` : value;
-}
-
-function isYoutubeUrl(value) {
-  if (!value || typeof value !== "string") return false;
-  try {
-    const parsed = new URL(value);
-    return YOUTUBE_HOSTNAMES.has(parsed.hostname) || parsed.hostname === "youtu.be";
-  } catch {
-    return false;
-  }
 }
 
 function extractMediaUrl(value) {
@@ -265,7 +216,7 @@ function extractYoutubeVideoId(rawItem) {
       const fromPath = normalizeYoutubeVideoId(link.pathname.replace(/^\//, ""));
       if (fromPath) return fromPath;
     }
-    if (YOUTUBE_HOSTNAMES.has(link.hostname) || link.hostname === "music.youtube.com") {
+    if (isYoutubeUrl(link.href) || link.hostname === "music.youtube.com") {
       const fromQuery = normalizeYoutubeVideoId(link.searchParams.get("v"));
       if (fromQuery) return fromQuery;
 
@@ -361,29 +312,6 @@ function normalizeItem(rawItem, source) {
   };
 }
 
-async function fetchWithTimeout(url, timeoutMs) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    let res;
-    try {
-      res = await fetch(url, {
-        signal: controller.signal,
-        headers: { "user-agent": USER_AGENT },
-      });
-    } catch (error) {
-      throw new Error(`Request failed for ${url}: ${error?.message || String(error)}`);
-    }
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status} ${res.statusText}`);
-    }
-    return await res.text();
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
 async function enrichItemWithLinkedPageImage(item) {
   if (item?.image || typeof item?.link !== "string") return item;
   if (!item.link.startsWith("http://") && !item.link.startsWith("https://")) {
@@ -391,7 +319,7 @@ async function enrichItemWithLinkedPageImage(item) {
   }
 
   try {
-    const html = await fetchWithTimeout(item.link, ITEM_PAGE_TIMEOUT_MS);
+    const html = await fetchText(item.link, {}, ITEM_PAGE_TIMEOUT_MS, USER_AGENT);
     const image = extractPageImage(html, item.link);
     if (!image) return item;
     return {
@@ -401,51 +329,6 @@ async function enrichItemWithLinkedPageImage(item) {
   } catch {
     return item;
   }
-}
-
-function parseYoutubeChannelId(html) {
-  if (!html) return null;
-  const patterns = [
-    /"externalId":"(UC[\w-]{22})"/,
-    /"channelId":"(UC[\w-]{22})"/,
-    /youtube\.com\/channel\/(UC[\w-]{22})/,
-  ];
-  for (const pattern of patterns) {
-    const match = html.match(pattern);
-    if (match?.[1] && YOUTUBE_CHANNEL_ID_PATTERN.test(match[1])) {
-      return match[1];
-    }
-  }
-  return null;
-}
-
-async function resolveFeedUrl(feedUrl) {
-  let parsed;
-  try {
-    parsed = new URL(feedUrl);
-  } catch {
-    return feedUrl;
-  }
-
-  if (!YOUTUBE_HOSTNAMES.has(parsed.hostname)) return feedUrl;
-
-  const handleMatch = parsed.pathname.match(/^\/@([A-Za-z0-9._-]+)\/?$/);
-  if (!handleMatch) return feedUrl;
-
-  const channelPageHtml = await fetchWithTimeout(feedUrl, FEED_TIMEOUT_MS);
-  const channelId = parseYoutubeChannelId(channelPageHtml);
-  if (!channelId) {
-    throw new Error(`Could not resolve YouTube channel id from handle URL: ${feedUrl}`);
-  }
-
-  return `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-}
-
-async function fetchFeed(source, parser) {
-  const resolvedFeedUrl = await resolveFeedUrl(source.feedUrl);
-  const xml = await fetchWithTimeout(resolvedFeedUrl, FEED_TIMEOUT_MS);
-  const parsed = await parser.parseString(xml);
-  return parsed?.items || [];
 }
 
 async function writeOutput(filePath, payload) {
@@ -474,22 +357,15 @@ async function main() {
 
   for (const source of memberFeeds) {
     try {
-      const rawItems = await fetchFeed(source, parser);
-      const seenIds = new Set();
-      const normalizedItems = rawItems
-        .map((rawItem) => normalizeItem(rawItem, source))
-        .filter(Boolean)
-        .filter((item) => {
-          if (seenIds.has(item.id)) return false;
-          seenIds.add(item.id);
-          return true;
-        })
-        .sort(
-          (a, b) =>
-            new Date(b.publishedAt).valueOf() -
-            new Date(a.publishedAt).valueOf(),
-        )
-        .slice(0, Math.max(1, args.itemsPerFeed));
+      const rawItems = await fetchRawFeedItems(source, {
+        parser,
+        feedTimeoutMs: FEED_TIMEOUT_MS,
+        userAgent: USER_AGENT,
+      });
+      const normalizedItems = normalizeAndLimitFeedItems(rawItems, source, {
+        maxItemsPerFeed: args.itemsPerFeed,
+        normalizeItem,
+      });
 
       const itemsWithLinkedPageImages = await Promise.all(
         normalizedItems.map((item) => enrichItemWithLinkedPageImage(item)),
