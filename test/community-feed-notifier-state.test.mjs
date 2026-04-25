@@ -3,19 +3,21 @@ import {
   buildDiscordPayload,
   buildMessage,
   defaultState,
+  migrateStateItemIds,
   parseState,
   upsertStateRecord,
 } from "../scripts/lib/community-feed-notifier-state.mjs";
 
 function sampleItem(overrides = {}) {
   return {
-    id: "https://example.com/feed.xml::post-1",
+    id: "example-author::post-1",
     sourceItemId: "post-1",
     title: "Post One",
     link: "https://example.com/post-1",
     publishedAt: "2026-04-25T05:35:48.687Z",
     summary: "A useful post",
     source: {
+      id: "example-author",
       name: "Example Author",
       feedUrl: "https://example.com/feed.xml",
       siteUrl: "https://example.com/",
@@ -26,7 +28,7 @@ function sampleItem(overrides = {}) {
 
 test("defaultState creates an empty notifier state", () => {
   expect(defaultState()).toEqual({
-    version: 1,
+    version: 2,
     initializedAt: null,
     updatedAt: null,
     items: {},
@@ -62,7 +64,7 @@ test("upsertStateRecord inserts a new item with suppression and channel defaults
   );
 
   expect(record).toMatchObject({
-    id: "https://example.com/feed.xml::post-1",
+    id: "example-author::post-1",
     sourceItemId: "post-1",
     firstSeenAt: "2026-04-25T06:00:00.000Z",
     lastSeenAt: "2026-04-25T06:00:00.000Z",
@@ -103,6 +105,90 @@ test("upsertStateRecord preserves firstSeenAt, suppression, and delivery channel
   expect(record.suppressed).toBe(false);
   expect(record.channels.discord.deliveredAt).toBe("2026-04-24T00:01:00.000Z");
   expect(record.title).toBe("Updated title");
+});
+
+test("upsertStateRecord migrates a legacy item key while preserving history", () => {
+  const item = sampleItem();
+  const legacyId = "https://example.com/feed.xml::post-1";
+  const state = {
+    ...defaultState(),
+    items: {
+      [legacyId]: {
+        ...item,
+        id: legacyId,
+        firstSeenAt: "2026-04-24T00:00:00.000Z",
+        lastSeenAt: "2026-04-24T00:00:00.000Z",
+        suppressed: true,
+        channels: {
+          discord: {
+            deliveredAt: "2026-04-24T00:01:00.000Z",
+          },
+        },
+      },
+    },
+  };
+
+  const record = upsertStateRecord(
+    state,
+    item,
+    "2026-04-25T06:00:00.000Z",
+  );
+
+  expect(record.id).toBe("example-author::post-1");
+  expect(record.firstSeenAt).toBe("2026-04-24T00:00:00.000Z");
+  expect(record.suppressed).toBe(true);
+  expect(record.channels.discord.deliveredAt).toBe("2026-04-24T00:01:00.000Z");
+  expect(state.items[legacyId]).toBeUndefined();
+  expect(state.items[item.id]).toBe(record);
+});
+
+test("migrateStateItemIds converts legacy gist keys to source-stable keys", () => {
+  const legacyId = "https://example.com/feed.xml::post-1";
+  const state = {
+    version: 1,
+    initializedAt: "2026-04-24T00:00:00.000Z",
+    updatedAt: "2026-04-24T00:00:00.000Z",
+    items: {
+      [legacyId]: {
+        ...sampleItem({ id: legacyId }),
+        firstSeenAt: "2026-04-24T00:00:00.000Z",
+        lastSeenAt: "2026-04-24T00:00:00.000Z",
+        suppressed: true,
+        channels: {
+          discord: {
+            deliveredAt: "2026-04-24T00:01:00.000Z",
+          },
+        },
+      },
+    },
+  };
+
+  const result = migrateStateItemIds(state, [
+    {
+      id: "example-author",
+      name: "Example Author",
+      feedUrl: "https://example.com/feed.xml",
+      siteUrl: "https://example.com/",
+    },
+  ]);
+
+  expect(result).toEqual({
+    changed: true,
+    migratedCount: 1,
+  });
+  expect(state.version).toBe(2);
+  expect(state.items[legacyId]).toBeUndefined();
+  expect(state.items["example-author::post-1"]).toMatchObject({
+    id: "example-author::post-1",
+    firstSeenAt: "2026-04-24T00:00:00.000Z",
+    lastSeenAt: "2026-04-24T00:00:00.000Z",
+    suppressed: true,
+    channels: {
+      discord: {
+        deliveredAt: "2026-04-24T00:01:00.000Z",
+      },
+    },
+  });
 });
 
 test("buildMessage formats a plain text destination message", () => {

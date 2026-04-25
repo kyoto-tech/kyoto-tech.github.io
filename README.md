@@ -88,6 +88,7 @@ public/          # Files served as-is (favicon, images)
 ## Community Feed Notifier
 
 - The notifier reads approved sources from `src/data/member-feeds.json`.
+- Each feed source has a stable `id`; do not change it casually because notifier state keys are derived from it.
 - State lives in the public gist `f95dd7597eec170d738d905e3666bfc6` as `community-feed-state.json`.
 - On the first non-dry run, the notifier seeds the current backlog into the gist without posting. Use the workflow dispatch input `allow_initial_posts` if you intentionally want to announce the backlog.
 - For a lightweight demo, use the workflow dispatch input `demo_mode`. It posts at most 3 items and seeds the rest of the current backlog so later scheduled runs do not replay the full backlog.

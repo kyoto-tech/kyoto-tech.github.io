@@ -372,13 +372,17 @@ async function main() {
       );
 
       feedsWithItems.push({
-        ...source,
+        name: source.name,
+        siteUrl: source.siteUrl,
+        feedUrl: source.feedUrl,
         items: itemsWithLinkedPageImages,
       });
     } catch (error) {
       failures.push({ source: source.name, error: error?.message || String(error) });
       feedsWithItems.push({
-        ...source,
+        name: source.name,
+        siteUrl: source.siteUrl,
+        feedUrl: source.feedUrl,
         items: [],
         error: error?.message || String(error),
       });
