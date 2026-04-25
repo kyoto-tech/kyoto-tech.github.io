@@ -68,4 +68,7 @@ jobs:
           if [ "$WORKFLOW_ALLOW_INITIAL_POSTS" = "true" ]; then
             args+=("--allow-initial-posts")
           fi
+          if [ -z "$DISCORD_WEBHOOK_URL" ] && [ -z "$COMMUNITY_FEED_GENERIC_WEBHOOK_URL" ]; then
+            args+=("--skip-without-destinations")
+          fi
           node scripts/community-feed-notifier.mjs "${args[@]}"

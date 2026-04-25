@@ -94,6 +94,7 @@ public/          # Files served as-is (favicon, images)
 - Required secret: `GH_GIST_TOKEN` with the `gist` scope.
 - Optional secret: `DISCORD_WEBHOOK_URL` for direct Discord posting.
 - Optional secret: `COMMUNITY_FEED_GENERIC_WEBHOOK_URL` for forwarding each new item as JSON to your own bot/service for X, LINE, or other destinations.
+- Scheduled runs skip notification work when no destination webhook secret is configured.
 
 ## Interacting with the community
 

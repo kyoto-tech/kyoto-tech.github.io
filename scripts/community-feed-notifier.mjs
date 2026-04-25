@@ -27,6 +27,7 @@ function parseArgs(argv) {
     dryRun: false,
     maxDeliveries: null,
     maxItemsPerFeed: DEFAULT_MAX_ITEMS_PER_FEED,
+    skipWithoutDestinations: false,
     suppressRemainingAfterLimit: false,
   };
 
@@ -43,6 +44,8 @@ function parseArgs(argv) {
     } else if (arg === "--max-items-per-feed" && argv[i + 1]) {
       args.maxItemsPerFeed = Number(argv[i + 1]);
       i += 1;
+    } else if (arg === "--skip-without-destinations") {
+      args.skipWithoutDestinations = true;
     } else if (arg === "--suppress-remaining-after-limit") {
       args.suppressRemainingAfterLimit = true;
     }
@@ -500,6 +503,13 @@ async function main() {
   const gistId = process.env.COMMUNITY_FEED_STATE_GIST_ID || "";
   const gistToken = process.env.GH_GIST_TOKEN || "";
   const destinations = getDestinations();
+
+  if (!destinations.length && !args.dryRun && args.skipWithoutDestinations) {
+    console.log(
+      "[notifier] No destinations configured; skipping notification run.",
+    );
+    return;
+  }
 
   if (!destinations.length && !args.dryRun) {
     throw new Error(
