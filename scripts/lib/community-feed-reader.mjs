@@ -22,13 +22,14 @@ export async function loadMemberFeeds(filePath = DEFAULT_MEMBER_FEEDS_PATH) {
   }
 
   return parsed.map((item) => {
-    if (!item?.name || !item?.feedUrl || !item?.siteUrl) {
+    if (!item?.id || !item?.name || !item?.feedUrl || !item?.siteUrl) {
       throw new Error(
         `Missing required fields in member feed entry: ${JSON.stringify(item)}`,
       );
     }
 
     return {
+      id: String(item.id),
       name: String(item.name),
       feedUrl: String(item.feedUrl),
       siteUrl: String(item.siteUrl),
@@ -135,6 +136,10 @@ export function parseYoutubeChannelId(html) {
   return null;
 }
 
+function buildNotifierItemId(source, sourceItemId) {
+  return `${source.id}::${String(sourceItemId)}`;
+}
+
 export async function resolveFeedUrl(
   feedUrl,
   {
@@ -184,7 +189,7 @@ export function normalizeNotifierItem(rawItem, source) {
     "";
 
   return {
-    id: `${source.feedUrl}::${String(rawId)}`,
+    id: buildNotifierItemId(source, rawId),
     sourceItemId: String(rawId),
     title: rawItem.title || "Untitled",
     link: rawItem.link || source.siteUrl,

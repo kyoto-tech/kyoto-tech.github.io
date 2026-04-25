@@ -20,6 +20,7 @@ test("loadMemberFeeds normalizes valid source entries", async () => {
     filePath,
     JSON.stringify([
       {
+        id: "example-author",
         name: "Example Author",
         feedUrl: "https://example.com/feed.xml",
         siteUrl: "https://example.com/",
@@ -29,6 +30,7 @@ test("loadMemberFeeds normalizes valid source entries", async () => {
 
   await expect(loadMemberFeeds(filePath)).resolves.toEqual([
     {
+      id: "example-author",
       name: "Example Author",
       feedUrl: "https://example.com/feed.xml",
       siteUrl: "https://example.com/",
@@ -84,8 +86,9 @@ test("parseYoutubeChannelId supports common channel id locations", () => {
   expect(parseYoutubeChannelId("no channel here")).toBeNull();
 });
 
-test("normalizeNotifierItem preserves notifier item identity format", () => {
+test("normalizeNotifierItem uses source-stable notifier item IDs", () => {
   const source = {
+    id: "example-author",
     name: "Example Author",
     feedUrl: "https://example.com/feed.xml",
     siteUrl: "https://example.com/",
@@ -101,7 +104,7 @@ test("normalizeNotifierItem preserves notifier item identity format", () => {
     source,
   );
 
-  expect(item.id).toBe("https://example.com/feed.xml::post-1");
+  expect(item.id).toBe("example-author::post-1");
   expect(item.sourceItemId).toBe("post-1");
   expect(item.summary).toBe("A useful post");
   expect(item.source).toEqual(source);
@@ -109,6 +112,7 @@ test("normalizeNotifierItem preserves notifier item identity format", () => {
 
 test("fetchFeedItems fetches, normalizes, dedupes, sorts, and limits items", async () => {
   const source = {
+    id: "example-author",
     name: "Example Author",
     feedUrl: "https://example.com/feed.xml",
     siteUrl: "https://example.com/",

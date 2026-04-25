@@ -8,6 +8,7 @@ import {
   buildDiscordPayload,
   buildMessage,
   defaultState,
+  migrateStateItemIds,
   parseState,
   upsertStateRecord,
 } from "./lib/community-feed-notifier-state.mjs";
@@ -312,6 +313,7 @@ async function main() {
 
   const state = gistId ? await readStateFromGist(gistId, gistToken) : defaultState();
   const now = new Date().toISOString();
+  const migration = migrateStateItemIds(state, memberFeeds);
   const sortedItems = allItems.sort(
     (a, b) => new Date(a.publishedAt).valueOf() - new Date(b.publishedAt).valueOf(),
   );
@@ -343,7 +345,21 @@ async function main() {
   const deliveryFailures = [];
   let limitedItems = 0;
   let processedItems = 0;
-  let stateChanged = false;
+  let stateChanged = migration.changed;
+
+  if (stateChanged) {
+    state.initializedAt = state.initializedAt || now;
+    state.updatedAt = now;
+
+    if (args.dryRun) {
+      console.log(
+        `[notifier] [dry-run] Would migrate ${migration.migratedCount} state item ID(s).`,
+      );
+    } else {
+      await writeStateToGist(gistId, gistToken, state);
+      console.log(`[notifier] Migrated ${migration.migratedCount} state item ID(s).`);
+    }
+  }
 
   for (const item of sortedItems) {
     const record = upsertStateRecord(state, item, now);
@@ -389,6 +405,8 @@ async function main() {
 
   if (!stateChanged) {
     console.log("[notifier] No new community posts needed delivery.");
+  } else if (newDeliveries === 0) {
+    console.log("[notifier] Updated state without sending new deliveries.");
   } else {
     console.log(`[notifier] Sent ${newDeliveries} new delivery(s).`);
   }

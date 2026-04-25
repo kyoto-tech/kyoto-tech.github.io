@@ -1,15 +1,18 @@
 [
   {
+    "id": "ash-ryan-arnwine",
     "name": "Ash Ryan Arnwine",
     "siteUrl": "https://www.ashryan.io/",
     "feedUrl": "https://www.ashryan.io/rss/"
   },
   {
+    "id": "ashwin-anil",
     "name": "Ashwin Anil",
     "siteUrl": "https://ashwin.im/",
     "feedUrl": "https://ashwin.im/rss.xml"
   },
   {
+    "id": "mere-mortal-dev",
     "name": "Mere Mortal Dev",
     "siteUrl": "https://www.youtube.com/@meremortaldev",
     "feedUrl": "https://www.youtube.com/@meremortaldev"
