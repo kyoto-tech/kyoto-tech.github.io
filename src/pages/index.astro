@@ -4,15 +4,15 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import WhyJoin from "../components/WhyJoin.astro";
-import WhatWeDo from "../components/WhatWeDo.astro";
 import Calendar from "../components/Calendar.astro";
 import Footer from "../components/Footer.astro";
 import { FaGithub, FaDiscord, FaMeetup, FaEnvelope } from "react-icons/fa";
-import { FaRegClock, FaRegCalendarAlt } from "react-icons/fa";
+import { FaExternalLinkAlt, FaRegClock, FaRegCalendarAlt } from "react-icons/fa";
 import { useTranslations } from "../i18n/utils";
 import memberFeeds from "../data/member-feeds.json";
 import compositeFeed from "../data/composite-feed.json";
 import eventLocations from "../data/event-locations.json";
+import { fetchMeetupEvents } from "../lib/meetup-events";
 
 const { lang = "en" } = Astro.props;
 const t = useTranslations(lang);
@@ -84,22 +84,6 @@ const photoGroups = [
   },
 ] as const;
 
-type ActivityContent =
-  | {
-      type: "paragraph";
-      text: string;
-    }
-  | {
-      type: "list";
-      intro?: string;
-      items: string[];
-    };
-
-type Activity = {
-  title: string;
-  content: ActivityContent[];
-};
-
 type MemberFeed = {
   name: string;
   siteUrl: string;
@@ -136,44 +120,8 @@ const benefits = [
   },
 ];
 
-const activities: Activity[] = [
-  {
-    title: t("home.activity1.title"),
-    content: [
-      {
-        type: "paragraph",
-        text: t("home.activity1.content1"),
-      },
-      {
-        type: "paragraph",
-        text: t("home.activity1.content2"),
-      },
-      {
-        type: "paragraph",
-        text: t("home.activity1.content3"),
-      },
-    ],
-  },
-  {
-    title: t("home.activity2.title"),
-    content: [
-      {
-        type: "paragraph",
-        text: t("home.activity2.content1"),
-      },
-      {
-        type: "paragraph",
-        text: t("home.activity2.content2"),
-      },
-      {
-        type: "paragraph",
-        text: t("home.activity2.content3"),
-      },
-    ],
-  },
-];
-
 const locale = lang === "ja" ? "ja-JP" : "en-US";
+const events = await fetchMeetupEvents();
 
 const memberFeedList = (memberFeeds as MemberFeed[]) ?? [];
 const compositeFeedEntries = Array.isArray(compositeFeed?.feeds)
@@ -236,7 +184,7 @@ const nextUpdate = compositeFeed?.generatedAt
     <Hero
       title={t("home.header.title")}
       subtitle={t("home.header.subtitle")}
-      ctaUrl={meetupUrl}
+      ctaUrl="#calendar"
       ctaLabel={t("home.header.cta")}
       badge={t("home.header.badge")}
     />
@@ -245,17 +193,9 @@ const nextUpdate = compositeFeed?.generatedAt
   <main id="main-content" class="space-y-0">
     <section id="quick-links" class="bg-white/90 px-6 py-12 md:px-12">
       <div class="mx-auto max-w-5xl">
-        <p
-          class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500"
-        >
-          {t("home.quickLinks.label")}
-        </p>
-        <h2 class="mt-3 text-3xl font-semibold text-slate-900">
+        <h2 class="text-3xl font-semibold text-slate-900">
           {t("home.quickLinks.title")}
         </h2>
-        <p class="mt-3 max-w-2xl text-base text-slate-600">
-          {t("home.quickLinks.description")}
-        </p>
         <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {
             quickLinks.map((link) => (
@@ -276,6 +216,10 @@ const nextUpdate = compositeFeed?.generatedAt
                     {t(link.descriptionKey)}
                   </span>
                 </span>
+                <FaExternalLinkAlt
+                  className="ml-auto self-center shrink-0 text-xs text-slate-400 transition group-hover:text-(--accent)"
+                  aria-hidden="true"
+                />
               </a>
             ))
           }
@@ -283,32 +227,48 @@ const nextUpdate = compositeFeed?.generatedAt
       </div>
     </section>
 
-    <section id="whats-happening" class="bg-white/70 px-6 py-16 md:px-12">
+    <section id="calendar" class="scroll-mt-24 bg-white px-6 py-16 md:px-12">
       <div class="mx-auto max-w-5xl">
-        <p
-          class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500"
-        >
-          {t("home.whatsHappening.label")}
-        </p>
-        <h2 class="mt-3 text-3xl font-semibold text-slate-900">
-          {t("home.whatsHappening.title")}
-        </h2>
-        <WhatWeDo activities={activities} />
-      </div>
-    </section>
-
-    <section id="calendar" class="bg-white px-6 py-16 md:px-12">
-      <div class="mx-auto max-w-5xl">
-        <p
-          class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500"
-        >
-          {t("home.calendar.label")}
-        </p>
-        <h2 class="mt-3 text-3xl font-semibold text-slate-900">
+        <h2 class="text-3xl font-semibold text-slate-900">
           {t("home.calendar.title")}
         </h2>
+        <div class="mt-5 grid gap-3 text-sm text-slate-700 md:grid-cols-3">
+          <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
+            <span class="mt-1 h-3 w-3 shrink-0 rounded-full bg-(--accent)" aria-hidden="true"></span>
+            <div>
+              <h3 class="font-semibold text-slate-900">
+                {t("home.calendar.legend.coffee.title")}
+              </h3>
+              <p class="mt-1">
+                {t("home.calendar.legend.coffee.description")}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
+            <span class="mt-1 h-3 w-3 shrink-0 rounded-full bg-teal-700" aria-hidden="true"></span>
+            <div>
+              <h3 class="font-semibold text-slate-900">
+                {t("home.calendar.legend.hackDay.title")}
+              </h3>
+              <p class="mt-1">
+                {t("home.calendar.legend.hackDay.description")}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
+            <span class="mt-1 h-3 w-3 shrink-0 rounded-full bg-violet-600" aria-hidden="true"></span>
+            <div>
+              <h3 class="font-semibold text-slate-900">
+                {t("home.calendar.legend.special.title")}
+              </h3>
+              <p class="mt-1">
+                {t("home.calendar.legend.special.description")}
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <Calendar lang={lang} />
+        <Calendar events={events} lang={lang} />
       </div>
     </section>
 
@@ -318,12 +278,7 @@ const nextUpdate = compositeFeed?.generatedAt
           class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
         >
           <div>
-            <p
-              class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500"
-            >
-              {t("home.communityFeed.label")}
-            </p>
-            <h2 class="mt-3 text-3xl font-semibold text-slate-900">
+            <h2 class="text-3xl font-semibold text-slate-900">
               {t("home.communityFeed.title")}
             </h2>
             <p class="mt-3 text-slate-600">
@@ -459,12 +414,7 @@ const nextUpdate = compositeFeed?.generatedAt
 
     <section id="why-join" class="bg-white/95 px-6 py-16 md:px-12">
       <div class="mx-auto max-w-5xl">
-        <p
-          class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500"
-        >
-          {t("home.whyJoin.label")}
-        </p>
-        <h2 class="mt-3 text-3xl font-semibold text-slate-900">
+        <h2 class="text-3xl font-semibold text-slate-900">
           {t("home.whyJoin.title")}
         </h2>
         <WhyJoin items={benefits} />
@@ -524,12 +474,7 @@ const nextUpdate = compositeFeed?.generatedAt
     <section id="who-comes" class="bg-white/95 px-6 py-16 md:px-12">
       <div class="mx-auto flex max-w-5xl flex-col gap-10 lg:flex-row">
         <div class="flex-1">
-          <p
-            class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500"
-          >
-            {t("home.whoComes.label")}
-          </p>
-          <h2 class="mt-3 text-3xl font-semibold text-slate-900">
+          <h2 class="text-3xl font-semibold text-slate-900">
             {t("home.whoComes.title")}
           </h2>
           <p class="mt-4 text-slate-600">{t("home.whoComes.intro")}</p>

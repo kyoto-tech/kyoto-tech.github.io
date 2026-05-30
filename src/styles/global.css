@@ -9,6 +9,10 @@
 	box-sizing: border-box;
 }
 
+html {
+	scroll-behavior: smooth;
+}
+
 body {
 	margin: 0;
 	min-height: 100vh;
@@ -48,4 +52,75 @@ body {
 	clip: rect(0, 0, 0, 0);
 	white-space: nowrap;
 	border: 0;
+}
+
+.kt-calendar {
+	--fc-border-color: rgb(226 232 240);
+	--fc-page-bg-color: #ffffff;
+	--fc-today-bg-color: rgba(221, 74, 72, 0.08);
+	--fc-event-bg-color: var(--accent);
+	--fc-event-border-color: var(--accent);
+	--fc-event-text-color: #ffffff;
+	overflow-x: auto;
+	padding-bottom: 0.5rem;
+}
+
+.kt-calendar .fc {
+	font-family: inherit;
+	min-width: 54rem;
+}
+
+.kt-calendar .fc-toolbar-title {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #0f172a;
+}
+
+.kt-calendar .fc-scrollgrid {
+	border-radius: 0.75rem;
+	overflow: hidden;
+	box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+.kt-calendar .fc-col-header-cell {
+	background: #f8fafc;
+	padding: 0.35rem 0;
+	font-size: 0.78rem;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: #64748b;
+}
+
+.kt-calendar .fc-daygrid-day {
+	min-height: 8rem;
+}
+
+.kt-calendar .fc-daygrid-day-number {
+	padding: 0.5rem;
+	font-weight: 600;
+	color: #334155;
+}
+
+.kt-calendar .fc-daygrid-event {
+	border-radius: 0.375rem;
+	padding: 0.1rem 0.25rem;
+	font-size: 0.82rem;
+	border: 0;
+	white-space: normal;
+}
+
+.kt-calendar .event-type-hack-day {
+	--fc-event-bg-color: #0f766e;
+	--fc-event-border-color: #0f766e;
+}
+
+.kt-calendar .event-type-special {
+	--fc-event-bg-color: #7c3aed;
+	--fc-event-border-color: #7c3aed;
+}
+
+@media (min-width: 768px) {
+	.kt-calendar .fc {
+		min-width: 0;
+	}
 }

@@ -5,9 +5,17 @@ type Props = {
   ctaUrl: string;
   ctaLabel: string;
   badge: string;
+  ctaExternal?: boolean;
 };
 
-const { title, subtitle, ctaUrl, ctaLabel, badge } = Astro.props as Props;
+const {
+  title,
+  subtitle,
+  ctaUrl,
+  ctaLabel,
+  badge,
+  ctaExternal = false,
+} = Astro.props as Props;
 const heroImageSrc =
   "https://images.unsplash.com/photo-1570463723985-41c39db0343d?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=2000&q=80";
 ---
@@ -24,8 +32,8 @@ const heroImageSrc =
     <p class="mt-4 max-w-2xl mx-auto text-lg text-neutral-600">{subtitle}</p>
     <a
       href={ctaUrl}
-      target="_blank"
-      rel="noreferrer"
+      target={ctaExternal ? "_blank" : undefined}
+      rel={ctaExternal ? "noreferrer" : undefined}
       class="mt-6 inline-block rounded-full bg-slate-900 px-6 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
     >
       {ctaLabel}
