@@ -105,26 +105,6 @@ export const ui = {
     "ideas.list.title": "What could we improve together?",
     "ideas.list.description":
       "These are starting points for conversations, experiments, and small collaborations around the city. You do not need to be a technologist to suggest one.",
-    "ideas.idea1.title": "Map tech-friendly places around Kyoto",
-    "ideas.idea1.description":
-      "Collect cafes, libraries, coworking spaces, and quiet corners where people can code, study, or meet collaborators.",
-    "ideas.idea1.tag1": "Local guide",
-    "ideas.idea1.tag2": "Open data",
-    "ideas.idea2.title": "Bilingual neighbor directory",
-    "ideas.idea2.description":
-      "Create an opt-in directory for residents who want to meet neighbors with shared interests, local knowledge, or useful skills.",
-    "ideas.idea2.tag1": "Community",
-    "ideas.idea2.tag2": "Bilingual",
-    "ideas.idea3.title": "Kyoto neighborhood show-and-tell",
-    "ideas.idea3.description":
-      "Host lightweight sessions where residents can share a local project, practical tip, community resource, or creative experiment.",
-    "ideas.idea3.tag1": "Events",
-    "ideas.idea3.tag2": "Show and tell",
-    "ideas.idea4.title": "Reusable community starters",
-    "ideas.idea4.description":
-      "Collect simple templates for maps, translations, local guides, and public-interest resources that other neighborhood groups can reuse.",
-    "ideas.idea4.tag1": "Community tools",
-    "ideas.idea4.tag2": "Starter kits",
     "home.whoComes.label": "Who Comes?",
     "home.whoComes.title": "People who like to build in public",
     "home.whoComes.intro": "You'll probably like it here if you are:",
@@ -284,26 +264,6 @@ export const ui = {
     "ideas.list.title": "一緒に何をよくできる？",
     "ideas.list.description":
       "街の中での会話、実験、小さなコラボレーションのきっかけになる案です。テックに詳しくなくても、誰でも提案できます。",
-    "ideas.idea1.title": "京都の作業しやすい場所マップ",
-    "ideas.idea1.description":
-      "コーディング、勉強、共同作業に向いているカフェ、図書館、コワーキングスペース、静かな場所を集めます。",
-    "ideas.idea1.tag1": "ローカルガイド",
-    "ideas.idea1.tag2": "オープンデータ",
-    "ideas.idea2.title": "バイリンガルなご近所ディレクトリ",
-    "ideas.idea2.description":
-      "共通の興味、地域の知識、役立つスキルを持つ住民同士がつながれる、任意参加のディレクトリをつくります。",
-    "ideas.idea2.tag1": "コミュニティ",
-    "ideas.idea2.tag2": "バイリンガル",
-    "ideas.idea3.title": "京都ご近所ショーアンドテル",
-    "ideas.idea3.description":
-      "地域のプロジェクト、暮らしの工夫、コミュニティの情報、クリエイティブな実験を気軽に共有できる小さな会を開きます。",
-    "ideas.idea3.tag1": "イベント",
-    "ideas.idea3.tag2": "Show and tell",
-    "ideas.idea4.title": "再利用できるコミュニティのスターター",
-    "ideas.idea4.description":
-      "地図、翻訳、ローカルガイド、公共性のある情報発信に使える小さなテンプレートを集め、他の地域団体も再利用できるようにします。",
-    "ideas.idea4.tag1": "コミュニティツール",
-    "ideas.idea4.tag2": "スターターキット",
     "home.whoComes.label": "参加者",
     "home.whoComes.title": "“作っているところ”をオープンにする人たち",
     "home.whoComes.intro": "こんな人なら、きっと楽しめます：",
