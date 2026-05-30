@@ -166,6 +166,7 @@ export const ui = {
     "communityFeed.filterTags": "Tags",
     "communityFeed.filterTime": "Time",
     "communityFeed.author": "Author",
+    "communityFeed.updatedAt": "Updated",
 
     "meta.siteName": "Kyoto Tech Meetup",
     "meta.title":
@@ -336,6 +337,7 @@ export const ui = {
     "communityFeed.filterTags": "タグ",
     "communityFeed.filterTime": "期間",
     "communityFeed.author": "著者",
+    "communityFeed.updatedAt": "更新日",
 
     "meta.siteName": "Kyoto Tech Meetup",
     "meta.title":

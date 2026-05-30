@@ -29,6 +29,16 @@ const FALLBACK_EMOJI: Record<string, string> = {
 const hasThumbnail = !!post.thumbnail;
 const fallbackGradient = FALLBACK_GRADIENTS[post.type];
 const fallbackEmoji = FALLBACK_EMOJI[post.type];
+
+const DATE_LOCALES: Record<"en" | "ja", string> = {
+  en: "en-US",
+  ja: "ja-JP",
+};
+const formattedDate = new Intl.DateTimeFormat(DATE_LOCALES[lang], {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}).format(new Date(post.date));
 ---
 
 <article
@@ -100,6 +110,13 @@ const fallbackEmoji = FALLBACK_EMOJI[post.type];
       >
         &rarr;
       </a>
+    </div>
+
+    <div class="mt-2 flex items-center gap-2 text-[13px] font-medium text-slate-400">
+      <span class="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-[10px] text-slate-400">
+        &#128197;
+      </span>
+      <span>{t("communityFeed.updatedAt")}: {formattedDate}</span>
     </div>
 
     {post.type === "project" && (
