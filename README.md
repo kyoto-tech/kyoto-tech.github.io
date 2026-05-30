@@ -40,6 +40,8 @@ Everything here is maintained by community members; contributions that make the 
 | ------------------ | ----------------------------------------------------------------------- |
 | `npm run dev`      | Launches Astro in development mode.                                     |
 | `npm run check`    | Runs lint, type-check, Astro check, and Knip in sequence.               |
+| `npm run feeds:notify` | Polls approved member feeds and posts unseen items to configured channels. |
+| `npm run feeds:notify:dry-run` | Shows what the notifier would send without posting or updating state. |
 | `npm run preview`  | Serves the production build locally.                                    |
 | `npm run build`    | Produces the static site in `dist/`.                                    |
 
@@ -79,8 +81,21 @@ public/          # Files served as-is (favicon, images)
 - Production deploys target [Cloudflare Pages](https://kyototechmeetup.com/) via Cloudflare's GitHub integration on merge to `main`.
 - Pull requests use GitHub Actions for CI checks and Cloudflare Pages for preview deployments.
 - GitHub can also trigger Cloudflare rebuilds via the deploy hook (`CLOUDFLARE_DEPLOY_HOOK`) every 3 hours by cron or by manual dispatch (`.github/workflows/scheduled-build.yml`).
+- Community feed notifications are handled separately by `.github/workflows/community-feed-notifier.yml`, which polls approved feeds every 15 minutes and tracks seen items in a gist-backed JSON state file.
 - The legacy [GitHub Pages URL](https://kyoto-tech.github.io/) is maintained as a redirect only, published from `.github/redirect-site` by `.github/workflows/deploy-github-pages-redirect.yml`.
 - To test a production build locally, use `npm run build && npm run preview`.
+
+## Community Feed Notifier
+
+- The notifier reads approved sources from `src/data/member-feeds.json`.
+- Each feed source has a stable `id`; do not change it casually because notifier state keys are derived from it.
+- State lives in the public gist `f95dd7597eec170d738d905e3666bfc6` as `community-feed-state.json`.
+- On the first non-dry run, the notifier seeds the current backlog into the gist without posting. Use the workflow dispatch input `allow_initial_posts` if you intentionally want to announce the backlog.
+- For a lightweight demo, use the workflow dispatch input `demo_mode`. It posts at most 3 items and seeds the rest of the current backlog so later scheduled runs do not replay the full backlog.
+- Required secret: `GH_GIST_TOKEN` with the `gist` scope.
+- Optional secret: `DISCORD_WEBHOOK_URL` for direct Discord posting.
+- Optional secret: `COMMUNITY_FEED_GENERIC_WEBHOOK_URL` for forwarding each new item as JSON to your own bot/service for X, LINE, or other destinations.
+- Scheduled runs skip notification work when no destination webhook secret is configured.
 
 ## Interacting with the community
 

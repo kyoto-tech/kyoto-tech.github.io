@@ -1,0 +1,74 @@
+name: Community Feed Notifier
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      demo_mode:
+        description: "Post at most 3 items, then seed the rest of the current backlog"
+        required: false
+        type: boolean
+        default: false
+      dry_run:
+        description: "Check feeds without posting or updating gist state"
+        required: false
+        type: boolean
+        default: true
+      allow_initial_posts:
+        description: "Post the current backlog instead of seeding it silently"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: community-feed-notifier
+  cancel-in-progress: false
+
+env:
+  COMMUNITY_FEED_STATE_GIST_ID: f95dd7597eec170d738d905e3666bfc6
+  COMMUNITY_FEED_MAX_ITEMS_PER_FEED: "10"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Notify community channels
+        env:
+          GH_GIST_TOKEN: ${{ secrets.GH_GIST_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          COMMUNITY_FEED_GENERIC_WEBHOOK_URL: ${{ secrets.COMMUNITY_FEED_GENERIC_WEBHOOK_URL }}
+          WORKFLOW_DEMO_MODE: ${{ github.event.inputs.demo_mode || 'false' }}
+          WORKFLOW_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+          WORKFLOW_ALLOW_INITIAL_POSTS: ${{ github.event.inputs.allow_initial_posts || 'false' }}
+        run: |
+          args=()
+          if [ "$WORKFLOW_DEMO_MODE" = "true" ]; then
+            args+=("--max-deliveries" "3" "--suppress-remaining-after-limit")
+          fi
+          if [ "$WORKFLOW_DRY_RUN" = "true" ]; then
+            args+=("--dry-run")
+          fi
+          if [ "$WORKFLOW_ALLOW_INITIAL_POSTS" = "true" ]; then
+            args+=("--allow-initial-posts")
+          fi
+          if [ -z "$DISCORD_WEBHOOK_URL" ] && [ -z "$COMMUNITY_FEED_GENERIC_WEBHOOK_URL" ]; then
+            args+=("--skip-without-destinations")
+          fi
+          node scripts/community-feed-notifier.mjs "${args[@]}"

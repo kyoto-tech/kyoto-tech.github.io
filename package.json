@@ -6,8 +6,10 @@
     "astro": "astro",
     "astrocheck": "astro check",
     "build": "npm run feeds:pull:stale-ok && astro build",
-    "check": "npm run lint; npm run tsc; npm run astrocheck; npm run images:check; npm run knip",
+    "check": "npm run lint; npm run test; npm run tsc; npm run astrocheck; npm run images:check; npm run knip",
     "dev": "astro dev",
+    "feeds:notify": "node scripts/community-feed-notifier.mjs",
+    "feeds:notify:dry-run": "node scripts/community-feed-notifier.mjs --dry-run",
     "feeds:pull": "node scripts/fetch-feeds.mjs",
     "feeds:pull:stale-ok": "node scripts/fetch-feeds.mjs --stale-ok",
     "images:optimize": "node scripts/optimize-images.mjs",
@@ -15,6 +17,7 @@
     "knip": "knip",
     "lint": "eslint . --ext .js,.mjs,.ts,.tsx,.astro --no-warn-ignored",
     "preview": "astro preview",
+    "test": "vitest run",
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
@@ -46,6 +49,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "knip": "^5.70.1",
     "sharp": "^0.34.5",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.5"
   }
 }

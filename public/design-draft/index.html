@@ -1,0 +1,391 @@
+﻿<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kyoto Tech Meetup | Design Draft</title>
+    <style>
+      :root {
+        --ink: #0f172b;
+        --muted: #45556c;
+        --subtle: #f8fafc;
+        --panel: rgba(255, 255, 255, 0.95);
+        --border: rgba(226, 232, 240, 0.8);
+        --accent: #dd4a48;
+        --accent-weak: rgba(221, 74, 72, 0.12);
+        --shadow: 0 20px 25px -5px rgba(28, 25, 23, 0.08), 0 8px 10px -6px rgba(28, 25, 23, 0.06);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Noto Sans JP", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: white;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      .page {
+        padding-top: 80px;
+      }
+
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 16px 0;
+        display: flex;
+        justify-content: center;
+        z-index: 10;
+      }
+
+      .nav-inner {
+        width: min(1152px, 90vw);
+        background: white;
+        border: 1px solid #f1f5f9;
+        border-radius: 999px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 18px;
+        gap: 24px;
+      }
+
+      .nav-title {
+        font-weight: 600;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .nav-cta {
+        background: var(--ink);
+        color: white;
+        border-radius: 999px;
+        padding: 8px 20px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .hero {
+        width: min(1152px, 90vw);
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: var(--subtle);
+        border: 1px solid #e2e8f0;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+      }
+
+      .hero h1 {
+        margin: 18px auto 8px;
+        font-size: clamp(32px, 4vw, 48px);
+        line-height: 1.2;
+      }
+
+      .hero p {
+        color: #525252;
+        max-width: 640px;
+        margin: 0 auto 24px;
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .hero-cta {
+        display: inline-flex;
+        background: var(--ink);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .hero-image {
+        margin: 48px auto 0;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      section {
+        padding: 56px 0;
+      }
+
+      .section-inner {
+        width: min(1024px, 90vw);
+        margin: 0 auto;
+      }
+
+      .eyebrow {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        color: #62748e;
+        font-weight: 700;
+      }
+
+      .section-title {
+        margin: 12px 0 10px;
+        font-size: 30px;
+        font-weight: 700;
+      }
+
+      .section-description {
+        color: var(--muted);
+        max-width: 640px;
+      }
+
+      .quick-links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      .quick-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        box-shadow: 0 10px 15px -3px rgba(28, 25, 23, 0.05), 0 4px 6px -4px rgba(28, 25, 23, 0.05);
+      }
+
+      .quick-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        background: var(--accent-weak);
+        display: grid;
+        place-items: center;
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .photo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      figure {
+        margin: 0;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      figcaption {
+        padding: 16px 20px;
+        font-size: 14px;
+        text-align: center;
+        color: #314158;
+      }
+
+      .two-column {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 40px;
+        margin-top: 32px;
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 10px 15px -3px rgba(28, 25, 23, 0.1);
+      }
+
+      .footer {
+        background: #0c0a09;
+        color: #cad5e2;
+        padding: 40px 0;
+        font-size: 14px;
+      }
+
+      .footer-inner {
+        width: min(1024px, 90vw);
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .draft-note {
+        margin: 0 auto 16px;
+        width: min(1024px, 90vw);
+        border: 1px dashed #e2e8f0;
+        background: #fff7ed;
+        color: #92400e;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 13px;
+      }
+
+      @media (max-width: 720px) {
+        .nav-links {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav">
+      <div class="nav-inner">
+        <div class="nav-title">Kyoto Tech Meetup</div>
+        <div class="nav-links">
+          <span>私たちについて</span>
+          <span>イベント</span>
+          <span>コミュニティフィード</span>
+        </div>
+        <a class="nav-cta" href="https://www.meetup.com/ja-JP/kyoto-tech-meetup/" target="_blank" rel="noreferrer">参加する</a>
+      </div>
+    </div>
+
+    <div class="page">
+      <div class="draft-note">
+        Design draft (Figma) から生成した参考HTMLです。実装判断用の比較素材として使用してください。
+      </div>
+
+      <header class="hero">
+        <span class="hero-badge">メンバー100人以上＆拡大中</span>
+        <h1>日本の文化都市・京都でつながり、学び、ものづくりをしよう</h1>
+        <p>京都でテクノロジーを探求するデベロッパー、デザイナー、研究者、創業者のための集まりです。</p>
+        <a class="hero-cta" href="https://www.meetup.com/ja-JP/kyoto-tech-meetup/" target="_blank" rel="noreferrer">参加する</a>
+        <div class="hero-image">
+          <img src="https://www.figma.com/api/mcp/asset/94558658-66b9-44be-8892-0523a25ac4fc" alt="Kyoto Tech Meetup" />
+        </div>
+      </header>
+
+      <section style="background: rgba(255, 255, 255, 0.9);">
+        <div class="section-inner">
+          <div class="eyebrow">クイックリンク</div>
+          <div class="section-title">コミュニティとつながる</div>
+          <p class="section-description">イベント、チャット、オープンソース、問い合わせにすぐアクセスできます。</p>
+          <div class="quick-links">
+            <div class="quick-card">
+              <div class="quick-icon">M</div>
+              <div>
+                <div style="font-weight: 700;">Meetup</div>
+                <div style="color: var(--muted); font-size: 14px;">次回イベントに参加する。</div>
+              </div>
+            </div>
+            <div class="quick-card">
+              <div class="quick-icon">D</div>
+              <div>
+                <div style="font-weight: 700;">Discord</div>
+                <div style="color: var(--muted); font-size: 14px;">雑談や質問にすぐ参加。</div>
+              </div>
+            </div>
+            <div class="quick-card">
+              <div class="quick-icon">G</div>
+              <div>
+                <div style="font-weight: 700;">GitHub</div>
+                <div style="color: var(--muted); font-size: 14px;">オープンソースに参加。</div>
+              </div>
+            </div>
+            <div class="quick-card">
+              <div class="quick-icon">C</div>
+              <div>
+                <div style="font-weight: 700;">Contact</div>
+                <div style="color: var(--muted); font-size: 14px;">主催チームに連絡。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background: rgba(255, 255, 255, 0.95);">
+        <div class="section-inner">
+          <div class="eyebrow">フォトセッション</div>
+          <div class="section-title">コミュニティの雰囲気</div>
+          <p class="section-description">Figmaドラフトにあわせた写真配置の参考です。</p>
+          <div class="photo-grid">
+            <figure>
+              <img src="https://www.figma.com/api/mcp/asset/4ca1522a-36f5-498a-88f7-773977140788" alt="Community Hack Day" />
+              <figcaption>初めてのCommunity Hack Day。このサイトもここで作りました！</figcaption>
+            </figure>
+            <figure>
+              <img src="https://www.figma.com/api/mcp/asset/8bf0048b-c740-46ef-9091-30563f3e38ad" alt="Community Hack Day 2" />
+              <figcaption>2回目のCommunity Hack Day</figcaption>
+            </figure>
+            <figure>
+              <img src="https://www.figma.com/api/mcp/asset/913ea576-e177-4c16-878d-ab6f6df7d251" alt="Morning Tech & Coffee" />
+              <figcaption>Morning Tech & Coffee</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section style="background: rgba(255, 255, 255, 0.95);">
+        <div class="section-inner">
+          <div class="eyebrow">参加者</div>
+          <div class="section-title">“作っているところ”をオープンにする人たち</div>
+          <div class="two-column">
+            <div>
+              <p style="color: var(--muted);">こんな人なら、きっと楽しめます：</p>
+              <ul style="color: var(--muted); line-height: 1.6; padding-left: 18px;">
+                <li>Web・AI・クリエイティブ系の技術に取り組むエンジニアや研究者</li>
+                <li>創業者やアーリーステージのスタートアップ関係者</li>
+                <li>プロダクトの話が好きなデザイナー、PM、DX／DevRel の方</li>
+                <li>京都に滞在中の大学院生や研究者で、地元のTechコミュニティを探している人</li>
+                <li>京都に住むリモートワーカーで、同僚と技術の雑談を恋しく思っている人</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3 style="margin-top: 0;">対応言語</h3>
+              <p style="color: var(--muted); line-height: 1.6;">英語でも日本語でも気軽に参加できます。英語と日本語が自然に混ざるミートアップなので、そのままの自分でどうぞ。</p>
+              <div style="margin-top: 18px;">
+                <img src="https://www.figma.com/api/mcp/asset/79e61820-a735-41d5-99b3-15260821cae5" alt="Locations illustration" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer-inner">
+          <div>© 2025–2026 Kyoto Tech Meetup — 京都在住のボランティアによるコミュニティ運営。</div>
+          <div>GitHub / Discord / Meetup / お問い合わせ</div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
