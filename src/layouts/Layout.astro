@@ -1,16 +1,46 @@
 ---
 import "../styles/global.css";
 import { useTranslations } from "../i18n/utils";
+import type { ui } from "../i18n/ui";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { ClientRouter } from "astro:transitions";
 
+type TranslationKey = keyof typeof ui["en"];
+type Props = {
+	titleKey?: TranslationKey;
+	descriptionKey?: TranslationKey;
+	imageAltKey?: TranslationKey;
+	path?: string;
+};
+
+const {
+	titleKey = "meta.title",
+	descriptionKey = "meta.description",
+	imageAltKey = "meta.imageAlt",
+	path,
+} = Astro.props as Props;
 const activeLang = (Astro.currentLocale ?? "en") as "en" | "ja";
 const t = useTranslations(activeLang);
 
 const SITE_URL = "https://kyototechmeetup.com";
-const canonicalUrl = `${SITE_URL}${getRelativeLocaleUrl(activeLang, "/")}`;
-const hrefEn = `${SITE_URL}/`;
-const hrefJa = `${SITE_URL}/ja/`;
+const normalizePath = (value: string) => {
+	const withoutIndex = value.replace(/index\.html$/, "");
+	const withLeadingSlash = withoutIndex.startsWith("/")
+		? withoutIndex
+		: `/${withoutIndex}`;
+	return withLeadingSlash.endsWith("/") ? withLeadingSlash : `${withLeadingSlash}/`;
+};
+const pathWithoutLocale =
+	activeLang === "ja"
+		? Astro.url.pathname.replace(/^\/ja(?=\/|$)/, "") || "/"
+		: Astro.url.pathname;
+const pagePath = normalizePath(path ?? pathWithoutLocale);
+const canonicalUrl = `${SITE_URL}${getRelativeLocaleUrl(activeLang, pagePath)}`;
+const hrefEn = `${SITE_URL}${getRelativeLocaleUrl("en", pagePath)}`;
+const hrefJa = `${SITE_URL}${getRelativeLocaleUrl("ja", pagePath)}`;
+const pageTitle = t(titleKey);
+const pageDescription = t(descriptionKey);
+const pageImageAlt = t(imageAltKey);
 const ogImageUrl = `${SITE_URL}/images/og/kyoto-tech-meetup.png`;
 const ogLocale = activeLang === "ja" ? "ja_JP" : "en_US";
 const ogLocaleAlternate = activeLang === "ja" ? "en_US" : "ja_JP";
@@ -121,7 +151,7 @@ const ldData = {
 			"@type": "WebPage",
 			"@id": `${canonicalUrl}#home`,
 			"url": canonicalUrl,
-			"name": t("meta.title"),
+			"name": pageTitle,
 			"inLanguage": activeLang,
 			"isPartOf": {
 				"@id": `${SITE_URL}/#website`
@@ -133,8 +163,8 @@ const ldData = {
 	]
 };
 
-const enHomePath = getRelativeLocaleUrl("en", "/");
-const jaHomePath = getRelativeLocaleUrl("ja", "/");
+const enPagePath = getRelativeLocaleUrl("en", pagePath);
+const jaPagePath = getRelativeLocaleUrl("ja", pagePath);
 
 ---
 
@@ -156,14 +186,14 @@ const jaHomePath = getRelativeLocaleUrl("ja", "/");
 
 		<meta
 			name="description"
-			content={t("meta.description")}
+			content={pageDescription}
 		/>
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content={t("meta.siteName")} />
-		<meta property="og:title" content={t("meta.title")} />
+		<meta property="og:title" content={pageTitle} />
 		<meta
 			property="og:description"
-			content={t("meta.description")}
+			content={pageDescription}
 		/>
 		<meta property="og:url" content={canonicalUrl} />
 		<meta property="og:locale" content={ogLocale} />
@@ -171,22 +201,22 @@ const jaHomePath = getRelativeLocaleUrl("ja", "/");
 		<meta property="og:image" content={ogImageUrl} />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
-		<meta property="og:image:alt" content={t("meta.imageAlt")} />
+		<meta property="og:image:alt" content={pageImageAlt} />
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content={t("meta.title")} />
+		<meta name="twitter:title" content={pageTitle} />
 			<meta
 				name="twitter:description"
-				content={t("meta.description")}
+				content={pageDescription}
 		/>
 		<meta name="twitter:image" content={ogImageUrl} />
-		<meta name="twitter:image:alt" content={t("meta.imageAlt")} />
+		<meta name="twitter:image:alt" content={pageImageAlt} />
 		<link rel="alternate" hreflang="en" href={hrefEn} />
 		<link rel="alternate" hreflang="ja" href={hrefJa} />
 		<link rel="alternate" hreflang="x-default" href={hrefEn} />
 		<link rel="canonical" href={canonicalUrl} />
 		<script type="application/ld+json" is:inline set:html={JSON.stringify(ldData)}></script>
-		<title>{t("meta.title")}</title>
-			<script is:inline define:vars={{ enHomePath, jaHomePath }}>
+		<title>{pageTitle}</title>
+			<script is:inline define:vars={{ enPagePath, jaPagePath }}>
 				const LANGUAGE_STORAGE_KEY = "kyoto-tech-language";
 
 				const normalizePath = (value) => {
@@ -195,11 +225,11 @@ const jaHomePath = getRelativeLocaleUrl("ja", "/");
 				};
 
 				const currentPath = normalizePath(location.pathname);
-				const normalizedEnHomePath = normalizePath(enHomePath);
-				const normalizedJaHomePath = normalizePath(jaHomePath);
+				const normalizedEnPagePath = normalizePath(enPagePath);
+				const normalizedJaPagePath = normalizePath(jaPagePath);
 
-				const isOnEnglishHome = currentPath === normalizedEnHomePath;
-				const isOnJapaneseHome = currentPath === normalizedJaHomePath;
+				const isOnEnglishPage = currentPath === normalizedEnPagePath;
+				const isOnJapanesePage = currentPath === normalizedJaPagePath;
 
 				let preferredLanguage = null;
 				try {
@@ -219,10 +249,10 @@ const jaHomePath = getRelativeLocaleUrl("ja", "/");
 							? "ja"
 							: "en";
 
-				if (isOnEnglishHome && targetLanguage === "ja") {
-					location.replace(normalizedJaHomePath);
-				} else if (isOnJapaneseHome && targetLanguage === "en") {
-					location.replace(normalizedEnHomePath);
+				if (isOnEnglishPage && targetLanguage === "ja") {
+					location.replace(normalizedJaPagePath);
+				} else if (isOnJapanesePage && targetLanguage === "en") {
+					location.replace(normalizedEnPagePath);
 				}
 			</script>
 			<ClientRouter />

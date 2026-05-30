@@ -6,6 +6,15 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 const activeLang = Astro.currentLocale as "en" | "ja" | undefined;
 const t = useTranslations(activeLang ?? "en");
 const allLangs = Object.entries(languages) as [keyof typeof languages, string][];
+const normalizePath = (value: string) => {
+	const withoutIndex = value.replace(/index\.html$/, "");
+	return withoutIndex.endsWith("/") ? withoutIndex : `${withoutIndex}/`;
+};
+const pathWithoutLocale =
+	activeLang === "ja"
+		? Astro.url.pathname.replace(/^\/ja(?=\/|$)/, "") || "/"
+		: Astro.url.pathname;
+const localizedPath = normalizePath(pathWithoutLocale);
 
 ---
 <div class="hidden items-center rounded-full bg-slate-50 p-1 shadow-sm sm:inline-flex">
@@ -14,7 +23,7 @@ const allLangs = Object.entries(languages) as [keyof typeof languages, string][]
 
 		return (
 			<a
-				href={getRelativeLocaleUrl(lang, "/")}
+				href={getRelativeLocaleUrl(lang, localizedPath)}
 				data-language={lang}
 				class:list={[
 					"rounded-full px-3 py-1 text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700",

@@ -1,0 +1,16 @@
+{
+  "id": "community-starters",
+  "order": 40,
+  "title": {
+    "en": "Reusable community starters",
+    "ja": "再利用できるコミュニティのスターター"
+  },
+  "description": {
+    "en": "Collect simple templates for maps, translations, local guides, and public-interest resources that other neighborhood groups can reuse.",
+    "ja": "地図、翻訳、ローカルガイド、公共性のある情報発信に使える小さなテンプレートを集め、他の地域団体も再利用できるようにします。"
+  },
+  "tags": {
+    "en": ["Community tools", "Starter kits"],
+    "ja": ["コミュニティツール", "スターターキット"]
+  }
+}

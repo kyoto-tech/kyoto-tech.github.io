@@ -24,6 +24,7 @@ export const ui = {
     "nav.about": "About Us",
     "nav.events": "Events",
     "nav.communityFeed": "Community Feed",
+    "nav.ideas": "Ideas",
 
     "home.quickLinks.label": "Quick links",
     "home.quickLinks.title": "Connect with the community",
@@ -37,6 +38,8 @@ export const ui = {
     "home.quickLinks.github.description": "Build with us",
     "home.quickLinks.contact.title": "Contact",
     "home.quickLinks.contact.description": "Reach out to us",
+    "home.quickLinks.ideas.title": "Kyoto Ideas",
+    "home.quickLinks.ideas.description": "Explore ideas from Kyoto residents",
 
     "home.whyJoin.label": "Why Join?",
     "home.whyJoin.title": "Small, intentional gatherings",
@@ -89,6 +92,19 @@ export const ui = {
     "home.communityFeed.emptyFeed": "No posts yet from this feed.",
     "home.communityFeed.fetchError": "Fetch issue",
 
+    "ideas.meta.title": "Kyoto Tech Ideas | Kyoto Tech Meetup",
+    "ideas.meta.description":
+      "Community ideas from Kyoto residents, with a simple way to submit your own idea.",
+    "ideas.hero.label": "Kyoto Ideas",
+    "ideas.hero.title": "Ideas from people who live in Kyoto",
+    "ideas.hero.subtitle":
+      "A small collection of ideas from residents who want to make daily life in Kyoto a little easier, friendlier, or more interesting.",
+    "ideas.hero.submitCta": "Submit Idea",
+    "ideas.hero.homeCta": "Back to Home",
+    "ideas.list.label": "Community prompts",
+    "ideas.list.title": "What could we improve together?",
+    "ideas.list.description":
+      "These are starting points for conversations, experiments, and small collaborations around the city. You do not need to be a technologist to suggest one.",
     "home.whoComes.label": "Who Comes?",
     "home.whoComes.title": "People who like to build in public",
     "home.whoComes.intro": "You'll probably like it here if you are:",
@@ -166,6 +182,7 @@ export const ui = {
     "nav.about": "私たちについて",
     "nav.events": "イベント",
     "nav.communityFeed": "コミュニティフィード",
+    "nav.ideas": "アイデア",
 
     "home.quickLinks.label": "クイックリンク",
     "home.quickLinks.title": "コミュニティとつながる",
@@ -179,6 +196,8 @@ export const ui = {
     "home.quickLinks.github.description": "コミュニティの制作物をチェック。",
     "home.quickLinks.contact.title": "お問い合わせ",
     "home.quickLinks.contact.description": "質問・提携・フィードバックなど。",
+    "home.quickLinks.ideas.title": "京都のアイデア",
+    "home.quickLinks.ideas.description": "京都に住む人たちのアイデアを見る。",
 
     "home.whyJoin.label": "参加する理由",
     "home.whyJoin.title": "小規模で意図のある集まり",
@@ -232,6 +251,19 @@ export const ui = {
       "このフィードの記事はまだ取得できていません。",
     "home.communityFeed.fetchError": "取得に失敗しました",
 
+    "ideas.meta.title": "Kyoto Tech Ideas | Kyoto Tech Meetup",
+    "ideas.meta.description":
+      "京都に住む人たちからのコミュニティのアイデアと、自分の案を送るための簡単な窓口です。",
+    "ideas.hero.label": "京都のアイデア",
+    "ideas.hero.title": "京都に住む人たちからのアイデア",
+    "ideas.hero.subtitle":
+      "京都での日々の暮らしを少し便利に、親しみやすく、おもしろくしたい住民からの小さなアイデア集です。",
+    "ideas.hero.submitCta": "アイデアを送る",
+    "ideas.hero.homeCta": "ホームへ戻る",
+    "ideas.list.label": "コミュニティのきっかけ",
+    "ideas.list.title": "一緒に何をよくできる？",
+    "ideas.list.description":
+      "街の中での会話、実験、小さなコラボレーションのきっかけになる案です。テックに詳しくなくても、誰でも提案できます。",
     "home.whoComes.label": "参加者",
     "home.whoComes.title": "“作っているところ”をオープンにする人たち",
     "home.whoComes.intro": "こんな人なら、きっと楽しめます：",

@@ -1,8 +1,6 @@
 name: Community Feed Notifier
 
 on:
-  schedule:
-    - cron: "*/15 * * * *"
   workflow_dispatch:
     inputs:
       demo_mode:
