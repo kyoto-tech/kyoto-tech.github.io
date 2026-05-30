@@ -1,0 +1,118 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import PageHeader from "../components/community-feed/PageHeader.astro";
+import FeaturedPost from "../components/community-feed/FeaturedPost.astro";
+import ContentCard from "../components/community-feed/ContentCard.astro";
+import CommunityFeedFilters from "../components/community-feed/CommunityFeedFilters.tsx";
+import { useTranslations } from "../i18n/utils";
+import {
+  getFeaturedPost,
+  getGridPosts,
+  getMembersWithPosts,
+} from "../utils/community-feed";
+
+const { lang = "en" } = Astro.props as { lang?: "en" | "ja" };
+const t = useTranslations(lang);
+
+const featuredPost = getFeaturedPost();
+const gridPosts = getGridPosts();
+const members = getMembersWithPosts().map((m) => ({ id: m.id, name: m.name }));
+
+const filterTranslations = {
+  filterAll: t("communityFeed.filterAll"),
+  filterBlog: t("communityFeed.filterBlog"),
+  filterVideo: t("communityFeed.filterVideo"),
+  filterProject: t("communityFeed.filterProject"),
+  allMembers: t("communityFeed.allMembers"),
+  allTime: t("communityFeed.allTime"),
+  lastWeek: t("communityFeed.lastWeek"),
+  lastMonth: t("communityFeed.lastMonth"),
+  last3Months: t("communityFeed.last3Months"),
+  clearAll: t("communityFeed.clearAll"),
+  emptyState: t("communityFeed.emptyState"),
+  emptyCta: t("communityFeed.emptyCta"),
+  filterType: t("communityFeed.filterType"),
+  filterMember: t("communityFeed.filterMember"),
+  filterTags: t("communityFeed.filterTags"),
+  filterTime: t("communityFeed.filterTime"),
+};
+---
+
+<Layout>
+  <Header lang={lang} />
+
+  <main
+    id="main-content"
+    class="community-feed-page mx-auto max-w-[1100px] px-5 pt-28 pb-16 md:px-8"
+  >
+    <PageHeader lang={lang} />
+    <FeaturedPost post={featuredPost} lang={lang} />
+
+    <CommunityFeedFilters
+      client:load
+      members={members}
+      lang={lang}
+      translations={filterTranslations}
+    />
+
+    <!-- Card grid -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {gridPosts.map((post) => (
+        <ContentCard post={post} lang={lang} />
+      ))}
+    </div>
+
+    <!-- Empty state -->
+    <div
+      id="cf-empty-state"
+      class="hidden flex-col items-center justify-center py-20 text-center"
+      style="display: none;"
+    >
+      <span class="text-5xl">&#127861;</span>
+      <p class="mt-4 text-lg text-slate-500">
+        {t("communityFeed.emptyState")}
+      </p>
+      <p class="mt-1 text-sm text-slate-400">
+        {t("communityFeed.emptyCta")}
+      </p>
+    </div>
+  </main>
+
+  <Footer lang={lang} />
+</Layout>
+
+<style>
+  .community-feed-page {
+    --accent: #c4703c;
+    --accent-hover: #a85d30;
+    background: #ffffff;
+    min-height: 100vh;
+  }
+
+  /* Staggered card entrance animation */
+  @keyframes cf-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .cf-card {
+    animation: cf-fade-up 350ms ease both;
+  }
+  .cf-card:nth-child(1) { animation-delay: 0ms; }
+  .cf-card:nth-child(2) { animation-delay: 40ms; }
+  .cf-card:nth-child(3) { animation-delay: 80ms; }
+  .cf-card:nth-child(4) { animation-delay: 120ms; }
+  .cf-card:nth-child(5) { animation-delay: 160ms; }
+  .cf-card:nth-child(6) { animation-delay: 200ms; }
+  .cf-card:nth-child(7) { animation-delay: 240ms; }
+  .cf-card:nth-child(8) { animation-delay: 280ms; }
+  .cf-card:nth-child(9) { animation-delay: 320ms; }
+</style>
