@@ -32,15 +32,10 @@ const t = useTranslations(lang);
 const homeUrl = lang === "ja" ? "/ja/" : "/";
 const submitEmail = "justin.garcia@gmail.com";
 const submitSubject = encodeURIComponent("Kyoto Tech Meetup idea");
-const submitBody = encodeURIComponent(`Hi community organizers,
+const submitBody = encodeURIComponent(`Idea:
 
-I'd like to submit an idea for Kyoto Tech Meetup.
-
-Idea title:
 Who it helps:
-What kind of help I am looking for:
-
-Thanks!`);
+`);
 const submitUrl = `mailto:${submitEmail}?subject=${submitSubject}&body=${submitBody}`;
 
 const ideaModules = import.meta.glob("../data/ideas/*.json", {
