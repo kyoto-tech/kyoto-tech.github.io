@@ -7,7 +7,7 @@ import WhyJoin from "../components/WhyJoin.astro";
 import WhatWeDo from "../components/WhatWeDo.astro";
 import Calendar from "../components/Calendar.astro";
 import Footer from "../components/Footer.astro";
-import { FaGithub, FaDiscord, FaMeetup, FaEnvelope } from "react-icons/fa";
+import { FaGithub, FaDiscord, FaMeetup, FaEnvelope, FaLightbulb } from "react-icons/fa";
 import { FaRegClock, FaRegCalendarAlt } from "react-icons/fa";
 import { useTranslations } from "../i18n/utils";
 import memberFeeds from "../data/member-feeds.json";
@@ -24,6 +24,7 @@ const meetupUrl =
 const discordUrl = "https://discord.gg/mXFWEHDKeu";
 const githubUrl = "https://github.com/kyoto-tech";
 const contactUrl = "https://forms.gle/NPtc1G1vM9jGBYhp6";
+const ideasUrl = lang === "ja" ? "/ja/ideas/" : "/ideas/";
 
 const quickLinks = [
   {
@@ -31,24 +32,35 @@ const quickLinks = [
     icon: FaMeetup,
     titleKey: "home.quickLinks.meetup.title",
     descriptionKey: "home.quickLinks.meetup.description",
+    external: true,
   },
   {
     href: discordUrl,
     icon: FaDiscord,
     titleKey: "home.quickLinks.discord.title",
     descriptionKey: "home.quickLinks.discord.description",
+    external: true,
   },
   {
     href: githubUrl,
     icon: FaGithub,
     titleKey: "home.quickLinks.github.title",
     descriptionKey: "home.quickLinks.github.description",
+    external: true,
+  },
+  {
+    href: ideasUrl,
+    icon: FaLightbulb,
+    titleKey: "home.quickLinks.ideas.title",
+    descriptionKey: "home.quickLinks.ideas.description",
+    external: false,
   },
   {
     href: contactUrl,
     icon: FaEnvelope,
     titleKey: "home.quickLinks.contact.title",
     descriptionKey: "home.quickLinks.contact.description",
+    external: true,
   },
 ] as const;
 
@@ -256,14 +268,14 @@ const nextUpdate = compositeFeed?.generatedAt
         <p class="mt-3 max-w-2xl text-base text-slate-600">
           {t("home.quickLinks.description")}
         </p>
-        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {
             quickLinks.map((link) => (
               <a
                 class="group flex h-full items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-lg shadow-stone-900/5 transition hover:-translate-y-0.5 hover:border-(--accent) hover:bg-white"
                 href={link.href}
-                target="_blank"
-                rel="noreferrer"
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noreferrer" : undefined}
               >
                 <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--accent)/10 text-(--accent)">
                   <link.icon size={18} aria-hidden="true" />

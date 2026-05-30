@@ -24,6 +24,7 @@ export const ui = {
     "nav.about": "About Us",
     "nav.events": "Events",
     "nav.communityFeed": "Community Feed",
+    "nav.ideas": "Ideas",
 
     "home.quickLinks.label": "Quick links",
     "home.quickLinks.title": "Connect with the community",
@@ -37,6 +38,8 @@ export const ui = {
     "home.quickLinks.github.description": "Build with us",
     "home.quickLinks.contact.title": "Contact",
     "home.quickLinks.contact.description": "Reach out to us",
+    "home.quickLinks.ideas.title": "Kyoto Ideas",
+    "home.quickLinks.ideas.description": "Explore community project ideas",
 
     "home.whyJoin.label": "Why Join?",
     "home.whyJoin.title": "Small, intentional gatherings",
@@ -89,6 +92,39 @@ export const ui = {
     "home.communityFeed.emptyFeed": "No posts yet from this feed.",
     "home.communityFeed.fetchError": "Fetch issue",
 
+    "ideas.meta.title": "Kyoto Tech Ideas | Kyoto Tech Meetup",
+    "ideas.meta.description":
+      "Project and meetup ideas from people building in Kyoto, with a simple way to submit your own idea.",
+    "ideas.hero.label": "Kyoto Ideas",
+    "ideas.hero.title": "Ideas from people building in Kyoto",
+    "ideas.hero.subtitle":
+      "A small collection of project, meetup, and community ideas that could use more hands, feedback, or a first prototype.",
+    "ideas.hero.submitCta": "Submit Idea",
+    "ideas.hero.homeCta": "Back to Home",
+    "ideas.list.label": "Community prompts",
+    "ideas.list.title": "What could we build together?",
+    "ideas.list.description":
+      "These are starting points for conversations at coffee meetups, hack days, or small collaborations around Kyoto.",
+    "ideas.idea1.title": "Map tech-friendly places around Kyoto",
+    "ideas.idea1.description":
+      "Collect cafes, libraries, coworking spaces, and quiet corners where people can code, study, or meet collaborators.",
+    "ideas.idea1.tag1": "Local guide",
+    "ideas.idea1.tag2": "Open data",
+    "ideas.idea2.title": "Bilingual builder directory",
+    "ideas.idea2.description":
+      "Create an opt-in directory for engineers, designers, researchers, and founders who want to meet people working nearby.",
+    "ideas.idea2.tag1": "Community",
+    "ideas.idea2.tag2": "Bilingual",
+    "ideas.idea3.title": "Kyoto indie demo night",
+    "ideas.idea3.description":
+      "Host lightweight demo sessions where people can show a side project, prototype, research tool, or creative coding experiment.",
+    "ideas.idea3.tag1": "Events",
+    "ideas.idea3.tag2": "Show and tell",
+    "ideas.idea4.title": "Reusable civic tech starters",
+    "ideas.idea4.description":
+      "Build small templates for local datasets, translation helpers, maps, and public-interest projects that other groups can reuse.",
+    "ideas.idea4.tag1": "Civic tech",
+    "ideas.idea4.tag2": "Starter kits",
     "home.whoComes.label": "Who Comes?",
     "home.whoComes.title": "People who like to build in public",
     "home.whoComes.intro": "You'll probably like it here if you are:",
@@ -166,6 +202,7 @@ export const ui = {
     "nav.about": "私たちについて",
     "nav.events": "イベント",
     "nav.communityFeed": "コミュニティフィード",
+    "nav.ideas": "アイデア",
 
     "home.quickLinks.label": "クイックリンク",
     "home.quickLinks.title": "コミュニティとつながる",
@@ -179,6 +216,8 @@ export const ui = {
     "home.quickLinks.github.description": "コミュニティの制作物をチェック。",
     "home.quickLinks.contact.title": "お問い合わせ",
     "home.quickLinks.contact.description": "質問・提携・フィードバックなど。",
+    "home.quickLinks.ideas.title": "京都のアイデア",
+    "home.quickLinks.ideas.description": "コミュニティのプロジェクト案を見る。",
 
     "home.whyJoin.label": "参加する理由",
     "home.whyJoin.title": "小規模で意図のある集まり",
@@ -232,6 +271,39 @@ export const ui = {
       "このフィードの記事はまだ取得できていません。",
     "home.communityFeed.fetchError": "取得に失敗しました",
 
+    "ideas.meta.title": "Kyoto Tech Ideas | Kyoto Tech Meetup",
+    "ideas.meta.description":
+      "京都で活動する人たちからのプロジェクトやミートアップのアイデアと、自分の案を送るための簡単な窓口です。",
+    "ideas.hero.label": "京都のアイデア",
+    "ideas.hero.title": "京都でつくる人たちからのアイデア",
+    "ideas.hero.subtitle":
+      "プロジェクト、ミートアップ、コミュニティづくりの小さなアイデア集です。手伝ってくれる人、フィードバック、最初のプロトタイプを探しています。",
+    "ideas.hero.submitCta": "アイデアを送る",
+    "ideas.hero.homeCta": "ホームへ戻る",
+    "ideas.list.label": "コミュニティのきっかけ",
+    "ideas.list.title": "一緒に何をつくれる？",
+    "ideas.list.description":
+      "コーヒーミートアップ、ハックデー、京都での小さなコラボレーションの会話のきっかけになる案です。",
+    "ideas.idea1.title": "京都の作業しやすい場所マップ",
+    "ideas.idea1.description":
+      "コーディング、勉強、共同作業に向いているカフェ、図書館、コワーキングスペース、静かな場所を集めます。",
+    "ideas.idea1.tag1": "ローカルガイド",
+    "ideas.idea1.tag2": "オープンデータ",
+    "ideas.idea2.title": "バイリンガルなビルダー名簿",
+    "ideas.idea2.description":
+      "近くで活動するエンジニア、デザイナー、研究者、創業者がつながれる、任意参加のディレクトリをつくります。",
+    "ideas.idea2.tag1": "コミュニティ",
+    "ideas.idea2.tag2": "バイリンガル",
+    "ideas.idea3.title": "京都インディーデモナイト",
+    "ideas.idea3.description":
+      "個人開発、プロトタイプ、研究ツール、クリエイティブコーディングの実験を気軽に見せられる小さなデモ会を開きます。",
+    "ideas.idea3.tag1": "イベント",
+    "ideas.idea3.tag2": "Show and tell",
+    "ideas.idea4.title": "再利用できるシビックテックのスターター",
+    "ideas.idea4.description":
+      "地域データ、翻訳補助、地図、公共性のあるプロジェクトに使える小さなテンプレートをつくり、他の団体も再利用できるようにします。",
+    "ideas.idea4.tag1": "シビックテック",
+    "ideas.idea4.tag2": "スターターキット",
     "home.whoComes.label": "参加者",
     "home.whoComes.title": "“作っているところ”をオープンにする人たち",
     "home.whoComes.intro": "こんな人なら、きっと楽しめます：",

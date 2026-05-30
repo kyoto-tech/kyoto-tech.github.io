@@ -1,0 +1,140 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { FaArrowLeft, FaEnvelope } from "react-icons/fa";
+import { useTranslations } from "../i18n/utils";
+
+type Props = {
+  lang?: "en" | "ja";
+};
+
+const { lang = "en" } = Astro.props as Props;
+const t = useTranslations(lang);
+const homeUrl = lang === "ja" ? "/ja/" : "/";
+const submitEmail = "justin.garcia@gmail.com";
+const submitSubject = encodeURIComponent("Kyoto Tech idea submission");
+const submitBody = encodeURIComponent(`Hi community organizers,
+
+I'd like to submit an idea for Kyoto Tech Meetup.
+
+Idea title:
+Who it helps:
+What kind of help I am looking for:
+
+Thanks!`);
+const submitUrl = `mailto:${submitEmail}?subject=${submitSubject}&body=${submitBody}`;
+
+const ideas = [
+  {
+    titleKey: "ideas.idea1.title",
+    descriptionKey: "ideas.idea1.description",
+    tagKeys: ["ideas.idea1.tag1", "ideas.idea1.tag2"],
+  },
+  {
+    titleKey: "ideas.idea2.title",
+    descriptionKey: "ideas.idea2.description",
+    tagKeys: ["ideas.idea2.tag1", "ideas.idea2.tag2"],
+  },
+  {
+    titleKey: "ideas.idea3.title",
+    descriptionKey: "ideas.idea3.description",
+    tagKeys: ["ideas.idea3.tag1", "ideas.idea3.tag2"],
+  },
+  {
+    titleKey: "ideas.idea4.title",
+    descriptionKey: "ideas.idea4.description",
+    tagKeys: ["ideas.idea4.tag1", "ideas.idea4.tag2"],
+  },
+] as const;
+---
+
+<Layout
+  titleKey="ideas.meta.title"
+  descriptionKey="ideas.meta.description"
+  path="/ideas/"
+>
+  <Header lang={lang} />
+
+  <main id="main-content" class="bg-stone-50 pt-24">
+    <section class="px-6 py-16 md:px-12">
+      <div class="mx-auto max-w-5xl">
+        <div
+          class="overflow-hidden rounded-3xl bg-white shadow-xl shadow-stone-900/5 ring-1 ring-slate-200/70"
+        >
+          <div class="p-8 md:p-12">
+            <p
+              class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500"
+            >
+              {t("ideas.hero.label")}
+            </p>
+            <h1
+              class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-slate-950 md:text-5xl"
+            >
+              {t("ideas.hero.title")}
+            </h1>
+            <p class="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
+              {t("ideas.hero.subtitle")}
+            </p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a
+                href={submitUrl}
+                class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+              >
+                <FaEnvelope aria-hidden="true" />
+                {t("ideas.hero.submitCta")}
+              </a>
+              <a
+                href={homeUrl}
+                class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950"
+              >
+                <FaArrowLeft aria-hidden="true" />
+                {t("ideas.hero.homeCta")}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white px-6 py-16 md:px-12">
+      <div class="mx-auto max-w-5xl">
+        <p
+          class="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500"
+        >
+          {t("ideas.list.label")}
+        </p>
+        <h2 class="mt-3 text-3xl font-semibold text-slate-900">
+          {t("ideas.list.title")}
+        </h2>
+        <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
+          {t("ideas.list.description")}
+        </p>
+
+        <div class="mt-8 grid gap-5 md:grid-cols-2">
+          {
+            ideas.map((idea) => (
+              <article class="flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white p-6 shadow-lg shadow-stone-900/5 transition hover:-translate-y-0.5 hover:border-(--accent)">
+                <div class="flex flex-wrap gap-2">
+                  {idea.tagKeys.map((tagKey) => (
+                    <span class="rounded-full bg-(--accent)/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-(--accent)">
+                      {t(tagKey)}
+                    </span>
+                  ))}
+                </div>
+                <h3 class="mt-5 text-xl font-semibold text-slate-950">
+                  {t(idea.titleKey)}
+                </h3>
+                <p class="mt-3 leading-relaxed text-slate-600">
+                  {t(idea.descriptionKey)}
+                </p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer lang={lang} />
+</Layout>
