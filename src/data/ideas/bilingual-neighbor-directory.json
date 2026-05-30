@@ -1,0 +1,16 @@
+{
+  "id": "bilingual-neighbor-directory",
+  "order": 20,
+  "title": {
+    "en": "Bilingual neighbor directory",
+    "ja": "バイリンガルなご近所ディレクトリ"
+  },
+  "description": {
+    "en": "Create an opt-in directory for residents who want to meet neighbors with shared interests, local knowledge, or useful skills.",
+    "ja": "共通の興味、地域の知識、役立つスキルを持つ住民同士がつながれる、任意参加のディレクトリをつくります。"
+  },
+  "tags": {
+    "en": ["Community", "Bilingual"],
+    "ja": ["コミュニティ", "バイリンガル"]
+  }
+}

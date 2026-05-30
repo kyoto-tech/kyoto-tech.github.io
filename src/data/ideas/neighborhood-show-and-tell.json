@@ -1,0 +1,16 @@
+{
+  "id": "neighborhood-show-and-tell",
+  "order": 30,
+  "title": {
+    "en": "Kyoto neighborhood show-and-tell",
+    "ja": "京都ご近所ショーアンドテル"
+  },
+  "description": {
+    "en": "Host lightweight sessions where residents can share a local project, practical tip, community resource, or creative experiment.",
+    "ja": "地域のプロジェクト、暮らしの工夫、コミュニティの情報、クリエイティブな実験を気軽に共有できる小さな会を開きます。"
+  },
+  "tags": {
+    "en": ["Events", "Show and tell"],
+    "ja": ["イベント", "Show and tell"]
+  }
+}

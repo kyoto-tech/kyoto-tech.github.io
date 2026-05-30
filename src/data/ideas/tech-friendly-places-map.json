@@ -1,0 +1,16 @@
+{
+  "id": "tech-friendly-places-map",
+  "order": 10,
+  "title": {
+    "en": "Map tech-friendly places around Kyoto",
+    "ja": "京都の作業しやすい場所マップ"
+  },
+  "description": {
+    "en": "Collect cafes, libraries, coworking spaces, and quiet corners where people can code, study, or meet collaborators.",
+    "ja": "コーディング、勉強、共同作業に向いているカフェ、図書館、コワーキングスペース、静かな場所を集めます。"
+  },
+  "tags": {
+    "en": ["Local guide", "Open data"],
+    "ja": ["ローカルガイド", "オープンデータ"]
+  }
+}
