@@ -147,6 +147,21 @@ export const ui = {
     "meta.description":
       "Gatherings for developers, designers, researchers, and founders exploring technology in Kyoto. Conversation-first meetups, community hack days, and collaborations in the city's tech scene.",
     "meta.imageAlt": "Community meetup in Kyoto for builders and technologists",
+
+    "members.title": "Community Members",
+    "members.subtitle": "The people behind Kyoto Tech Meetup — engineers, designers, researchers, and founders based in Kyoto.",
+    "members.map.title": "Member Map",
+    "members.map.filterAll": "All roles",
+    "members.map.legendTitle": "Role",
+    "members.map.website": "Website",
+    "members.map.unknownMember": "Member",
+    "members.map.role.softwareEngineer": "Software Engineer",
+    "members.map.role.designer": "Designer",
+    "members.map.role.other": "Others",
+    "members.stats.members": "Members",
+    "members.stats.events": "Events Hosted",
+    "members.stats.countries": "Countries",
+    "nav.members": "Members",
   },
   ja: {
     "a11y.skipToMain": "メインコンテンツへスキップ",
@@ -292,5 +307,20 @@ export const ui = {
       "京都でテクノロジーを探求するデベロッパー、デザイナー、研究者、ファウンダーのための集まり。会話重視のミートアップ、コミュニティハックデー、コラボレーションを通じて、京都のテックシーンを盛り上げています。",
     "meta.imageAlt":
       "京都で開催される、テクノロジーに関心のある人たちのコミュニティミートアップ",
+
+    "members.title": "コミュニティメンバー",
+    "members.subtitle": "京都在住のエンジニア、デザイナー、研究者、ファウンダーなど、Kyoto Tech Meetupを支える人たち。",
+    "members.map.title": "メンバーマップ",
+    "members.map.filterAll": "すべてのロール",
+    "members.map.legendTitle": "ロール",
+    "members.map.website": "ウェブサイト",
+    "members.map.unknownMember": "メンバー",
+    "members.map.role.softwareEngineer": "ソフトウェアエンジニア",
+    "members.map.role.designer": "デザイナー",
+    "members.map.role.other": "その他",
+    "members.stats.members": "メンバー数",
+    "members.stats.events": "開催イベント数",
+    "members.stats.countries": "参加国数",
+    "nav.members": "メンバー",
   },
 } as const;
