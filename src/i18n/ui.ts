@@ -25,10 +25,7 @@ export const ui = {
     "nav.events": "Events",
     "nav.communityFeed": "Community Feed",
 
-    "home.quickLinks.label": "Quick links",
     "home.quickLinks.title": "Connect with the community",
-    "home.quickLinks.description":
-      "Jump straight to events, chat, open-source projects, or contact the organizers.",
     "home.quickLinks.meetup.title": "Meetup",
     "home.quickLinks.meetup.description": "Hang with us",
     "home.quickLinks.discord.title": "Discord",
@@ -37,8 +34,6 @@ export const ui = {
     "home.quickLinks.github.description": "Build with us",
     "home.quickLinks.contact.title": "Contact",
     "home.quickLinks.contact.description": "Reach out to us",
-
-    "home.whyJoin.label": "Why Join?",
     "home.whyJoin.title": "Small, intentional gatherings",
 
     "home.benefit1.title": "Conversation, not conferences",
@@ -53,26 +48,6 @@ export const ui = {
     "home.benefit3.description":
       "Use the meetup to find co-founders, collaborators, study buddies, or just people who care about the same weird tech rabbit holes you do.",
 
-    "home.whatsHappening.label": "What's happening?",
-    "home.whatsHappening.title": "Two core sessions each month",
-
-    "home.activity1.title": "Morning Tech Coffee",
-    "home.activity1.content1":
-      "A relaxed, conversation-first meetup in central Kyoto.",
-    "home.activity1.content2":
-      "We grab coffee, grab a table, and talk about whatever people are building or exploring: AI workflows, indie apps, creative coding, career paths in Japan, or day-to-day life in Kyoto. No agenda, no presentations.",
-    "home.activity1.content3":
-      "It's simple, friendly, and a great way to start the day before work.",
-
-    "home.activity2.title": "Community Hack Day",
-    "home.activity2.content1":
-      "A collaborative working session where we ship projects.",
-    "home.activity2.content2":
-      "Bring an idea, help someone else, or join a team on something that interests you. Projects stay intentionally small and shippable, and everything lives openly in the [Kyoto Tech Meetup GitHub organization](https://github.com/kyoto-tech).",
-    "home.activity2.content3":
-      "It's creative, practical, and a great way to contribute to the local ecosystem.",
-
-    "home.communityFeed.label": "Community feed",
     "home.communityFeed.title": "What members are publishing",
     "home.communityFeed.description":
       "Here are the latest posts from our members' blogs.",
@@ -89,7 +64,6 @@ export const ui = {
     "home.communityFeed.emptyFeed": "No posts yet from this feed.",
     "home.communityFeed.fetchError": "Fetch issue",
 
-    "home.whoComes.label": "Who Comes?",
     "home.whoComes.title": "People who like to build in public",
     "home.whoComes.intro": "You'll probably like it here if you are:",
     "home.whoComes.item1":
@@ -106,32 +80,26 @@ export const ui = {
     "home.languages.description":
       "The meetup is English-friendly with a natural mix of English and Japanese. Come as you are; we'll make space.",
 
-    "home.locations.title": "Locations",
-    "home.locations.description1":
-      "We meet at cafés and shared spaces in central Kyoto.",
-    "home.locations.description2":
-      "Exact time and place are in each event invite and reminder email.",
-    "home.locations.description3":
-      "Most of our events take place at the cafés shown on the map below.",
+    "home.locations.title": "Frequent locations",
+    "home.locations.note":
+      "Always check the event listing for actual locations.",
 
-    "home.calendar.label": "Upcoming Meetups",
-    "home.calendar.title": "Kyoto Tech Meetup Calendar",
+    "home.calendar.title": "Our Event Calendar",
+    "home.calendar.legend.coffee.title": "Tech & Coffee",
+    "home.calendar.legend.coffee.description":
+      "Weekly casual hangouts",
+    "home.calendar.legend.hackDay.title": "Hack Day",
+    "home.calendar.legend.hackDay.description":
+      "Monthly collaborative building",
+    "home.calendar.legend.special.title": "Special Events",
+    "home.calendar.legend.special.description":
+      "One-off gatherings",
 
     "home.eventCard.empty": "Check back soon for events!",
     "home.eventCard.emptyLink": "Join our meetup group here to get updates.",
     "home.eventCard.liveNow": "Live Now",
     "home.eventCard.venueTba": "Venue TBA",
     "home.eventCard.going": "going",
-
-    "home.hackDay.imageAlt": "Our first Community Hack Day where we built this very site!",
-    "home.hackDay.caption": "Our first Community Hack Day where we built this very site!",
-    "home.hackDay.groupTitle": "Community Hack Days",
-    "home.hackDay2.imageAlt": "Our second Community Hack Day",
-    "home.hackDay2.caption": "Our second Community Hack Day",
-    "home.hackDay.repoLink": "repo here",
-    "home.morningCoffee.groupTitle": "Morning Tech & Coffee",
-    "home.morningCoffee.imageAlt": "Morning Tech & Coffee meetup",
-    "home.morningCoffee.caption": "Morning Tech & Coffee",
 
     "home.footer.copyright":
       "Kyoto Tech Meetup. Crafted by volunteers in Kyoto.",
@@ -167,10 +135,7 @@ export const ui = {
     "nav.events": "イベント",
     "nav.communityFeed": "コミュニティフィード",
 
-    "home.quickLinks.label": "クイックリンク",
     "home.quickLinks.title": "コミュニティとつながる",
-    "home.quickLinks.description":
-      "イベント、チャット、オープンソース、問い合わせにすぐアクセスできます。",
     "home.quickLinks.meetup.title": "Meetup",
     "home.quickLinks.meetup.description": "次回イベントに参加する。",
     "home.quickLinks.discord.title": "Discord",
@@ -179,8 +144,6 @@ export const ui = {
     "home.quickLinks.github.description": "コミュニティの制作物をチェック。",
     "home.quickLinks.contact.title": "お問い合わせ",
     "home.quickLinks.contact.description": "質問・提携・フィードバックなど。",
-
-    "home.whyJoin.label": "参加する理由",
     "home.whyJoin.title": "小規模で意図のある集まり",
 
     "home.benefit1.title": "話すための場、会議ではない",
@@ -195,26 +158,6 @@ export const ui = {
     "home.benefit3.description":
       "共同創業者、協力者、勉強仲間を見つけたり、あなたと同じ“ちょっと変わった”技術の話題に興味を持つ仲間とつながることができます。",
 
-    "home.whatsHappening.label": "今やっていること",
-    "home.whatsHappening.title": "月に2回のコアセッション",
-
-    "home.activity1.title": "Morning Tech Coffee",
-    "home.activity1.content1":
-      "京都中心部で行う、リラックスした「会話主体」のミートアップです。",
-    "home.activity1.content2":
-      "コーヒーを買って席につき、みんなが作っているもの・試していることについて気軽に話します。AIのワークフロー、個人開発、クリエイティブコーディング、日本でのキャリア、京都の日常など、テーマは自由。アジェンダもプレゼンもありません。",
-    "home.activity1.content3":
-      "シンプルでフレンドリー。仕事前に一日を気持ちよく始められます。",
-
-    "home.activity2.title": "Community Hack Day",
-    "home.activity2.content1":
-      "みんなでプロジェクトを“実際に”仕上げるコラボレーションデイです。",
-    "home.activity2.content2":
-      "アイデアを持ってくるのもよし、誰かを手伝うのもよし、興味のあるチームに参加するのもOK。プロジェクトは意図的に小さく、すぐに形にできる範囲で進めます。すべてはオープンに、[Kyoto Tech Meetup GitHub Organization](https://github.com/kyoto-tech) に公開されます。",
-    "home.activity2.content3":
-      "クリエイティブで実践的。京都のテックコミュニティに貢献する絶好の場です。",
-
-    "home.communityFeed.label": "コミュニティフィード",
     "home.communityFeed.title": "メンバーの最新投稿",
     "home.communityFeed.description":
       "メンバーのブログから最新の記事をご紹介します。",
@@ -232,7 +175,6 @@ export const ui = {
       "このフィードの記事はまだ取得できていません。",
     "home.communityFeed.fetchError": "取得に失敗しました",
 
-    "home.whoComes.label": "参加者",
     "home.whoComes.title": "“作っているところ”をオープンにする人たち",
     "home.whoComes.intro": "こんな人なら、きっと楽しめます：",
 
@@ -250,32 +192,26 @@ export const ui = {
     "home.languages.description":
       "英語でも日本語でも気軽に参加できます。英語と日本語が自然に混ざるミートアップなので、そのままの自分でどうぞ。みんなで場をつくります。",
 
-    "home.locations.title": "開催場所",
-    "home.locations.description1":
-      "京都中心部のカフェやシェアスペースで集まっています。",
-    "home.locations.description2":
-      "具体的な場所と時間は、各イベントの案内メールやリマインダーでお知らせします。",
-    "home.locations.description3":
-      "ほとんどのイベントは、以下の地図に示されているカフェで開催されています。",
+    "home.locations.title": "よく使う場所",
+    "home.locations.note":
+      "実際の開催場所は、必ず各イベントページで確認してください。",
 
-    "home.calendar.label": "今後のミートアップ",
-    "home.calendar.title": "Kyoto Tech Meetup カレンダー",
+    "home.calendar.title": "イベントカレンダー",
+    "home.calendar.legend.coffee.title": "Tech & Coffee",
+    "home.calendar.legend.coffee.description":
+      "毎週のカジュアルな交流会",
+    "home.calendar.legend.hackDay.title": "Hack Day",
+    "home.calendar.legend.hackDay.description":
+      "月1回の共同制作",
+    "home.calendar.legend.special.title": "Special Events",
+    "home.calendar.legend.special.description":
+      "単発のイベント",
 
     "home.eventCard.empty": "イベント情報は近日公開予定です。",
     "home.eventCard.emptyLink": "Meetupグループに参加して最新情報を受け取りましょう。",
     "home.eventCard.liveNow": "開催中",
     "home.eventCard.venueTba": "会場未定",
     "home.eventCard.going": "人が参加予定",
-
-    "home.hackDay.imageAlt": "初めてのCommunity Hack Day。このサイトもここで作りました！",
-    "home.hackDay.caption": "初めてのCommunity Hack Day。このサイトもここで作りました！",
-    "home.hackDay.groupTitle": "Community Hack Days",
-    "home.hackDay2.imageAlt": "2回目のCommunity Hack Day",
-    "home.hackDay2.caption": "2回目のCommunity Hack Day",
-    "home.hackDay.repoLink": "リポジトリはこちら",
-    "home.morningCoffee.groupTitle": "Morning Tech & Coffee",
-    "home.morningCoffee.imageAlt": "Morning Tech & Coffeeミートアップ",
-    "home.morningCoffee.caption": "Morning Tech & Coffee",
 
     "home.footer.copyright":
       "Kyoto Tech Meetup — 京都在住のボランティアによるコミュニティ運営。",

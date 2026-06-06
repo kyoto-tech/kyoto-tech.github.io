@@ -9,11 +9,8 @@ type Props = {
 const { lang = "en" } = Astro.props as Props;
 const t = useTranslations(lang);
 
-const meetupUrl =
-  lang === "ja"
-    ? "https://www.meetup.com/ja-JP/kyoto-tech-meetup/"
-    : "https://www.meetup.com/kyoto-tech-meetup/";
 const homeUrl = lang === "ja" ? "/ja/" : "/";
+const calendarUrl = `${homeUrl}#calendar`;
 ---
 
 <nav class="fixed top-0 left-0 right-0 z-50 px-4 py-4">
@@ -25,17 +22,15 @@ const homeUrl = lang === "ja" ? "/ja/" : "/";
         </span>
       </a>
       <div class="hidden items-center gap-1 md:flex">
-        <a href="#whats-happening" class="rounded-full px-3 py-1 text-sm text-slate-600 transition hover:text-slate-900">{t("nav.about")}</a>
-        <a href="#calendar" class="rounded-full px-3 py-1 text-sm text-slate-600 transition hover:text-slate-900">{t("nav.events")}</a>
-        <a href="#community-feed" class="rounded-full px-3 py-1 text-sm text-slate-600 transition hover:text-slate-900">{t("nav.communityFeed")}</a>
+        <a href={`${homeUrl}#why-join`} class="rounded-full px-3 py-1 text-sm text-slate-600 transition hover:text-slate-900">{t("nav.about")}</a>
+        <a href={`${homeUrl}#calendar`} class="rounded-full px-3 py-1 text-sm text-slate-600 transition hover:text-slate-900">{t("nav.events")}</a>
+        <a href={`${homeUrl}#community-feed`} class="rounded-full px-3 py-1 text-sm text-slate-600 transition hover:text-slate-900">{t("nav.communityFeed")}</a>
       </div>
     </div>
     <div class="flex items-center gap-3">
       <LanguagePicker />
       <a
-        href={meetupUrl}
-        target="_blank"
-        rel="noreferrer"
+        href={calendarUrl}
         class="rounded-full bg-slate-900 px-5 py-2 text-sm text-white transition hover:bg-slate-800"
       >
         {t("home.header.cta")}
