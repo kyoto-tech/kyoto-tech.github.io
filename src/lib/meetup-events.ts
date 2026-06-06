@@ -2,6 +2,8 @@
 import { classifyEventType, type EventType } from "./event-types";
 
 const EVENTS_URL = "https://www.meetup.com/kyoto-tech-meetup/events/";
+const coffeeWeekdaySuffixPattern =
+  /\s+on\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$/i;
 
 export type MeetupEvent = {
   title: string;
@@ -21,6 +23,16 @@ export type MeetupEvent = {
     country?: string;
   } | null;
 };
+
+export function normalizeMeetupEventTitle(title: string): string {
+  const titleWithoutGroupSuffix = title.replace(" | Kyoto Tech Meetup", "");
+
+  if (classifyEventType(titleWithoutGroupSuffix) !== "coffee") {
+    return titleWithoutGroupSuffix;
+  }
+
+  return titleWithoutGroupSuffix.replace(coffeeWeekdaySuffixPattern, "");
+}
 
 export async function fetchMeetupEvents(): Promise<MeetupEvent[]> {
   const requestUrl = new URL(EVENTS_URL);
@@ -128,7 +140,7 @@ export async function fetchMeetupEvents(): Promise<MeetupEvent[]> {
     )
     .map(([, rawValue]) => {
       const value = rawValue as any;
-      const title = value.title?.replace(" | Kyoto Tech Meetup", "") ?? "";
+      const title = normalizeMeetupEventTitle(value.title ?? "");
       const socialProof = resolveSocialProofInsights(value.socialProofInsights);
       const goingCount =
         resolveGoingCount(value.going) ?? socialProof?.going ?? 0;

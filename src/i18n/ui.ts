@@ -80,40 +80,26 @@ export const ui = {
     "home.languages.description":
       "The meetup is English-friendly with a natural mix of English and Japanese. Come as you are; we'll make space.",
 
-    "home.locations.title": "Locations",
-    "home.locations.description1":
-      "We meet at cafés and shared spaces in central Kyoto.",
-    "home.locations.description2":
-      "Exact time and place are in each event invite and reminder email.",
-    "home.locations.description3":
-      "Most of our events take place at the cafés shown on the map below.",
+    "home.locations.title": "Frequent locations",
+    "home.locations.note":
+      "Always check the event listing for actual locations.",
 
     "home.calendar.title": "Our Event Calendar",
     "home.calendar.legend.coffee.title": "Tech & Coffee",
     "home.calendar.legend.coffee.description":
-      "Weekly casual morning hangouts",
+      "Weekly casual hangouts",
     "home.calendar.legend.hackDay.title": "Hack Day",
     "home.calendar.legend.hackDay.description":
-      "Monthly collaborative building sessions",
+      "Monthly collaborative building",
     "home.calendar.legend.special.title": "Special Events",
     "home.calendar.legend.special.description":
-      "One-off community gatherings",
+      "One-off gatherings",
 
     "home.eventCard.empty": "Check back soon for events!",
     "home.eventCard.emptyLink": "Join our meetup group here to get updates.",
     "home.eventCard.liveNow": "Live Now",
     "home.eventCard.venueTba": "Venue TBA",
     "home.eventCard.going": "going",
-
-    "home.hackDay.imageAlt": "Our first Community Hack Day where we built this very site!",
-    "home.hackDay.caption": "Our first Community Hack Day where we built this very site!",
-    "home.hackDay.groupTitle": "Community Hack Days",
-    "home.hackDay2.imageAlt": "Our second Community Hack Day",
-    "home.hackDay2.caption": "Our second Community Hack Day",
-    "home.hackDay.repoLink": "repo here",
-    "home.morningCoffee.groupTitle": "Morning Tech & Coffee",
-    "home.morningCoffee.imageAlt": "Morning Tech & Coffee meetup",
-    "home.morningCoffee.caption": "Morning Tech & Coffee",
 
     "home.footer.copyright":
       "Kyoto Tech Meetup. Crafted by volunteers in Kyoto.",
@@ -206,40 +192,26 @@ export const ui = {
     "home.languages.description":
       "英語でも日本語でも気軽に参加できます。英語と日本語が自然に混ざるミートアップなので、そのままの自分でどうぞ。みんなで場をつくります。",
 
-    "home.locations.title": "開催場所",
-    "home.locations.description1":
-      "京都中心部のカフェやシェアスペースで集まっています。",
-    "home.locations.description2":
-      "具体的な場所と時間は、各イベントの案内メールやリマインダーでお知らせします。",
-    "home.locations.description3":
-      "ほとんどのイベントは、以下の地図に示されているカフェで開催されています。",
+    "home.locations.title": "よく使う場所",
+    "home.locations.note":
+      "実際の開催場所は、必ず各イベントページで確認してください。",
 
     "home.calendar.title": "イベントカレンダー",
     "home.calendar.legend.coffee.title": "Tech & Coffee",
     "home.calendar.legend.coffee.description":
-      "毎週のカジュアルな朝の交流会",
+      "毎週のカジュアルな交流会",
     "home.calendar.legend.hackDay.title": "Hack Day",
     "home.calendar.legend.hackDay.description":
-      "月1回の共同制作セッション",
+      "月1回の共同制作",
     "home.calendar.legend.special.title": "Special Events",
     "home.calendar.legend.special.description":
-      "単発のコミュニティイベント",
+      "単発のイベント",
 
     "home.eventCard.empty": "イベント情報は近日公開予定です。",
     "home.eventCard.emptyLink": "Meetupグループに参加して最新情報を受け取りましょう。",
     "home.eventCard.liveNow": "開催中",
     "home.eventCard.venueTba": "会場未定",
     "home.eventCard.going": "人が参加予定",
-
-    "home.hackDay.imageAlt": "初めてのCommunity Hack Day。このサイトもここで作りました！",
-    "home.hackDay.caption": "初めてのCommunity Hack Day。このサイトもここで作りました！",
-    "home.hackDay.groupTitle": "Community Hack Days",
-    "home.hackDay2.imageAlt": "2回目のCommunity Hack Day",
-    "home.hackDay2.caption": "2回目のCommunity Hack Day",
-    "home.hackDay.repoLink": "リポジトリはこちら",
-    "home.morningCoffee.groupTitle": "Morning Tech & Coffee",
-    "home.morningCoffee.imageAlt": "Morning Tech & Coffeeミートアップ",
-    "home.morningCoffee.caption": "Morning Tech & Coffee",
 
     "home.footer.copyright":
       "Kyoto Tech Meetup — 京都在住のボランティアによるコミュニティ運営。",

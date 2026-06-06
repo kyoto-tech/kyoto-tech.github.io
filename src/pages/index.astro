@@ -1,5 +1,4 @@
 ---
-/* eslint-disable max-lines */
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
@@ -52,35 +51,27 @@ const quickLinks = [
   },
 ] as const;
 
-const photoGroups = [
+const calendarLegendItems = [
   {
-    titleKey: "home.hackDay.groupTitle",
-    photos: [
-      {
-        src: "/images/kyoto-tech-meetup-hack-day.jpg",
-        altKey: "home.hackDay.imageAlt",
-        captionKey: "home.hackDay.caption",
-        repoUrl: "https://github.com/kyoto-tech/kyoto-tech.github.io",
-      },
-      {
-        src: "/images/kyoto-tech-meetup-hack-day_2.jpg",
-        altKey: "home.hackDay2.imageAlt",
-        captionKey: "home.hackDay2.caption",
-        repoUrl: null,
-      },
-    ],
+    titleKey: "home.calendar.legend.coffee.title",
+    descriptionKey: "home.calendar.legend.coffee.description",
+    image: "/images/kyoto-tech-morning-tech-&-coffee.jpg",
+    color: "var(--accent)",
+    imageClass: "object-[center_65%]",
   },
   {
-    titleKey: "home.morningCoffee.groupTitle",
-    photos: [
-      {
-        src: "/images/kyoto-tech-morning-tech-&-coffee.jpg",
-        altKey: "home.morningCoffee.imageAlt",
-        captionKey: "home.morningCoffee.caption",
-        repoUrl: null,
-        content: "bottom",
-      },
-    ],
+    titleKey: "home.calendar.legend.hackDay.title",
+    descriptionKey: "home.calendar.legend.hackDay.description",
+    image: "/images/kyoto-tech-meetup-hack-day.jpg",
+    color: "#0f766e",
+    imageClass: "object-center",
+  },
+  {
+    titleKey: "home.calendar.legend.special.title",
+    descriptionKey: "home.calendar.legend.special.description",
+    image: "/images/kyoto-tech-meetup-hack-day_2.jpg",
+    color: "#7c3aed",
+    imageClass: "object-center",
   },
 ] as const;
 
@@ -232,43 +223,72 @@ const nextUpdate = compositeFeed?.generatedAt
         <h2 class="text-3xl font-semibold text-slate-900">
           {t("home.calendar.title")}
         </h2>
-        <div class="mt-5 grid gap-3 text-sm text-slate-700 md:grid-cols-3">
-          <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-            <span class="mt-1 h-3 w-3 shrink-0 rounded-full bg-(--accent)" aria-hidden="true"></span>
-            <div>
-              <h3 class="font-semibold text-slate-900">
-                {t("home.calendar.legend.coffee.title")}
-              </h3>
-              <p class="mt-1">
-                {t("home.calendar.legend.coffee.description")}
-              </p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-            <span class="mt-1 h-3 w-3 shrink-0 rounded-full bg-teal-700" aria-hidden="true"></span>
-            <div>
-              <h3 class="font-semibold text-slate-900">
-                {t("home.calendar.legend.hackDay.title")}
-              </h3>
-              <p class="mt-1">
-                {t("home.calendar.legend.hackDay.description")}
-              </p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-            <span class="mt-1 h-3 w-3 shrink-0 rounded-full bg-violet-600" aria-hidden="true"></span>
-            <div>
-              <h3 class="font-semibold text-slate-900">
-                {t("home.calendar.legend.special.title")}
-              </h3>
-              <p class="mt-1">
-                {t("home.calendar.legend.special.description")}
-              </p>
-            </div>
-          </div>
+        <div class="mt-5 grid gap-4 text-sm text-slate-700 md:grid-cols-3">
+          {
+            calendarLegendItems.map((item) => (
+              <article class="overflow-hidden rounded-xl border border-slate-200 bg-white">
+                <div class="h-32 overflow-hidden bg-slate-100">
+                  <img
+                    src={item.image}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    class={`h-full w-full object-cover ${item.imageClass}`}
+                  />
+                </div>
+                <div class="p-4">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="h-3 w-3 shrink-0 rounded-full"
+                      style={`background-color: ${item.color};`}
+                      aria-hidden="true"
+                    />
+                    <h3 class="font-semibold text-slate-900">
+                      {t(item.titleKey)}
+                    </h3>
+                  </div>
+                  <p class="mt-2">{t(item.descriptionKey)}</p>
+                </div>
+              </article>
+            ))
+          }
         </div>
 
         <Calendar events={events} lang={lang} />
+
+        <div id="locations" class="mt-12">
+          <h3 class="text-2xl font-semibold text-slate-900">
+            {t("home.locations.title")}
+          </h3>
+          <p class="mt-2 text-base text-slate-600">
+            {t("home.locations.note")}
+          </p>
+          <div class="mt-6 grid gap-5 md:grid-cols-2">
+            {eventLocations.map((location) => (
+              <article class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white">
+                <div class="p-4">
+                  <h4 class="text-lg font-semibold text-slate-900">
+                    {location.name}
+                  </h4>
+                </div>
+                <div class="h-72 bg-slate-100">
+                  <iframe
+                    src={location.embedUrl}
+                    title={t("a11y.mapTitle").replace("{name}", location.name)}
+                    aria-label={t("a11y.mapLabel").replace("{name}", location.name)}
+                    width="100%"
+                    height="100%"
+                    style="border:0; display: block;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                  >
+                  </iframe>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
 
@@ -418,56 +438,6 @@ const nextUpdate = compositeFeed?.generatedAt
           {t("home.whyJoin.title")}
         </h2>
         <WhyJoin items={benefits} />
-        {photoGroups.map((group) => (
-          <div class="mt-10">
-            <h3 class="mb-4 text-base font-semibold uppercase tracking-widest text-slate-500">
-              {t(group.titleKey)}
-            </h3>
-        
-            <div
-              class={`flex flex-col gap-4 sm:flex-row ${
-                group.photos.length === 1 ? "sm:max-w-[50%] sm:mx-auto" : ""
-              }`}
-            >
-              {group.photos.map((photo) => (
-                <figure
-                  class="flex-1 overflow-hidden rounded-3xl bg-white/90 shadow-xl shadow-stone-900/5 ring-1 ring-white/60"
-                >
-                  <img
-                    src={photo.src}
-                    alt={t(photo.altKey)}
-                    loading="lazy"
-                    decoding="async"
-                    class={`w-full h-[280px] rounded-3xl object-cover transition-transform duration-300 ${
-                      "content" in photo && photo.content === "bottom"
-                        ? "object-[center_65%]"
-                        : "object-center"
-                    }`}
-                  />
-        
-                  <figcaption class="px-5 py-4 text-center text-sm font-medium text-slate-700">
-                    {t(photo.captionKey)}
-                    {photo.repoUrl && (
-                      <>
-                        <br />
-                        (
-                        <a
-                          class="text-(--accent) underline-offset-4 hover:underline"
-                          href={photo.repoUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {t("home.hackDay.repoLink")}
-                        </a>
-                        )
-                      </>
-                    )}
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          </div>
-        ))}
       </div>
     </section>
 
@@ -498,42 +468,6 @@ const nextUpdate = compositeFeed?.generatedAt
             <p class="mt-3 text-base leading-relaxed text-slate-600">
               {t("home.languages.description")}
             </p>
-          </div>
-          <div
-            class="rounded-2xl bg-white/90 shadow-lg shadow-stone-900/10 ring-1 ring-white/70 overflow-hidden"
-          >
-            <div class="p-6">
-              <h3 class="text-xl font-semibold text-slate-900">
-                {t("home.locations.title")}
-              </h3>
-              <p class="mt-3 text-base leading-relaxed text-slate-600">
-                {t("home.locations.description1")}
-              </p>
-              <p class="mt-2 text-base leading-relaxed text-slate-600">
-                {t("home.locations.description2")}
-              </p>
-              <p class="mt-2 text-base leading-relaxed text-slate-600">
-                {t("home.locations.description3")}
-              </p>
-            </div>
-            <div class="flex flex-col gap-4 px-6 pb-6 pt-2 sm:flex-row">
-              {eventLocations.map((location) => (
-                <div class="aspect-square flex-1 overflow-hidden rounded-2xl bg-white/90 shadow-lg shadow-stone-900/10 ring-1 ring-white/70">
-                  <iframe
-                    src={location.embedUrl}
-                    title={t("a11y.mapTitle").replace("{name}", location.name)}
-                    aria-label={t("a11y.mapLabel").replace("{name}", location.name)}
-                    width="100%"
-                    height="100%"
-                    style="border:0; display: block;"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                  >
-                  </iframe>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>
