@@ -28,10 +28,12 @@ function sampleItem(overrides = {}) {
 
 test("defaultState creates an empty notifier state", () => {
   expect(defaultState()).toEqual({
-    version: 2,
+    version: 3,
     initializedAt: null,
     updatedAt: null,
     items: {},
+    events: {},
+    weeklyDigest: {},
   });
 });
 
@@ -51,6 +53,8 @@ test("parseState normalizes missing or malformed state fields", () => {
     initializedAt: null,
     updatedAt: "2026-04-25T05:35:48.687Z",
     items: {},
+    events: {},
+    weeklyDigest: {},
   });
 });
 
@@ -176,7 +180,7 @@ test("migrateStateItemIds converts legacy gist keys to source-stable keys", () =
     changed: true,
     migratedCount: 1,
   });
-  expect(state.version).toBe(2);
+  expect(state.version).toBe(3);
   expect(state.items[legacyId]).toBeUndefined();
   expect(state.items["example-author::post-1"]).toMatchObject({
     id: "example-author::post-1",
@@ -189,6 +193,116 @@ test("migrateStateItemIds converts legacy gist keys to source-stable keys", () =
       },
     },
   });
+});
+
+// --- v2→v3 migration tests (Req 14.1, 17.5) ---
+
+test("parseState with v2 state (missing events and weeklyDigest) defaults those to {}", () => {
+  const v2State = JSON.stringify({
+    version: 2,
+    initializedAt: "2026-04-24T00:00:00.000Z",
+    updatedAt: "2026-04-24T00:00:00.000Z",
+    items: { "some-id::post-1": { id: "some-id::post-1", title: "Post" } },
+  });
+  const result = parseState(v2State);
+  expect(result.events).toEqual({});
+  expect(result.weeklyDigest).toEqual({});
+  expect(result.items).toEqual({ "some-id::post-1": { id: "some-id::post-1", title: "Post" } });
+  expect(result.version).toBe(2);
+});
+
+test("parseState with events and weeklyDigest as invalid types defaults to {}", () => {
+  const withArray = JSON.stringify({
+    version: 3,
+    initializedAt: null,
+    updatedAt: null,
+    items: {},
+    events: ["not", "an", "object"],
+    weeklyDigest: null,
+  });
+  const result = parseState(withArray);
+  expect(result.events).toEqual({});
+  expect(result.weeklyDigest).toEqual({});
+});
+
+test("parseState with valid v3 state preserves events and weeklyDigest data", () => {
+  const v3State = JSON.stringify({
+    version: 3,
+    initializedAt: "2026-04-24T00:00:00.000Z",
+    updatedAt: "2026-04-25T00:00:00.000Z",
+    items: {},
+    events: { "https://meetup.com/event/1": { deliveredAt: "2026-04-24T08:00:00.000Z" } },
+    weeklyDigest: { "2026-W17": { deliveredAt: "2026-04-21T08:00:00.000Z" } },
+  });
+  const result = parseState(v3State);
+  expect(result.events).toEqual({ "https://meetup.com/event/1": { deliveredAt: "2026-04-24T08:00:00.000Z" } });
+  expect(result.weeklyDigest).toEqual({ "2026-W17": { deliveredAt: "2026-04-21T08:00:00.000Z" } });
+});
+
+test("defaultState() returns v3 shape with events and weeklyDigest", () => {
+  const state = defaultState();
+  expect(state.version).toBe(3);
+  expect(state).toHaveProperty("events", {});
+  expect(state).toHaveProperty("weeklyDigest", {});
+  expect(state).toHaveProperty("items", {});
+});
+
+test("migrateStateItemIds on a v2 state adds events and weeklyDigest, bumps version, preserves items", () => {
+  const state = {
+    version: 2,
+    initializedAt: "2026-04-24T00:00:00.000Z",
+    updatedAt: "2026-04-24T00:00:00.000Z",
+    items: {
+      "author-a::post-1": {
+        id: "author-a::post-1",
+        sourceItemId: "post-1",
+        title: "Existing Post",
+        source: { id: "author-a", feedUrl: "https://a.com/feed.xml" },
+      },
+    },
+  };
+
+  const result = migrateStateItemIds(state, [
+    { id: "author-a", name: "Author A", feedUrl: "https://a.com/feed.xml", siteUrl: "https://a.com/" },
+  ]);
+
+  expect(result.changed).toBe(true);
+  expect(state.version).toBe(3);
+  expect(state.events).toEqual({});
+  expect(state.weeklyDigest).toEqual({});
+  // items are preserved untouched (key didn't change because it already uses source id format)
+  expect(state.items["author-a::post-1"]).toMatchObject({
+    id: "author-a::post-1",
+    title: "Existing Post",
+  });
+});
+
+test("migrateStateItemIds on a v3 state does not alter existing events and weeklyDigest", () => {
+  const state = {
+    version: 3,
+    initializedAt: "2026-04-24T00:00:00.000Z",
+    updatedAt: "2026-04-25T00:00:00.000Z",
+    items: {
+      "author-b::post-2": {
+        id: "author-b::post-2",
+        sourceItemId: "post-2",
+        title: "Another Post",
+        source: { id: "author-b", feedUrl: "https://b.com/feed.xml" },
+      },
+    },
+    events: { "https://meetup.com/event/1": { deliveredAt: "2026-04-24T08:00:00.000Z" } },
+    weeklyDigest: { "2026-W17": { deliveredAt: "2026-04-21T08:00:00.000Z" } },
+  };
+
+  const result = migrateStateItemIds(state, [
+    { id: "author-b", name: "Author B", feedUrl: "https://b.com/feed.xml", siteUrl: "https://b.com/" },
+  ]);
+
+  expect(result.changed).toBe(false);
+  expect(state.version).toBe(3);
+  expect(state.events).toEqual({ "https://meetup.com/event/1": { deliveredAt: "2026-04-24T08:00:00.000Z" } });
+  expect(state.weeklyDigest).toEqual({ "2026-W17": { deliveredAt: "2026-04-21T08:00:00.000Z" } });
+  expect(state.items["author-b::post-2"]).toMatchObject({ id: "author-b::post-2", title: "Another Post" });
 });
 
 test("buildMessage formats a plain text destination message", () => {

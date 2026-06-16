@@ -1,4 +1,88 @@
-const CURRENT_STATE_VERSION = 2;
+import { fetchJson, fetchWithTimeout } from "./community-feed-reader.mjs";
+
+const CURRENT_STATE_VERSION = 3;
+const GITHUB_API_ROOT = "https://api.github.com";
+const DEFAULT_STATE_FILENAME = "community-feed-state.json";
+const DEFAULT_REQUEST_TIMEOUT_MS = 10000;
+const DEFAULT_USER_AGENT =
+  "Kyoto Tech Meetup notifier (+https://kyototechmeetup.com)";
+
+export async function readStateFromGist(
+  gistId,
+  token,
+  {
+    filename = process.env.COMMUNITY_FEED_STATE_GIST_FILENAME || DEFAULT_STATE_FILENAME,
+    requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT_MS,
+    userAgent = DEFAULT_USER_AGENT,
+  } = {},
+) {
+  const headers = {
+    Accept: "application/vnd.github+json",
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const gist = await fetchJson(
+    `${GITHUB_API_ROOT}/gists/${gistId}`,
+    { headers },
+    requestTimeoutMs,
+    userAgent,
+  );
+  const stateFile = gist?.files?.[filename];
+
+  if (!stateFile?.content) {
+    return defaultState();
+  }
+
+  return parseState(stateFile.content);
+}
+
+export async function writeStateToGist(
+  gistId,
+  token,
+  state,
+  {
+    filename = process.env.COMMUNITY_FEED_STATE_GIST_FILENAME || DEFAULT_STATE_FILENAME,
+    requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT_MS,
+    userAgent = DEFAULT_USER_AGENT,
+  } = {},
+) {
+  if (!token) {
+    throw new Error("GH_GIST_TOKEN is required to update gist-backed state.");
+  }
+
+  const payload = {
+    files: {
+      [filename]: {
+        content: `${JSON.stringify(state, null, 2)}\n`,
+      },
+    },
+  };
+
+  const response = await fetchWithTimeout(
+    `${GITHUB_API_ROOT}/gists/${gistId}`,
+    {
+      method: "PATCH",
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    },
+    requestTimeoutMs,
+    userAgent,
+  );
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(
+      `Failed to update gist state: HTTP ${response.status} ${body}`.trim(),
+    );
+  }
+}
 
 export function defaultState() {
   return {
@@ -6,6 +90,8 @@ export function defaultState() {
     initializedAt: null,
     updatedAt: null,
     items: {},
+    events: {},
+    weeklyDigest: {},
   };
 }
 
@@ -24,6 +110,14 @@ export function parseState(content) {
     items:
       parsed.items && typeof parsed.items === "object" && !Array.isArray(parsed.items)
         ? parsed.items
+        : {},
+    events:
+      parsed.events && typeof parsed.events === "object" && !Array.isArray(parsed.events)
+        ? parsed.events
+        : {},
+    weeklyDigest:
+      parsed.weeklyDigest && typeof parsed.weeklyDigest === "object" && !Array.isArray(parsed.weeklyDigest)
+        ? parsed.weeklyDigest
         : {},
   };
 }
@@ -97,6 +191,15 @@ export function migrateStateItemIds(state, sources) {
   }
 
   state.items = migratedItems;
+
+  // v2→v3: ensure top-level events and weeklyDigest maps exist
+  if (!state.events || typeof state.events !== "object" || Array.isArray(state.events)) {
+    state.events = {};
+  }
+  if (!state.weeklyDigest || typeof state.weeklyDigest !== "object" || Array.isArray(state.weeklyDigest)) {
+    state.weeklyDigest = {};
+  }
+
   if (migratedCount > 0 || previousVersion !== CURRENT_STATE_VERSION) {
     state.version = CURRENT_STATE_VERSION;
   }

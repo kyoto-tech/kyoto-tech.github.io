@@ -1,6 +1,5 @@
 import {
   fetchFeedItems,
-  fetchJson,
   fetchWithTimeout,
   loadMemberFeeds,
 } from "./lib/community-feed-reader.mjs";
@@ -9,12 +8,11 @@ import {
   buildMessage,
   defaultState,
   migrateStateItemIds,
-  parseState,
+  readStateFromGist,
   upsertStateRecord,
+  writeStateToGist,
 } from "./lib/community-feed-notifier-state.mjs";
 
-const GITHUB_API_ROOT = "https://api.github.com";
-const DEFAULT_STATE_FILENAME = "community-feed-state.json";
 const DEFAULT_MAX_ITEMS_PER_FEED = Number(
   process.env.COMMUNITY_FEED_MAX_ITEMS_PER_FEED || 10,
 );
@@ -58,69 +56,10 @@ function parseArgs(argv) {
   return args;
 }
 
-function getStateFilename() {
-  return process.env.COMMUNITY_FEED_STATE_GIST_FILENAME || DEFAULT_STATE_FILENAME;
-}
-
-async function readStateFromGist(gistId, token) {
-  const headers = {
-    Accept: "application/vnd.github+json",
-  };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const gist = await fetchJson(
-    `${GITHUB_API_ROOT}/gists/${gistId}`,
-    { headers },
-    REQUEST_TIMEOUT_MS,
-    USER_AGENT,
-  );
-  const stateFile = gist?.files?.[getStateFilename()];
-
-  if (!stateFile?.content) {
-    return defaultState();
-  }
-
-  return parseState(stateFile.content);
-}
-
-async function writeStateToGist(gistId, token, state) {
-  if (!token) {
-    throw new Error("GH_GIST_TOKEN is required to update gist-backed state.");
-  }
-
-  const payload = {
-    files: {
-      [getStateFilename()]: {
-        content: `${JSON.stringify(state, null, 2)}\n`,
-      },
-    },
-  };
-
-  const response = await fetchWithTimeout(
-    `${GITHUB_API_ROOT}/gists/${gistId}`,
-    {
-      method: "PATCH",
-      headers: {
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    },
-    REQUEST_TIMEOUT_MS,
-    USER_AGENT,
-  );
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(
-      `Failed to update gist state: HTTP ${response.status} ${body}`.trim(),
-    );
-  }
-}
+const GIST_OPTIONS = {
+  requestTimeoutMs: REQUEST_TIMEOUT_MS,
+  userAgent: USER_AGENT,
+};
 
 async function sendDiscordNotification(item) {
   const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
@@ -311,7 +250,7 @@ async function main() {
     return;
   }
 
-  const state = gistId ? await readStateFromGist(gistId, gistToken) : defaultState();
+  const state = gistId ? await readStateFromGist(gistId, gistToken, GIST_OPTIONS) : defaultState();
   const now = new Date().toISOString();
   const migration = migrateStateItemIds(state, memberFeeds);
   const sortedItems = allItems.sort(
@@ -334,7 +273,7 @@ async function main() {
       return;
     }
 
-    await writeStateToGist(gistId, gistToken, state);
+    await writeStateToGist(gistId, gistToken, state, GIST_OPTIONS);
     console.log(
       `[notifier] Seeded ${sortedItems.length} existing item(s) into gist without posting.`,
     );
@@ -356,7 +295,7 @@ async function main() {
         `[notifier] [dry-run] Would migrate ${migration.migratedCount} state item ID(s).`,
       );
     } else {
-      await writeStateToGist(gistId, gistToken, state);
+      await writeStateToGist(gistId, gistToken, state, GIST_OPTIONS);
       console.log(`[notifier] Migrated ${migration.migratedCount} state item ID(s).`);
     }
   }
@@ -377,7 +316,7 @@ async function main() {
         stateChanged = true;
 
         if (!args.dryRun) {
-          await writeStateToGist(gistId, gistToken, state);
+          await writeStateToGist(gistId, gistToken, state, GIST_OPTIONS);
         }
       }
 
@@ -393,7 +332,7 @@ async function main() {
     stateChanged = true;
 
     if (!args.dryRun) {
-      await writeStateToGist(gistId, gistToken, state);
+      await writeStateToGist(gistId, gistToken, state, GIST_OPTIONS);
     }
   }
 
