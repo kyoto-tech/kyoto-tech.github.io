@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Auto-translate i18n strings",
+  "description": "When localization source files (ui.ts, JSON data files) are edited, automatically identify new or modified English strings and generate corresponding Japanese translations that maintain proper context, meaning, and locale conventions.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "src/i18n/ui.ts",
+      "src/data/*.json"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A localization file was just edited. Please review the change and check if any new or modified strings exist in the primary language (English / `en`) that are missing or outdated in the target language (Japanese / `ja`). For each such string:\n\n1. Identify the key and original English text.\n2. Generate a natural, contextually appropriate Japanese translation that follows locale conventions (e.g., appropriate formality level, correct particles, suitable punctuation).\n3. Add or update the corresponding entry in the `ja` section of `src/i18n/ui.ts`, keeping keys aligned across both locales.\n\nMaintain consistency with the existing translation style already present in the file. Do not remove or reorder existing translations. Only add or update what is needed."
+  }
+}
