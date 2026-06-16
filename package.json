@@ -17,6 +17,8 @@
     "knip": "knip",
     "lint": "eslint . --ext .js,.mjs,.ts,.tsx,.astro --no-warn-ignored",
     "preview": "astro preview",
+    "reminder": "tsx scripts/meetup-event-reminder.mjs",
+    "reminder:dry-run": "tsx scripts/meetup-event-reminder.mjs --dry-run",
     "test": "vitest run",
     "tsc": "tsc --noEmit"
   },
@@ -48,6 +50,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "knip": "^5.70.1",
     "sharp": "^0.34.5",
+    "tsx": "^4.22.4",
     "typescript": "^5.9.3",
     "vitest": "^4.1.5"
   }

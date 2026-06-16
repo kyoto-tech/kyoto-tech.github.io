@@ -1,0 +1,50 @@
+name: Meetup Event Reminder
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Check events without posting or updating gist state"
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: meetup-event-reminder
+  cancel-in-progress: false
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      COMMUNITY_FEED_STATE_GIST_ID: f95dd7597eec170d738d905e3666bfc6
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run event reminder
+        env:
+          GH_GIST_TOKEN: ${{ secrets.GH_GIST_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          WORKFLOW_DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          args=("--skip-without-destinations")
+          if [ "$WORKFLOW_DRY_RUN" = "true" ]; then
+            args+=("--dry-run")
+          fi
+          npx tsx scripts/meetup-event-reminder.mjs "${args[@]}"
