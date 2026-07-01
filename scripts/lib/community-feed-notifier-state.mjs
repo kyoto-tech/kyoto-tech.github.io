@@ -161,6 +161,16 @@ function buildLegacyStateItemId(source, sourceItemId) {
   return `${source.feedUrl}::${String(sourceItemId)}`;
 }
 
+function isHttpUrl(value) {
+  if (!value || typeof value !== "string") return false;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function migrateStateItemIds(state, sources) {
   const previousVersion = state.version;
   const sourceByFeedUrl = new Map(
@@ -220,6 +230,7 @@ export function upsertStateRecord(state, item, seenAt, options = {}) {
     link: item.link,
     publishedAt: item.publishedAt,
     summary: item.summary || null,
+    imageUrl: item.imageUrl || null,
     source: item.source,
     firstSeenAt: existing?.firstSeenAt || seenAt,
     lastSeenAt: seenAt,
@@ -262,6 +273,12 @@ export function buildDiscordPayload(item) {
 
   if (item.summary) {
     embed.description = item.summary;
+  }
+
+  if (isHttpUrl(item.imageUrl)) {
+    embed.image = {
+      url: item.imageUrl,
+    };
   }
 
   return {

@@ -60,6 +60,16 @@ export function truncate(value, max = 280) {
   return value.length > max ? `${value.slice(0, max - 3).trimEnd()}...` : value;
 }
 
+function isHttpUrl(value) {
+  if (!value || typeof value !== "string") return false;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export function isYoutubeUrl(value) {
   if (!value || typeof value !== "string") return false;
   try {
@@ -140,6 +150,75 @@ function buildNotifierItemId(source, sourceItemId) {
   return `${source.id}::${String(sourceItemId)}`;
 }
 
+function firstArrayValue(value) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function mediaUrl(value) {
+  const candidate = firstArrayValue(value);
+
+  if (!candidate) return "";
+  if (typeof candidate === "string") return candidate;
+  if (typeof candidate.url === "string") return candidate.url;
+  if (typeof candidate.href === "string") return candidate.href;
+  if (typeof candidate.$?.url === "string") return candidate.$.url;
+  if (typeof candidate.$?.href === "string") return candidate.$.href;
+
+  return "";
+}
+
+function enclosureImageUrl(enclosure) {
+  const candidate = firstArrayValue(enclosure);
+
+  if (!candidate || typeof candidate !== "object") return "";
+  if (candidate.type && !String(candidate.type).toLowerCase().startsWith("image/")) {
+    return "";
+  }
+
+  return typeof candidate.url === "string" ? candidate.url : "";
+}
+
+function htmlImageUrl(value, baseUrl) {
+  if (!value || typeof value !== "string") return "";
+
+  const match = value.match(/<img\b[^>]*\bsrc=["']([^"']+)["']/i);
+  if (!match?.[1]) return "";
+
+  try {
+    return new URL(match[1], baseUrl).toString();
+  } catch {
+    return "";
+  }
+}
+
+function extractImageUrl(rawItem, source) {
+  const baseUrl = rawItem.link || source.siteUrl;
+  const candidates = [
+    enclosureImageUrl(rawItem.enclosure),
+    mediaUrl(rawItem["media:content"]),
+    mediaUrl(rawItem.mediaContent),
+    mediaUrl(rawItem["media:thumbnail"]),
+    mediaUrl(rawItem.mediaThumbnail),
+    mediaUrl(rawItem.itunes?.image),
+    mediaUrl(rawItem.image),
+    htmlImageUrl(rawItem["content:encoded"], baseUrl),
+    htmlImageUrl(rawItem.content, baseUrl),
+    htmlImageUrl(rawItem.summary, baseUrl),
+    htmlImageUrl(rawItem.description, baseUrl),
+  ];
+
+  for (const candidate of candidates) {
+    try {
+      const absoluteUrl = new URL(candidate, baseUrl).toString();
+      if (isHttpUrl(absoluteUrl)) return absoluteUrl;
+    } catch {
+      // Try the next source.
+    }
+  }
+
+  return "";
+}
+
 export async function resolveFeedUrl(
   feedUrl,
   {
@@ -195,6 +274,7 @@ export function normalizeNotifierItem(rawItem, source) {
     link: rawItem.link || source.siteUrl,
     publishedAt: publishedAt.toISOString(),
     summary: truncate(summary),
+    imageUrl: extractImageUrl(rawItem, source),
     source,
   };
 }

@@ -340,3 +340,13 @@ test("buildDiscordPayload omits empty summaries from embed description", () => {
   const payload = buildDiscordPayload(sampleItem({ summary: "" }));
   expect(payload.embeds[0]).not.toHaveProperty("description");
 });
+
+test("buildDiscordPayload includes a relevant item image when available", () => {
+  const payload = buildDiscordPayload(
+    sampleItem({ imageUrl: "https://example.com/images/post-1.jpg" }),
+  );
+
+  expect(payload.embeds[0].image).toEqual({
+    url: "https://example.com/images/post-1.jpg",
+  });
+});

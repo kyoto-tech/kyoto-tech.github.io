@@ -110,6 +110,30 @@ test("normalizeNotifierItem uses source-stable notifier item IDs", () => {
   expect(item.source).toEqual(source);
 });
 
+test("normalizeNotifierItem extracts image URLs from feed item media", () => {
+  const source = {
+    id: "example-author",
+    name: "Example Author",
+    feedUrl: "https://example.com/feed.xml",
+    siteUrl: "https://example.com/",
+  };
+  const item = normalizeNotifierItem(
+    {
+      guid: "post-1",
+      title: "Post One",
+      link: "https://example.com/post-1",
+      isoDate: "2026-04-25T05:35:48.687Z",
+      enclosure: {
+        url: "https://example.com/images/post-1.jpg",
+        type: "image/jpeg",
+      },
+    },
+    source,
+  );
+
+  expect(item.imageUrl).toBe("https://example.com/images/post-1.jpg");
+});
+
 test("fetchFeedItems fetches, normalizes, dedupes, sorts, and limits items", async () => {
   const source = {
     id: "example-author",
