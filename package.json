@@ -6,7 +6,7 @@
     "astro": "astro",
     "astrocheck": "astro check",
     "build": "npm run feeds:pull:stale-ok && astro build",
-    "check": "npm run lint; npm run test; npm run tsc; npm run astrocheck; npm run images:check; npm run knip",
+    "check": "npm run lint; npm run tsc; npm run knip; npm run test; npm run astrocheck; npm run images:check",
     "dev": "astro dev",
     "feeds:notify": "node scripts/community-feed-notifier.mjs",
     "feeds:notify:dry-run": "node scripts/community-feed-notifier.mjs --dry-run",
