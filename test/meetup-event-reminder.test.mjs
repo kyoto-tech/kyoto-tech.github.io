@@ -4,6 +4,7 @@ import {
   buildDigestDiscordPayload,
   computeIsoWeek,
   getJstWeekBounds,
+  shouldSendReminder,
 } from "../scripts/meetup-event-reminder.mjs";
 
 // --- Helpers ---
@@ -90,10 +91,11 @@ describe("buildReminderDiscordPayload", () => {
     expect(embed.footer).toEqual({ text: "Kyoto Tech Meetup" });
   });
 
-  it("content format: '⏰ Event reminder — **{emoji}** {title}'", () => {
+  it("content uses generic timing copy", () => {
     const event = sampleEvent({ eventType: "coffee", title: "My Event" });
     const payload = buildReminderDiscordPayload(event, "24h");
-    expect(payload.content).toBe("⏰ Event reminder — **☕** My Event");
+    expect(payload.content).toBe("⏰ Upcoming event — **☕** My Event");
+    expect(payload.content).not.toMatch(/tomorrow|1h|24h|hour/i);
   });
 
   it("defaults to 0 when goingCount/interestedCount are undefined", () => {
@@ -243,52 +245,58 @@ describe("buildDigestDiscordPayload", () => {
   });
 });
 
-// --- Trigger-time logic tests ---
+// --- Reminder send-window tests ---
 
-describe("trigger-time logic (window offset checks)", () => {
-  // These test the window offset logic directly (not the full main loop)
-  // The script uses: now >= start - offset AND deliveredAt === null
-
-  const WINDOW_OFFSETS = {
-    "24h": 24 * 60 * 60 * 1000,
-    "1h": 60 * 60 * 1000,
-  };
-
-  function shouldTrigger(nowMs, eventStartIso, window, deliveredAt) {
-    const offset = WINDOW_OFFSETS[window];
-    const triggerTime = new Date(eventStartIso).getTime() - offset;
-    return nowMs >= triggerTime && deliveredAt === null;
-  }
-
-  it("event starting in 23 hours: 24h window should trigger", () => {
+describe("shouldSendReminder", () => {
+  it("sends the 24h reminder after the early due time", () => {
     const eventStart = "2026-06-15T09:00:00.000Z";
-    const now = new Date(eventStart).getTime() - 23 * 60 * 60 * 1000; // 23h before
-    expect(shouldTrigger(now, eventStart, "24h", null)).toBe(true);
+    const now = new Date(eventStart).getTime() - 29 * 60 * 60 * 1000;
+    expect(shouldSendReminder(now, eventStart, "24h", {})).toBe(true);
   });
 
-  it("event starting in 25 hours: 24h window should NOT trigger", () => {
+  it("does not send the 24h reminder before the early due time", () => {
     const eventStart = "2026-06-15T09:00:00.000Z";
-    const now = new Date(eventStart).getTime() - 25 * 60 * 60 * 1000; // 25h before
-    expect(shouldTrigger(now, eventStart, "24h", null)).toBe(false);
+    const now = new Date(eventStart).getTime() - 31 * 60 * 60 * 1000;
+    expect(shouldSendReminder(now, eventStart, "24h", {})).toBe(false);
   });
 
-  it("event starting in 30 minutes: 1h window should trigger", () => {
+  it("does not send a stale 24h reminder inside 12 hours before the event", () => {
     const eventStart = "2026-06-15T09:00:00.000Z";
-    const now = new Date(eventStart).getTime() - 30 * 60 * 1000; // 30 min before
-    expect(shouldTrigger(now, eventStart, "1h", null)).toBe(true);
+    const now = new Date(eventStart).getTime() - 11 * 60 * 60 * 1000;
+    expect(shouldSendReminder(now, eventStart, "24h", {})).toBe(false);
   });
 
-  it("event starting in 2 hours: 1h window should NOT trigger", () => {
+  it("sends the day-of reminder after the early due time", () => {
     const eventStart = "2026-06-15T09:00:00.000Z";
-    const now = new Date(eventStart).getTime() - 2 * 60 * 60 * 1000; // 2h before
-    expect(shouldTrigger(now, eventStart, "1h", null)).toBe(false);
+    const now = new Date(eventStart).getTime() - 5 * 60 * 60 * 1000;
+    expect(shouldSendReminder(now, eventStart, "1h", {})).toBe(true);
   });
 
-  it("if deliveredAt is already set, window should NOT trigger (skip-if-delivered)", () => {
+  it("does not send the day-of reminder before the early due time", () => {
     const eventStart = "2026-06-15T09:00:00.000Z";
-    const now = new Date(eventStart).getTime() - 23 * 60 * 60 * 1000; // within 24h
+    const now = new Date(eventStart).getTime() - 7 * 60 * 60 * 1000;
+    expect(shouldSendReminder(now, eventStart, "1h", {})).toBe(false);
+  });
+
+  it("allows the day-of reminder through event start", () => {
+    const eventStart = "2026-06-15T09:00:00.000Z";
+    const now = new Date(eventStart).getTime();
+    expect(shouldSendReminder(now, eventStart, "1h", {})).toBe(true);
+  });
+
+  it("does not send a stale day-of reminder after event start", () => {
+    const eventStart = "2026-06-15T09:00:00.000Z";
+    const now = new Date(eventStart).getTime() + 1;
+    expect(shouldSendReminder(now, eventStart, "1h", {})).toBe(false);
+  });
+
+  it("does not send an already delivered reminder", () => {
+    const eventStart = "2026-06-15T09:00:00.000Z";
+    const now = new Date(eventStart).getTime() - 29 * 60 * 60 * 1000;
     expect(
-      shouldTrigger(now, eventStart, "24h", "2026-06-14T10:00:00.000Z"),
+      shouldSendReminder(now, eventStart, "24h", {
+        deliveredAt: "2026-06-14T10:00:00.000Z",
+      }),
     ).toBe(false);
   });
 });

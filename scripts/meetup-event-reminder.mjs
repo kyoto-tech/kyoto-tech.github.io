@@ -11,9 +11,18 @@ const USER_AGENT =
   "Kyoto Tech Meetup event reminder (+https://kyototechmeetup.com)";
 
 const REMINDER_WINDOWS = ["24h", "1h"];
-const WINDOW_OFFSETS = {
-  "24h": 24 * 60 * 60 * 1000,
-  "1h": 60 * 60 * 1000,
+const HOUR_MS = 60 * 60 * 1000;
+const REMINDER_WINDOW_CONFIG = {
+  "24h": {
+    dueOffsetMs: 30 * HOUR_MS,
+    staleOffsetMs: 12 * HOUR_MS,
+    label: "advance",
+  },
+  "1h": {
+    dueOffsetMs: 6 * HOUR_MS,
+    staleOffsetMs: 0,
+    label: "day-of",
+  },
 };
 
 const EVENT_TYPE_EMOJI = {
@@ -190,10 +199,9 @@ const GIST_OPTIONS = {
 /**
  * Build a Discord payload for a pre-event reminder.
  * @param {object} event - A MeetupEvent object
- * @param {string} window - The reminder window label ("24h" or "1h")
  * @returns {object} Discord webhook payload
  */
-export function buildReminderDiscordPayload(event, window) {
+export function buildReminderDiscordPayload(event) {
   const emoji = EVENT_TYPE_EMOJI[event.eventType] || "⭐";
 
   const descriptionLines = [];
@@ -205,7 +213,7 @@ export function buildReminderDiscordPayload(event, window) {
   );
 
   return {
-    content: `⏰ Event reminder — **${emoji}** ${event.title}`,
+    content: `⏰ Upcoming event — **${emoji}** ${event.title}`,
     embeds: [
       {
         title: event.title,
@@ -218,28 +226,88 @@ export function buildReminderDiscordPayload(event, window) {
   };
 }
 
+function defaultReminderState() {
+  return {
+    deliveredAt: null,
+    deliveryId: null,
+    lastAttemptAt: null,
+    lastError: null,
+    skippedAt: null,
+    skipReason: null,
+  };
+}
+
+function normalizeReminderState(reminder) {
+  return {
+    ...defaultReminderState(),
+    ...(reminder && typeof reminder === "object" ? reminder : {}),
+  };
+}
+
+function getReminderWindowBounds(eventStartIso, window) {
+  const eventStartMs = new Date(eventStartIso).getTime();
+  const config = REMINDER_WINDOW_CONFIG[window];
+
+  if (!config || !Number.isFinite(eventStartMs)) {
+    return null;
+  }
+
+  return {
+    dueTime: eventStartMs - config.dueOffsetMs,
+    staleTime: eventStartMs - config.staleOffsetMs,
+  };
+}
+
+export function shouldSendReminder(nowMs, eventStartIso, window, reminderState = {}) {
+  if (reminderState?.deliveredAt || reminderState?.skippedAt) {
+    return false;
+  }
+
+  const bounds = getReminderWindowBounds(eventStartIso, window);
+  if (!bounds) return false;
+
+  return nowMs >= bounds.dueTime && nowMs <= bounds.staleTime;
+}
+
+function shouldSkipStaleReminder(nowMs, eventStartIso, window, reminderState = {}) {
+  if (reminderState?.deliveredAt || reminderState?.skippedAt) {
+    return false;
+  }
+
+  const bounds = getReminderWindowBounds(eventStartIso, window);
+  if (!bounds) return false;
+
+  return nowMs > bounds.staleTime;
+}
+
+function getReminderLabel(window) {
+  return REMINDER_WINDOW_CONFIG[window]?.label || window;
+}
+
 function upsertEventStateRecord(state, event) {
   if (!state.events[event.link]) {
     state.events[event.link] = {
       eventId: event.link,
       title: event.title,
       start: event.start,
-      reminders: {
-        "24h": {
-          deliveredAt: null,
-          deliveryId: null,
-          lastAttemptAt: null,
-          lastError: null,
-        },
-        "1h": {
-          deliveredAt: null,
-          deliveryId: null,
-          lastAttemptAt: null,
-          lastError: null,
-        },
-      },
+      reminders: {},
     };
   }
+
+  state.events[event.link].title = event.title;
+  state.events[event.link].start = event.start;
+  state.events[event.link].reminders =
+    state.events[event.link].reminders &&
+    typeof state.events[event.link].reminders === "object"
+      ? state.events[event.link].reminders
+      : {};
+
+  for (const window of REMINDER_WINDOWS) {
+    state.events[event.link].reminders[window] = normalizeReminderState(
+      state.events[event.link].reminders[window],
+    );
+  }
+
   return state.events[event.link];
 }
 
@@ -317,15 +385,42 @@ async function main() {
     const eventState = upsertEventStateRecord(state, event);
 
     for (const window of REMINDER_WINDOWS) {
-      const offset = WINDOW_OFFSETS[window];
-      const triggerTime = new Date(event.start).getTime() - offset;
+      const eventReminderState = eventState.reminders[window];
+      const reminderLabel = getReminderLabel(window);
 
-      if (nowMs >= triggerTime && eventState.reminders[window].deliveredAt === null) {
+      if (shouldSkipStaleReminder(nowMs, event.start, window, eventReminderState)) {
+        const skippedAt = new Date().toISOString();
+        const skipReason = `Missed ${reminderLabel} delivery window.`;
+
+        if (args.dryRun) {
+          console.log(
+            `[reminder] [dry-run] Would skip stale ${reminderLabel} reminder for "${event.title}": ${skipReason}`,
+          );
+        } else {
+          eventReminderState.skippedAt = skippedAt;
+          eventReminderState.skipReason = skipReason;
+          eventReminderState.lastAttemptAt = skippedAt;
+          eventReminderState.lastError = null;
+
+          state.updatedAt = new Date().toISOString();
+          if (gistId) {
+            await writeStateToGist(gistId, gistToken, state, GIST_OPTIONS);
+          }
+
+          console.log(
+            `[reminder] Skipped stale ${reminderLabel} reminder for "${event.title}": ${skipReason}`,
+          );
+        }
+
+        continue;
+      }
+
+      if (shouldSendReminder(nowMs, event.start, window, eventReminderState)) {
         const payload = buildReminderDiscordPayload(event, window);
 
         if (args.dryRun) {
           console.log(
-            `[reminder] [dry-run] Would send ${window} reminder for "${event.title}".`,
+            `[reminder] [dry-run] Would send ${reminderLabel} reminder for "${event.title}".`,
           );
           console.log(
             `[reminder] [dry-run] Payload: ${JSON.stringify(payload, null, 2)}`,
@@ -355,31 +450,33 @@ async function main() {
           }
 
           const result = await response.json();
-          eventState.reminders[window].deliveredAt = attemptedAt;
-          eventState.reminders[window].deliveryId = result?.id
+          eventReminderState.deliveredAt = attemptedAt;
+          eventReminderState.deliveryId = result?.id
             ? String(result.id)
             : null;
-          eventState.reminders[window].lastAttemptAt = attemptedAt;
-          eventState.reminders[window].lastError = null;
+          eventReminderState.lastAttemptAt = attemptedAt;
+          eventReminderState.lastError = null;
+          eventReminderState.skippedAt = null;
+          eventReminderState.skipReason = null;
 
           console.log(
-            `[reminder] Sent ${window} reminder for "${event.title}".`,
+            `[reminder] Sent ${reminderLabel} reminder for "${event.title}".`,
           );
         } catch (error) {
           const message = error?.message || String(error);
-          eventState.reminders[window].deliveredAt = null;
-          eventState.reminders[window].deliveryId = null;
-          eventState.reminders[window].lastAttemptAt = attemptedAt;
-          eventState.reminders[window].lastError = message;
+          eventReminderState.deliveredAt = null;
+          eventReminderState.deliveryId = null;
+          eventReminderState.lastAttemptAt = attemptedAt;
+          eventReminderState.lastError = message;
 
           deliveryFailures.push({
             event: event.title,
-            window,
+            window: reminderLabel,
             error: message,
           });
 
           console.error(
-            `[reminder] Failed to send ${window} reminder for "${event.title}": ${message}`,
+            `[reminder] Failed to send ${reminderLabel} reminder for "${event.title}": ${message}`,
           );
         }
 
