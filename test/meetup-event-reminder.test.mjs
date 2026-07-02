@@ -91,6 +91,26 @@ describe("buildReminderDiscordPayload", () => {
     expect(embed.footer).toEqual({ text: "Kyoto Tech Meetup" });
   });
 
+  it("embed includes the event image when Meetup provides one", () => {
+    const payload = buildReminderDiscordPayload(
+      sampleEvent({ image: "https://secure.meetupstatic.com/photos/event/1.jpg" }),
+      "24h",
+    );
+
+    expect(payload.embeds[0].image).toEqual({
+      url: "https://secure.meetupstatic.com/photos/event/1.jpg",
+    });
+  });
+
+  it("embed omits invalid event image URLs", () => {
+    const payload = buildReminderDiscordPayload(
+      sampleEvent({ image: "javascript:alert(1)" }),
+      "24h",
+    );
+
+    expect(payload.embeds[0]).not.toHaveProperty("image");
+  });
+
   it("content uses generic timing copy", () => {
     const event = sampleEvent({ eventType: "coffee", title: "My Event" });
     const payload = buildReminderDiscordPayload(event, "24h");
@@ -242,6 +262,27 @@ describe("buildDigestDiscordPayload", () => {
     const description = payload.embeds[0].description;
 
     expect(description).not.toContain("📍");
+  });
+
+  it("single-event digest includes the event image", () => {
+    const payload = buildDigestDiscordPayload([
+      sampleEvent({ image: "https://secure.meetupstatic.com/photos/event/1.jpg" }),
+    ]);
+
+    expect(payload.embeds[0].image).toEqual({
+      url: "https://secure.meetupstatic.com/photos/event/1.jpg",
+    });
+  });
+
+  it("multi-event digest uses the first valid event image", () => {
+    const payload = buildDigestDiscordPayload([
+      sampleEvent({ title: "Event A", image: "javascript:alert(1)" }),
+      sampleEvent({ title: "Event B", image: "https://example.com/b.jpg" }),
+    ]);
+
+    expect(payload.embeds[0].image).toEqual({
+      url: "https://example.com/b.jpg",
+    });
   });
 });
 

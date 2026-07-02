@@ -31,6 +31,32 @@ const EVENT_TYPE_EMOJI = {
   special: "⭐",
 };
 
+function isHttpUrl(value) {
+  if (!value || typeof value !== "string") return false;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+function applyEventImage(embed, event) {
+  if (!isHttpUrl(event?.image)) return embed;
+
+  return {
+    ...embed,
+    image: {
+      url: event.image,
+    },
+  };
+}
+
+function applyFirstEventImage(embed, events) {
+  const eventWithImage = events.find((event) => isHttpUrl(event?.image));
+  return applyEventImage(embed, eventWithImage);
+}
+
 /**
  * Compute the ISO 8601 week identifier for a given date in a timezone.
  * Returns a string like "2026-W25".
@@ -162,13 +188,13 @@ export function buildDigestDiscordPayload(events) {
     return line;
   });
 
+  const embed = {
+    description: bulletLines.join("\n"),
+  };
+
   return {
     content: "📅 This week's Kyoto Tech events:",
-    embeds: [
-      {
-        description: bulletLines.join("\n"),
-      },
-    ],
+    embeds: [applyFirstEventImage(embed, events)],
   };
 }
 
@@ -212,17 +238,20 @@ export function buildReminderDiscordPayload(event) {
     `👥 ${event.goingCount ?? 0} going · ${event.interestedCount ?? 0} interested`,
   );
 
+  const embed = applyEventImage(
+    {
+      title: event.title,
+      url: event.link,
+      timestamp: event.start,
+      description: descriptionLines.join("\n"),
+      footer: { text: "Kyoto Tech Meetup" },
+    },
+    event,
+  );
+
   return {
     content: `⏰ Upcoming event — **${emoji}** ${event.title}`,
-    embeds: [
-      {
-        title: event.title,
-        url: event.link,
-        timestamp: event.start,
-        description: descriptionLines.join("\n"),
-        footer: { text: "Kyoto Tech Meetup" },
-      },
-    ],
+    embeds: [embed],
   };
 }
 
