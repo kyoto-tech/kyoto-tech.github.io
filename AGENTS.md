@@ -23,6 +23,11 @@ This repo is the Astro-powered marketing site for the Kyoto Tech Meetup communit
 - Build: `npm run build`
 - Preview: `npm run preview`
 
+## Git Workflow
+- At the start of each task, check the current branch. If it is `main`, create or switch to a feature branch before editing, committing, or pushing.
+- If the current branch name appears unrelated to the requested work, warn the user before continuing and recommend creating or switching to a more relevant branch.
+- Do not push work directly to `main`; all reviewable work should live on a branch.
+
 ## i18n Rules
 - Add/modify strings in `src/i18n/ui.ts` under both `en` and `ja`.
 - Keep keys aligned across locales; `useTranslations` falls back to `defaultLang`.
