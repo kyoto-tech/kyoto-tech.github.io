@@ -6,14 +6,14 @@ Everything here is maintained by community members; contributions that make the 
 
 ## Tech Stack
 
-- [Astro 5](https://astro.build/) with React islands for dynamic UI.
+- [Astro 7](https://astro.build/) with React islands for dynamic UI.
 - [Tailwind CSS 4 (via `@tailwindcss/vite`)](https://tailwindcss.com/) for utility-first styling plus a small layer of global CSS.
 - [Marked](https://marked.js.org/) for rendering Markdown copy inside Astro components.
 - ESLint (flat config), TypeScript, Knip, and Astro Check keep the project tidy.
 
 ## Getting Started
 
-1. Install dependencies:
+1. Use Node.js 22.12.0 or newer, then install dependencies:
 
    ```bash
    npm install
