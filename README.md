@@ -13,7 +13,7 @@ Everything here is maintained by community members; contributions that make the 
 
 ## Getting Started
 
-1. Install dependencies:
+1. Use Node.js 22.12.0 or newer, then install dependencies:
 
    ```bash
    npm install
