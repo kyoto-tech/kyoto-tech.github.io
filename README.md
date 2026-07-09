@@ -40,6 +40,8 @@ Everything here is maintained by community members; contributions that make the 
 | ------------------ | ----------------------------------------------------------------------- |
 | `npm run dev`      | Launches Astro in development mode.                                     |
 | `npm run check`    | Runs lint, type-check, Astro check, and Knip in sequence.               |
+| `npm run events:pull` | Refreshes the committed Meetup event cache and fails on errors.      |
+| `npm run events:pull:stale-ok` | Refreshes Meetup events or preserves the last valid cache. |
 | `npm run feeds:notify` | Polls approved member feeds and posts unseen items to configured channels. |
 | `npm run feeds:notify:dry-run` | Shows what the notifier would send without posting or updating state. |
 | `npm run preview`  | Serves the production build locally.                                    |
@@ -76,6 +78,10 @@ public/          # Files served as-is (favicon, images)
 - Add tests or visual regression tooling for future redesigns.
 - Internationalization or localization improvements for Japanese/English visitors.
 
+## Product Roadmaps
+
+- [Homepage redesign roadmap](docs/homepage-redesign-roadmap.md) — an event-led newcomer journey and Community Hub, organized as independently shippable pull requests.
+
 ## Deployment
 
 - Production deploys target [Cloudflare Pages](https://kyototechmeetup.com/) via Cloudflare's GitHub integration on merge to `main`.
@@ -84,6 +90,14 @@ public/          # Files served as-is (favicon, images)
 - Community feed notifications are handled separately by `.github/workflows/community-feed-notifier.yml`, which polls approved feeds every 15 minutes and tracks seen items in a gist-backed JSON state file.
 - The legacy [GitHub Pages URL](https://kyoto-tech.github.io/) is maintained as a redirect only, published from `.github/redirect-site` by `.github/workflows/deploy-github-pages-redirect.yml`.
 - To test a production build locally, use `npm run build && npm run preview`.
+
+## Meetup Event Cache
+
+- `src/data/meetup-events.json` is the generated event snapshot consumed by the Astro pages.
+- `npm run events:pull` refreshes the snapshot from Meetup and fails if the request or response is invalid.
+- `npm run events:pull:stale-ok` keeps the last valid snapshot when Meetup is temporarily unavailable. Production builds use this mode.
+- Page rendering reads only the committed snapshot; it does not make live Meetup requests while generating `/` and `/ja/`.
+- Event reminders continue to fetch live Meetup data because they run as a separate operational workflow.
 
 ## Community Feed Notifier
 

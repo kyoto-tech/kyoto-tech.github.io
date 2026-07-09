@@ -12,7 +12,11 @@ import { useTranslations } from "../i18n/utils";
 import memberFeeds from "../data/member-feeds.json";
 import compositeFeed from "../data/composite-feed.json";
 import eventLocations from "../data/event-locations.json";
-import { fetchMeetupEvents } from "../lib/meetup-events";
+import meetupEventData from "../data/meetup-events.json";
+import {
+  isMeetupEvent,
+  selectUpcomingMeetupEvents,
+} from "../lib/meetup-events";
 
 const { lang = "en" } = Astro.props;
 const t = useTranslations(lang);
@@ -113,7 +117,10 @@ const benefits = [
 ];
 
 const locale = lang === "ja" ? "ja-JP" : "en-US";
-const events = await fetchMeetupEvents();
+const cachedMeetupEvents = Array.isArray(meetupEventData?.events)
+  ? (meetupEventData.events as unknown[]).filter(isMeetupEvent)
+  : [];
+const events = selectUpcomingMeetupEvents(cachedMeetupEvents);
 
 const memberFeedList = (memberFeeds as MemberFeed[]) ?? [];
 const compositeFeedEntries = Array.isArray(compositeFeed?.feeds)
