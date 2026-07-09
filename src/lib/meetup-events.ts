@@ -1,7 +1,14 @@
-/* global fetch, URL */
+/* global fetch, URL, AbortController, setTimeout, clearTimeout */
 import { classifyEventType, type EventType } from "./event-types";
 
-const EVENTS_URL = "https://www.meetup.com/kyoto-tech-meetup/events/";
+export const DEFAULT_MEETUP_EVENTS_URL =
+  "https://www.meetup.com/kyoto-tech-meetup/events/";
+export const DEFAULT_MEETUP_TIMEOUT_MS = 12000;
+
+const DEFAULT_EVENT_WINDOW_DAYS = 60;
+const DEFAULT_IN_PROGRESS_GRACE_MS = 4 * 60 * 60 * 1000;
+const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+const EVENT_TYPES = new Set<EventType>(["coffee", "hack-day", "special"]);
 const coffeeWeekdaySuffixPattern =
   /\s+on\s+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$/i;
 
@@ -24,6 +31,64 @@ export type MeetupEvent = {
   } | null;
 };
 
+type FetchLike = typeof fetch;
+
+type FetchMeetupEventsOptions = {
+  eventsUrl?: string;
+  fetchFn?: FetchLike;
+  now?: Date;
+  timeoutMs?: number;
+};
+
+type SelectMeetupEventsOptions = {
+  inProgressGraceMs?: number;
+  now?: Date;
+  windowDays?: number;
+};
+
+function isOptionalString(value: unknown): boolean {
+  return value === undefined || typeof value === "string";
+}
+
+function isValidDateString(value: unknown): value is string {
+  return typeof value === "string" && !Number.isNaN(new Date(value).valueOf());
+}
+
+function isMeetupVenue(value: unknown): value is NonNullable<MeetupEvent["venue"]> {
+  if (!value || typeof value !== "object") return false;
+  const venue = value as Record<string, unknown>;
+  return (
+    isOptionalString(venue.name) &&
+    isOptionalString(venue.address) &&
+    isOptionalString(venue.city) &&
+    isOptionalString(venue.state) &&
+    isOptionalString(venue.country)
+  );
+}
+
+export function isMeetupEvent(value: unknown): value is MeetupEvent {
+  if (!value || typeof value !== "object") return false;
+  const event = value as Record<string, unknown>;
+
+  return (
+    typeof event.title === "string" &&
+    event.title.length > 0 &&
+    typeof event.link === "string" &&
+    event.link.length > 0 &&
+    isValidDateString(event.start) &&
+    (event.endTime === null || isValidDateString(event.endTime)) &&
+    typeof event.description === "string" &&
+    (event.image === null || typeof event.image === "string") &&
+    typeof event.goingCount === "number" &&
+    Number.isFinite(event.goingCount) &&
+    typeof event.interestedCount === "number" &&
+    Number.isFinite(event.interestedCount) &&
+    typeof event.eventType === "string" &&
+    EVENT_TYPES.has(event.eventType as EventType) &&
+    (event.venue === null || isMeetupVenue(event.venue))
+  );
+}
+
 export function normalizeMeetupEventTitle(title: string): string {
   const titleWithoutGroupSuffix = title.replace(" | Kyoto Tech Meetup", "");
 
@@ -34,36 +99,41 @@ export function normalizeMeetupEventTitle(title: string): string {
   return titleWithoutGroupSuffix.replace(coffeeWeekdaySuffixPattern, "");
 }
 
-export async function fetchMeetupEvents(): Promise<MeetupEvent[]> {
-  const requestUrl = new URL(EVENTS_URL);
-  requestUrl.searchParams.set("_cb", String(Date.now()));
+function compareMeetupEvents(a: MeetupEvent, b: MeetupEvent): number {
+  const startDifference =
+    new Date(a.start).valueOf() - new Date(b.start).valueOf();
+  if (startDifference !== 0) return startDifference;
 
-  const html = await fetch(requestUrl.toString(), {
-    headers: {
-      "cache-control": "no-cache",
-      pragma: "no-cache",
-      "accept-language": "en-US,en;q=0.9",
-    },
-  }).then((r) => r.text());
+  const linkDifference = a.link.localeCompare(b.link);
+  return linkDifference !== 0 ? linkDifference : a.title.localeCompare(b.title);
+}
 
+export function parseMeetupEventsHtml(html: string): MeetupEvent[] {
   const match = html.match(
     /<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/,
   );
 
-  if (!match?.[1]) return [];
+  if (!match?.[1]) {
+    throw new Error("Meetup response did not contain __NEXT_DATA__.");
+  }
 
-  const data = JSON.parse(match[1]);
+  let data: any;
+  try {
+    data = JSON.parse(match[1]);
+  } catch (error) {
+    throw new Error("Meetup response contained invalid __NEXT_DATA__ JSON.", {
+      cause: error,
+    });
+  }
+
   const apolloState = data?.props?.pageProps?.__APOLLO_STATE__ as
     | Record<string, any>
     | undefined;
-  if (!apolloState) return [];
+  if (!apolloState || typeof apolloState !== "object") {
+    throw new Error("Meetup response did not contain Apollo event data.");
+  }
 
-  const now = new Date();
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() + 60);
-  const inProgressGraceMs = 4 * 60 * 60 * 1000;
-
-  const resolvePhotoUrl = (photoLike: any) => {
+  const resolvePhotoUrl = (photoLike: any): string | null => {
     const ref =
       typeof photoLike === "string" && photoLike.startsWith("PhotoInfo:")
         ? photoLike
@@ -81,7 +151,7 @@ export async function fetchMeetupEvents(): Promise<MeetupEvent[]> {
     );
   };
 
-  const resolveVenue = (venueLike: any) => {
+  const resolveVenue = (venueLike: any): MeetupEvent["venue"] => {
     const ref =
       typeof venueLike === "string" && venueLike.startsWith("Venue:")
         ? venueLike
@@ -120,7 +190,7 @@ export async function fetchMeetupEvents(): Promise<MeetupEvent[]> {
     };
   };
 
-  const resolveGoingCount = (goingLike: any) => {
+  const resolveGoingCount = (goingLike: any): number | null => {
     if (!goingLike) return null;
     if (typeof goingLike.totalCount === "number") return goingLike.totalCount;
 
@@ -158,14 +228,92 @@ export async function fetchMeetupEvents(): Promise<MeetupEvent[]> {
         eventType: classifyEventType(title),
       };
     })
-    .filter((evt) => {
-      const start = new Date(evt.start);
-      const end = evt.endTime ? new Date(evt.endTime) : null;
-      const upcoming = start >= now;
-      const inProgress = end
-        ? start <= now && end >= now
-        : start <= now && now.valueOf() - start.valueOf() <= inProgressGraceMs;
-      return (upcoming || inProgress) && start <= cutoff;
+    .filter(isMeetupEvent)
+    .sort(compareMeetupEvents);
+}
+
+export function selectUpcomingMeetupEvents(
+  events: readonly MeetupEvent[],
+  {
+    inProgressGraceMs = DEFAULT_IN_PROGRESS_GRACE_MS,
+    now = new Date(),
+    windowDays = DEFAULT_EVENT_WINDOW_DAYS,
+  }: SelectMeetupEventsOptions = {},
+): MeetupEvent[] {
+  const nowMs = now.valueOf();
+  if (Number.isNaN(nowMs)) {
+    throw new Error("Cannot select Meetup events with an invalid current date.");
+  }
+
+  const cutoffMs = nowMs + windowDays * MILLISECONDS_PER_DAY;
+
+  return events
+    .filter(isMeetupEvent)
+    .filter((event) => {
+      const startMs = new Date(event.start).valueOf();
+      const endMs = event.endTime
+        ? new Date(event.endTime).valueOf()
+        : null;
+      const upcoming = startMs >= nowMs;
+      const inProgress =
+        startMs <= nowMs &&
+        (endMs !== null
+          ? endMs >= nowMs
+          : nowMs - startMs <= inProgressGraceMs);
+
+      return (upcoming || inProgress) && startMs <= cutoffMs;
     })
-    .sort((a, b) => new Date(a.start).valueOf() - new Date(b.start).valueOf());
+    .sort(compareMeetupEvents);
+}
+
+export function selectNextMeetupEvent(
+  events: readonly MeetupEvent[],
+  options: SelectMeetupEventsOptions = {},
+): MeetupEvent | null {
+  return selectUpcomingMeetupEvents(events, options)[0] ?? null;
+}
+
+export async function fetchMeetupEvents({
+  eventsUrl = DEFAULT_MEETUP_EVENTS_URL,
+  fetchFn = fetch,
+  now = new Date(),
+  timeoutMs = DEFAULT_MEETUP_TIMEOUT_MS,
+}: FetchMeetupEventsOptions = {}): Promise<MeetupEvent[]> {
+  const requestUrl = new URL(eventsUrl);
+  requestUrl.searchParams.set("_cb", String(now.valueOf()));
+
+  const controller = new AbortController();
+  const timeout = setTimeout(
+    () => controller.abort(),
+    Math.max(1, timeoutMs),
+  );
+
+  try {
+    const response = await fetchFn(requestUrl, {
+      signal: controller.signal,
+      headers: {
+        "cache-control": "no-cache",
+        pragma: "no-cache",
+        "accept-language": "en-US,en;q=0.9",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Meetup request failed for ${requestUrl.origin}${requestUrl.pathname}: HTTP ${response.status}`,
+      );
+    }
+
+    const events = parseMeetupEventsHtml(await response.text());
+    return selectUpcomingMeetupEvents(events, { now });
+  } catch (error) {
+    if (controller.signal.aborted) {
+      throw new Error(`Meetup request timed out after ${timeoutMs}ms.`, {
+        cause: error,
+      });
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 }

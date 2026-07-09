@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Proposed  
+Status: Active — PR 1 merged; PR 2 ready for review
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, locations, conversations, and member work
 
@@ -541,4 +541,3 @@ The redesign is successful when:
 - Real event imagery and member work provide the page's primary social proof.
 - Both locale routes respect explicit visitor choice.
 - Static builds remain usable when Meetup or feed sources are temporarily unavailable.
-

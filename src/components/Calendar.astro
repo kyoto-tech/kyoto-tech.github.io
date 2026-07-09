@@ -1,18 +1,17 @@
 ---
 import FullCalendarView from "../components/FullCalendarView.jsx";
-import { fetchMeetupEvents, type MeetupEvent } from "../lib/meetup-events";
+import type { MeetupEvent } from "../lib/meetup-events";
 import {
   getFiveWeekCalendarRange,
   toFullCalendarEvents,
 } from "../lib/full-calendar-events";
 
 type Props = {
-  events?: MeetupEvent[];
+  events: MeetupEvent[];
   lang?: "en" | "ja";
 };
 
-const { events: providedEvents, lang = "en" } = Astro.props as Props;
-const events = providedEvents ?? (await fetchMeetupEvents());
+const { events, lang = "en" } = Astro.props as Props;
 const calendarEvents = toFullCalendarEvents(events);
 const range = getFiveWeekCalendarRange();
 ---

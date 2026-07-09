@@ -15,6 +15,10 @@ This repo is the Astro-powered marketing site for the Kyoto Tech Meetup communit
   - `src/data/member-feeds.json` (source list)
   - `src/data/composite-feed.json` (generated output consumed by UI)
   - `scripts/fetch-feeds.mjs` (RSS aggregator that writes the JSON above)
+- Meetup event JSON:
+  - `src/data/meetup-events.json` (generated cache consumed by the site)
+  - `scripts/fetch-meetup-events.mjs` (stale-safe Meetup fetcher)
+  - `src/lib/meetup-events.ts` (normalization, selection, and live reminder fetches)
 
 ## Quick Start
 - Install: `npm install`
@@ -43,3 +47,6 @@ This repo is the Astro-powered marketing site for the Kyoto Tech Meetup communit
 ## Data Notes
 - `src/data/composite-feed.json` is generated; update via `scripts/fetch-feeds.mjs`.
 - `src/data/member-feeds.json` is the source-of-truth for aggregated RSS feeds.
+- `src/data/meetup-events.json` is generated; update via `scripts/fetch-meetup-events.mjs`.
+- Production pages consume the committed Meetup cache and must not fetch Meetup while Astro renders routes.
+- `npm run events:pull:stale-ok` preserves the last valid cache when Meetup is temporarily unavailable.
