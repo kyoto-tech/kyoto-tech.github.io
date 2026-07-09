@@ -76,6 +76,10 @@ public/          # Files served as-is (favicon, images)
 - Add tests or visual regression tooling for future redesigns.
 - Internationalization or localization improvements for Japanese/English visitors.
 
+## Product Roadmaps
+
+- [Homepage redesign roadmap](docs/homepage-redesign-roadmap.md) — an event-led newcomer journey and Community Hub, organized as independently shippable pull requests.
+
 ## Deployment
 
 - Production deploys target [Cloudflare Pages](https://kyototechmeetup.com/) via Cloudflare's GitHub integration on merge to `main`.
