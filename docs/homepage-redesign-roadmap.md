@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PRs 1–2 merged; PR 3 ready for review
+Status: Active — PRs 1–3 merged; PR 4 is next
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, locations, conversations, and member work
 
@@ -313,6 +313,7 @@ Give existing members fast, task-oriented access to resources without interrupti
 - Mix internal destination links with external community services.
 - Reorder the remainder of the homepage according to the target structure.
 - Add a fixed-navigation destination for the hub.
+- Restore a compact community-size signal near the hub introduction, backed by Meetup data rather than a hard-coded claim.
 
 ### Suggested shortcuts
 
@@ -332,6 +333,15 @@ Give existing members fast, task-oriented access to resources without interrupti
 - Update header anchors and localized navigation strings.
 - Keep the homepage as a single-page experience for now. A separate member hub route is out of scope unless the resource set grows materially.
 
+### Meetup member milestone
+
+- Extend the stale-safe Meetup pull so `src/data/meetup-events.json` can retain a validated top-level `memberCount` alongside the event snapshot.
+- Preserve the last valid member count when Meetup is unavailable or the count cannot be parsed; a count failure must not discard otherwise valid event data.
+- Convert the exact count to a conservative public milestone by rounding down to the nearest 25. For example, counts from 225 through 249 render as “225+ members and growing.”
+- Do not render the module when there is no valid cached count or the rounded milestone is below 25.
+- Keep the module out of the event-led hero. Place it as concise community-level social proof near the Community Hub introduction.
+- Add aligned English and Japanese strings, and keep formatting in a small tested helper rather than embedding rounding logic in the template.
+
 ### Acceptance criteria
 
 - A returning visitor can reach every core resource from either the header or Community Hub.
@@ -339,12 +349,14 @@ Give existing members fast, task-oriented access to resources without interrupti
 - Internal and external destinations are visually distinguishable without excessive decoration.
 - Mobile navigation exposes the same essential destinations as desktop navigation.
 - Anchor destinations account for the fixed header and do not hide section headings.
+- The member milestone never overstates the Meetup count and remains usable from stale cached data.
 
 ### Verification
 
 - Verify all internal anchors in both locales.
 - Verify all external destinations and accessible names.
 - Test keyboard and touch navigation at supported breakpoints.
+- Unit-test member-count parsing and milestone boundaries including 224, 225, 249, and 250.
 - Run `npm run check` and `npm run build`.
 
 ---
@@ -360,9 +372,17 @@ Preserve the detailed calendar for existing members while giving mobile visitors
 - Add a server-rendered `src/components/UpcomingEventList.astro`.
 - Show the next three to six events chronologically.
 - Include date, time, venue status, event type, and a direct RSVP action.
-- Render the list at mobile widths and the five-week FullCalendar view at tablet and desktop widths.
-- Use `client:media="(min-width: 768px)"` for FullCalendar so mobile visitors do not execute the calendar island unnecessarily.
+- Render the list at mobile widths and retain the existing server-rendered calendar grid at tablet and desktop widths.
 - Preserve a useful no-events state linking to the Meetup group.
+
+### Happening-now state
+
+- Preserve the existing `NextEventCard.astro` behavior, which already renders “Live Now” / “開催中” with an active green status dot when `getHeroEventState` identifies an ongoing event.
+- Move `isOngoingEvent` out of the hero-specific helper into shared event logic so the hero, upcoming-event list, and calendar use the same start, end, and four-hour missing-end-time grace rules.
+- Restore an obvious active treatment in the upcoming-event list based on the former `EventList.jsx` design: a live badge plus an emphasized card edge or restrained pulse.
+- Mark the same event as active wherever it appears in the desktop calendar grid.
+- Respect `prefers-reduced-motion`; the badge and non-motion styling must communicate the state without relying on animation.
+- Server-render the initial state. Add only a small time-aware client enhancement if needed so the label changes when a visitor keeps the page open across an event start or end; do not reintroduce a fully hydrated event-list component solely for this behavior.
 
 ### Location cards
 
@@ -375,14 +395,18 @@ Preserve the detailed calendar for existing members while giving mobile visitors
 
 - A 320px or 390px visitor can discover and open upcoming events without horizontally panning an 864px calendar.
 - The desktop calendar retains its current event coverage and localized labels.
-- Mobile visitors do not hydrate FullCalendar.
+- Mobile visitors do not load an unnecessary calendar client island.
+- Ongoing events use the localized live label and active styling in the hero, mobile list, and desktop calendar without duplicating timing rules.
+- The live state remains understandable with reduced motion enabled.
 - Venue cards provide an address and direct maps link without requiring an embedded map.
 - Both locales render dates, labels, and venue guidance correctly.
 
 ### Verification
 
-- Test event cards with long titles, missing venues, overlapping events, and no events.
-- Confirm FullCalendar behavior at and around the 768px breakpoint.
+- Test event cards with long titles, missing venues, overlapping events, ongoing events, and no events.
+- Test live-state boundaries for explicit end times and the four-hour fallback window.
+- Confirm list/calendar switching at and around the 768px breakpoint.
+- Verify the active treatment with reduced motion enabled and while crossing a start or end time with the page open.
 - Verify the page with third-party maps blocked.
 - Run responsive accessibility checks, `npm run check`, and `npm run build`.
 
