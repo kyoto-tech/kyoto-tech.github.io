@@ -133,9 +133,6 @@ const ldData = {
 	]
 };
 
-const enHomePath = getRelativeLocaleUrl("en", "/");
-const jaHomePath = getRelativeLocaleUrl("ja", "/");
-
 ---
 
 <!doctype html>
@@ -186,45 +183,6 @@ const jaHomePath = getRelativeLocaleUrl("ja", "/");
 		<link rel="canonical" href={canonicalUrl} />
 		<script type="application/ld+json" is:inline set:html={JSON.stringify(ldData)}></script>
 		<title>{t("meta.title")}</title>
-			<script is:inline define:vars={{ enHomePath, jaHomePath }}>
-				const LANGUAGE_STORAGE_KEY = "kyoto-tech-language";
-
-				const normalizePath = (value) => {
-					const withoutIndex = value.replace(/index\.html$/, "");
-					return withoutIndex.endsWith("/") ? withoutIndex : `${withoutIndex}/`;
-				};
-
-				const currentPath = normalizePath(location.pathname);
-				const normalizedEnHomePath = normalizePath(enHomePath);
-				const normalizedJaHomePath = normalizePath(jaHomePath);
-
-				const isOnEnglishHome = currentPath === normalizedEnHomePath;
-				const isOnJapaneseHome = currentPath === normalizedJaHomePath;
-
-				let preferredLanguage = null;
-				try {
-					preferredLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-				} catch {
-					preferredLanguage = null;
-				}
-
-				const browserPrefersJapanese =
-					(navigator.language?.toLowerCase().startsWith("ja")) ||
-					(navigator.languages?.some((lang) => lang.toLowerCase().startsWith("ja")));
-
-				const targetLanguage =
-					preferredLanguage === "en" || preferredLanguage === "ja"
-						? preferredLanguage
-						: browserPrefersJapanese
-							? "ja"
-							: "en";
-
-				if (isOnEnglishHome && targetLanguage === "ja") {
-					location.replace(normalizedJaHomePath);
-				} else if (isOnJapaneseHome && targetLanguage === "en") {
-					location.replace(normalizedEnHomePath);
-				}
-			</script>
 			<ClientRouter />
 	</head>
 	<body>

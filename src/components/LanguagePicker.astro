@@ -1,14 +1,30 @@
 ---
-import { languages } from "../i18n/ui";
+import { defaultLang, languages } from "../i18n/ui";
 import { useTranslations } from "../i18n/utils";
 import { getRelativeLocaleUrl } from "astro:i18n";
 
-const activeLang = Astro.currentLocale as "en" | "ja" | undefined;
-const t = useTranslations(activeLang ?? "en");
+type Props = {
+	lang?: keyof typeof languages;
+	variant?: "desktop" | "mobile";
+};
+
+const {
+	lang = (Astro.currentLocale as keyof typeof languages | undefined) ?? defaultLang,
+	variant = "desktop",
+} = Astro.props as Props;
+const activeLang = lang;
+const t = useTranslations(activeLang);
 const allLangs = Object.entries(languages) as [keyof typeof languages, string][];
 
 ---
-<div class="hidden items-center rounded-full bg-slate-50 p-1 shadow-sm sm:inline-flex">
+<div
+	class:list={[
+		"items-center bg-slate-50 p-1 shadow-sm",
+		variant === "desktop"
+			? "hidden rounded-full lg:inline-flex"
+			: "grid grid-cols-2 gap-1 rounded-xl",
+	]}
+>
 	{allLangs.map(([lang, label]) => {
 		const isActive = lang === activeLang;
 
@@ -17,7 +33,10 @@ const allLangs = Object.entries(languages) as [keyof typeof languages, string][]
 				href={getRelativeLocaleUrl(lang, "/")}
 				data-language={lang}
 				class:list={[
-					"rounded-full px-3 py-1 text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700",
+					"rounded-full text-center text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700",
+					variant === "desktop"
+						? "px-3 py-1"
+						: "inline-flex min-h-11 items-center justify-center px-4 py-2",
 					isActive
 						? "border border-slate-200 bg-white text-slate-900 shadow"
 						: "text-slate-600 hover:text-slate-900",
@@ -31,21 +50,3 @@ const allLangs = Object.entries(languages) as [keyof typeof languages, string][]
 		);
 	})}
 </div>
-
-<script is:inline>
-	const LANGUAGE_STORAGE_KEY = "kyoto-tech-language";
-	const languageLinks = document.querySelectorAll("a[data-language]");
-
-	languageLinks.forEach((link) => {
-		link.addEventListener("click", () => {
-			const selectedLanguage = link.getAttribute("data-language");
-			if (selectedLanguage !== "en" && selectedLanguage !== "ja") return;
-
-			try {
-				localStorage.setItem(LANGUAGE_STORAGE_KEY, selectedLanguage);
-			} catch {
-				// Ignore if storage is unavailable.
-			}
-		});
-	});
-</script>
