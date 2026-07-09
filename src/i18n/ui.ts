@@ -1,6 +1,6 @@
 export const languages = {
   en: "English",
-  ja: "Japanese",
+  ja: "日本語",
 };
 
 export const defaultLang = "en";
@@ -9,6 +9,9 @@ export const ui = {
   en: {
     "a11y.skipToMain": "Skip to main content",
     "a11y.switchLang": "Switch language to {label}",
+    "a11y.primaryNav": "Primary navigation",
+    "a11y.openMenu": "Open navigation menu",
+    "a11y.closeMenu": "Close navigation menu",
     "a11y.mapTitle": "Map of {name}",
     "a11y.mapLabel": "Embedded map showing the location of {name}",
 
@@ -21,9 +24,11 @@ export const ui = {
     "home.header.cta": "Join Us",
     "home.header.discordCta": "Join our Discord",
     "home.header.githubCta": "View our GitHub",
-    "nav.about": "About Us",
-    "nav.events": "Events",
-    "nav.communityFeed": "Community Feed",
+    "nav.nextMeetup": "Next meetup",
+    "nav.eventsShort": "Events",
+    "nav.calendar": "Calendar",
+    "nav.locations": "Locations",
+    "nav.communityHub": "Community Hub",
 
     "home.quickLinks.title": "Connect with the community",
     "home.quickLinks.meetup.title": "Meetup",
@@ -119,6 +124,9 @@ export const ui = {
   ja: {
     "a11y.skipToMain": "メインコンテンツへスキップ",
     "a11y.switchLang": "{label}に言語を切り替える",
+    "a11y.primaryNav": "メインナビゲーション",
+    "a11y.openMenu": "ナビゲーションメニューを開く",
+    "a11y.closeMenu": "ナビゲーションメニューを閉じる",
     "a11y.mapTitle": "{name}の地図",
     "a11y.mapLabel": "{name}の場所を示す埋め込み地図",
 
@@ -131,9 +139,11 @@ export const ui = {
     "home.header.cta": "参加する",
     "home.header.discordCta": "Discordでチャットする",
     "home.header.githubCta": "GitHubでコードを見る",
-    "nav.about": "私たちについて",
-    "nav.events": "イベント",
-    "nav.communityFeed": "コミュニティフィード",
+    "nav.nextMeetup": "次回のイベント",
+    "nav.eventsShort": "イベント",
+    "nav.calendar": "カレンダー",
+    "nav.locations": "開催場所",
+    "nav.communityHub": "コミュニティハブ",
 
     "home.quickLinks.title": "コミュニティとつながる",
     "home.quickLinks.meetup.title": "Meetup",
