@@ -185,9 +185,9 @@ Turn the hero into the beginning of the joining journey: an invitation, a real v
 
 ### Desktop composition
 
-- Left column: concise headline, one-sentence description, primary RSVP, secondary event link, and a short reassurance line.
-- Right column: a candid community photograph with a next-event card visually attached to it.
-- Avoid a centered text block followed by a disconnected full-width image.
+- Top row: concise headline, one-sentence description, primary RSVP, secondary event link, and a short reassurance line on the left; next-event details on the right.
+- A candid community photograph follows at the full width of the hero container.
+- Keep the copy, event details, actions, and photograph within one visually connected hero composition.
 
 ### Mobile composition
 

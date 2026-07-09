@@ -178,47 +178,10 @@ const formatDate = (value: string) => {
       secondaryCtaLabel={t("home.hero.secondaryCta")}
       title={t("home.header.title")}
       subtitle={t("home.header.subtitle")}
-      tagline={t("home.header.tagline")}
     />
   </div>
 
   <main id="main-content" class="space-y-0">
-    <section id="community-hub" class="scroll-mt-24 bg-white/90 px-6 py-12 md:px-12">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-3xl font-semibold text-slate-900">
-          {t("home.quickLinks.title")}
-        </h2>
-        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {
-            quickLinks.map((link) => (
-              <a
-                class="group flex h-full items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-lg shadow-stone-900/5 transition hover:-translate-y-0.5 hover:border-(--accent) hover:bg-white"
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--accent)/10 text-(--accent)">
-                  <link.icon size={18} aria-hidden="true" />
-                </span>
-                <span class="flex flex-col">
-                  <span class="text-base font-semibold text-slate-900 group-hover:text-(--accent)">
-                    {t(link.titleKey)}
-                  </span>
-                  <span class="mt-1 text-sm text-slate-600">
-                    {t(link.descriptionKey)}
-                  </span>
-                </span>
-                <FaExternalLinkAlt
-                  className="ml-auto self-center shrink-0 text-xs text-slate-400 transition group-hover:text-(--accent)"
-                  aria-hidden="true"
-                />
-              </a>
-            ))
-          }
-        </div>
-      </div>
-    </section>
-
     <section id="calendar" class="scroll-mt-24 bg-white px-6 py-16 md:px-12">
       <div class="mx-auto max-w-5xl">
         <h2 class="text-3xl font-semibold text-slate-900">
@@ -297,6 +260,42 @@ const formatDate = (value: string) => {
               </article>
             ))}
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="community-hub" class="scroll-mt-24 bg-white/90 px-6 py-12 md:px-12">
+      <div class="mx-auto max-w-5xl">
+        <h2 class="text-3xl font-semibold text-slate-900">
+          {t("home.quickLinks.title")}
+        </h2>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            quickLinks.map((link) => (
+              <a
+                class="group flex h-full items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-lg shadow-stone-900/5 transition hover:-translate-y-0.5 hover:border-(--accent) hover:bg-white"
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--accent)/10 text-(--accent)">
+                  <link.icon size={18} aria-hidden="true" />
+                </span>
+                <span class="flex flex-col">
+                  <span class="text-base font-semibold text-slate-900 group-hover:text-(--accent)">
+                    {t(link.titleKey)}
+                  </span>
+                  <span class="mt-1 text-sm text-slate-600">
+                    {t(link.descriptionKey)}
+                  </span>
+                </span>
+                <FaExternalLinkAlt
+                  className="ml-auto self-center shrink-0 text-xs text-slate-400 transition group-hover:text-(--accent)"
+                  aria-hidden="true"
+                />
+              </a>
+            ))
+          }
         </div>
       </div>
     </section>
