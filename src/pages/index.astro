@@ -15,6 +15,7 @@ import eventLocations from "../data/event-locations.json";
 import meetupEventData from "../data/meetup-events.json";
 import {
   isMeetupEvent,
+  selectNextMeetupEvent,
   selectUpcomingMeetupEvents,
 } from "../lib/meetup-events";
 
@@ -120,7 +121,10 @@ const locale = lang === "ja" ? "ja-JP" : "en-US";
 const cachedMeetupEvents = Array.isArray(meetupEventData?.events)
   ? (meetupEventData.events as unknown[]).filter(isMeetupEvent)
   : [];
-const events = selectUpcomingMeetupEvents(cachedMeetupEvents);
+const buildNow = new Date();
+const events = selectUpcomingMeetupEvents(cachedMeetupEvents, { now: buildNow });
+const nextEvent = selectNextMeetupEvent(events, { now: buildNow });
+const nextEventUrl = nextEvent?.link ?? meetupUrl;
 
 const memberFeedList = (memberFeeds as MemberFeed[]) ?? [];
 const compositeFeedEntries = Array.isArray(compositeFeed?.feeds)
@@ -154,15 +158,27 @@ const formatDate = (value: string) => {
 ---
 
 <Layout>
-  <Header lang={lang} />
+  <Header
+    hasNextEvent={Boolean(nextEvent)}
+    lang={lang}
+    nextEventUrl={nextEventUrl}
+  />
 
   <div class="mx-auto max-w-6xl pt-20">
     <Hero
+      event={nextEvent}
+      fallbackCtaLabel={t("home.hero.fallbackCta")}
+      fallbackUrl={meetupUrl}
+      imageAlt={t("home.hero.imageAlt")}
+      imageSrc="/images/kyoto-tech-community-work-session.jpg"
+      lang={lang}
+      now={buildNow}
+      primaryCtaLabel={t("home.hero.primaryCta")}
+      reassurance={t("home.hero.reassurance")}
+      secondaryCtaLabel={t("home.hero.secondaryCta")}
       title={t("home.header.title")}
       subtitle={t("home.header.subtitle")}
-      ctaUrl="#calendar"
-      ctaLabel={t("home.header.cta")}
-      badge={t("home.header.badge")}
+      tagline={t("home.header.tagline")}
     />
   </div>
 

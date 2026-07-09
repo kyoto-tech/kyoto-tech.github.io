@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PR 1 merged; PR 2 ready for review
+Status: Active — PRs 1–2 merged; PR 3 ready for review
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, locations, conversations, and member work
 
@@ -213,7 +213,7 @@ Joining information must appear before the image on mobile.
 - Add `src/components/NextEventCard.astro` because the same event summary may be reused later.
 - Render date and time with semantic `<time datetime="...">` elements.
 - Use the event's title, start time, venue, and link without duplicating formatting logic in the component.
-- Store the selected hero photograph under `src/assets` and render it through Astro image tooling with explicit dimensions, responsive sizes, and modern formats.
+- Store approved community photographs under `public/images`, process them with the repository image tooling, and render the selected hero image with explicit dimensions.
 - Load the hero image eagerly and avoid the current combination of lazy loading with high fetch priority.
 - Add aligned English and Japanese strings in `src/i18n/ui.ts`.
 - Keep the secondary action internal, such as “See all events,” pointing to `#calendar`.

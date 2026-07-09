@@ -16,15 +16,20 @@ export const ui = {
     "a11y.mapLabel": "Embedded map showing the location of {name}",
 
     "home.header.tagline": "Kyoto Tech Meetup",
-    "home.header.title":
-      "Connect, learn, and build together in Japan's cultural heart",
+    "home.header.title": "Meet Kyoto's tech community.",
     "home.header.subtitle":
-      "Gatherings for developers, designers, researchers, and founders exploring technology in Kyoto.",
-    "home.header.badge": "100+ Members & Growing",
-    "home.header.cta": "Join Us",
+      "Come for coffee, conversation, and hands-on building with people working across technology in Kyoto.",
+    "home.hero.primaryCta": "RSVP for the next meetup",
+    "home.hero.fallbackCta": "Follow us on Meetup",
+    "home.hero.secondaryCta": "See all events",
+    "home.hero.reassurance":
+      "English and Japanese welcome · First-timers encouraged",
+    "home.hero.imageAlt":
+      "Kyoto Tech Meetup members working together in a tatami room",
     "home.header.discordCta": "Join our Discord",
     "home.header.githubCta": "View our GitHub",
     "nav.nextMeetup": "Next meetup",
+    "nav.meetup": "Meetup",
     "nav.eventsShort": "Events",
     "nav.calendar": "Calendar",
     "nav.locations": "Locations",
@@ -101,9 +106,16 @@ export const ui = {
       "One-off gatherings",
 
     "home.eventCard.empty": "Check back soon for events!",
-    "home.eventCard.emptyLink": "Join our meetup group here to get updates.",
+    "home.eventCard.emptyLink":
+      "We are planning the next gathering. Follow the Meetup group to hear when it is announced.",
+    "home.eventCard.ariaLabel": "Next meetup details",
+    "home.eventCard.next": "Next meetup",
     "home.eventCard.liveNow": "Live Now",
     "home.eventCard.venueTba": "Venue TBA",
+    "home.eventCard.dateTime": "Date and time",
+    "home.eventCard.venue": "Venue",
+    "home.eventCard.details": "View event details",
+    "home.eventCard.groupCta": "View the Meetup group",
     "home.eventCard.going": "going",
 
     "home.footer.copyright":
@@ -131,15 +143,19 @@ export const ui = {
     "a11y.mapLabel": "{name}の場所を示す埋め込み地図",
 
     "home.header.tagline": "Kyoto Tech Meetup",
-    "home.header.title":
-      "日本の文化都市・京都でつながり、学び、ものづくりをしよう",
+    "home.header.title": "京都でテック仲間と\n出会おう。",
     "home.header.subtitle":
-      "京都でテクノロジーを探求するデベロッパー、デザイナー、研究者、創業者のための集まりです。",
-    "home.header.badge": "メンバー100人以上＆拡大中",
-    "home.header.cta": "参加する",
+      "コーヒーを片手に語り合い、京都でテクノロジーに取り組む人たちと一緒に手を動かすミートアップです。",
+    "home.hero.primaryCta": "次回のミートアップに参加",
+    "home.hero.fallbackCta": "Meetupをフォロー",
+    "home.hero.secondaryCta": "イベント一覧を見る",
+    "home.hero.reassurance": "日本語・英語どちらでも歓迎 · 初参加の方もどうぞ",
+    "home.hero.imageAlt":
+      "畳の部屋で一緒に作業するKyoto Tech Meetupのメンバー",
     "home.header.discordCta": "Discordでチャットする",
     "home.header.githubCta": "GitHubでコードを見る",
     "nav.nextMeetup": "次回のイベント",
+    "nav.meetup": "Meetup",
     "nav.eventsShort": "イベント",
     "nav.calendar": "カレンダー",
     "nav.locations": "開催場所",
@@ -218,9 +234,16 @@ export const ui = {
       "単発のイベント",
 
     "home.eventCard.empty": "イベント情報は近日公開予定です。",
-    "home.eventCard.emptyLink": "Meetupグループに参加して最新情報を受け取りましょう。",
+    "home.eventCard.emptyLink":
+      "次回の集まりを準備中です。Meetupグループをフォローして、開催のお知らせをお待ちください。",
+    "home.eventCard.ariaLabel": "次回のミートアップ情報",
+    "home.eventCard.next": "次回のミートアップ",
     "home.eventCard.liveNow": "開催中",
     "home.eventCard.venueTba": "会場未定",
+    "home.eventCard.dateTime": "日時",
+    "home.eventCard.venue": "会場",
+    "home.eventCard.details": "イベント詳細を見る",
+    "home.eventCard.groupCta": "Meetupグループを見る",
     "home.eventCard.going": "人が参加予定",
 
     "home.footer.copyright":
