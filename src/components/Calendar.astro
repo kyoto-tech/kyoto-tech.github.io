@@ -1,10 +1,7 @@
 ---
-import FullCalendarView from "../components/FullCalendarView.jsx";
 import type { MeetupEvent } from "../lib/meetup-events";
-import {
-  getFiveWeekCalendarRange,
-  toFullCalendarEvents,
-} from "../lib/full-calendar-events";
+import { buildFiveWeekCalendar } from "../lib/calendar-grid";
+import { useTranslations } from "../i18n/utils";
 
 type Props = {
   events: MeetupEvent[];
@@ -12,15 +9,96 @@ type Props = {
 };
 
 const { events, lang = "en" } = Astro.props as Props;
-const calendarEvents = toFullCalendarEvents(events);
-const range = getFiveWeekCalendarRange();
+const t = useTranslations(lang);
+const locale = lang === "ja" ? "ja-JP" : "en-US";
+const weeks = buildFiveWeekCalendar(events);
+const rangeStart = weeks[0]?.[0]?.dateKey;
+const weekdayLabels = Array.from({ length: 7 }, (_, index) => {
+  const date = new Date(Date.UTC(2026, 0, 5 + index));
+  return new Intl.DateTimeFormat(locale, {
+    timeZone: "UTC",
+    weekday: "short",
+  }).format(date);
+});
+
+const formatFullDate = (dateKey: string) =>
+  new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+    year: "numeric",
+  }).format(new Date(`${dateKey}T00:00:00.000Z`));
+
+const formatDayNumber = (dateKey: string, dayNumber: number) => {
+  if (dateKey !== rangeStart && dayNumber !== 1) return String(dayNumber);
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  }).format(new Date(`${dateKey}T00:00:00.000Z`));
+};
+
+const eventColorClass = (event: MeetupEvent) => {
+  if (event.eventType === "hack-day") return "bg-teal-700 hover:bg-teal-800";
+  if (event.eventType === "special") return "bg-violet-700 hover:bg-violet-800";
+  return "bg-(--accent) hover:bg-(--accent-dark)";
+};
 ---
 
-<section class="pt-6 pb-6">
-  <FullCalendarView
-    client:load
-    events={calendarEvents}
-    range={range}
-    lang={lang}
-  />
+<section class="pb-6 pt-6">
+  <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white pb-1">
+    <table class="w-full min-w-[54rem] table-fixed border-collapse" aria-label={t("home.calendar.title")}>
+      <thead>
+        <tr>
+          {
+            weekdayLabels.map((label) => (
+              <th
+                scope="col"
+                class="border-b border-r border-slate-200 bg-slate-50 px-2 py-2 text-center text-xs font-semibold uppercase tracking-[0.12em] text-slate-500 last:border-r-0"
+              >
+                {label}
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {
+          weeks.map((week) => (
+            <tr>
+              {week.map((day) => (
+                <td
+                  class:list={[
+                    "h-32 border-b border-r border-slate-200 p-2 align-top last:border-r-0",
+                    day.isToday ? "bg-(--accent)/8" : "bg-white",
+                  ]}
+                >
+                  <time
+                    datetime={day.dateKey}
+                    aria-label={formatFullDate(day.dateKey)}
+                    class="block text-right text-sm font-semibold text-slate-700"
+                  >
+                    {formatDayNumber(day.dateKey, day.dayNumber)}
+                  </time>
+                  <div class="mt-2 grid gap-1.5">
+                    {day.events.map((event) => (
+                      <a
+                        href={event.link}
+                        class:list={[
+                          "rounded-md px-2 py-1.5 text-xs font-medium leading-snug text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700",
+                          eventColorClass(event),
+                        ]}
+                      >
+                        {event.title}
+                      </a>
+                    ))}
+                  </div>
+                </td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
 </section>

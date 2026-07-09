@@ -15,6 +15,7 @@ import eventLocations from "../data/event-locations.json";
 import meetupEventData from "../data/meetup-events.json";
 import {
   isMeetupEvent,
+  selectNextMeetupEvent,
   selectUpcomingMeetupEvents,
 } from "../lib/meetup-events";
 
@@ -120,7 +121,10 @@ const locale = lang === "ja" ? "ja-JP" : "en-US";
 const cachedMeetupEvents = Array.isArray(meetupEventData?.events)
   ? (meetupEventData.events as unknown[]).filter(isMeetupEvent)
   : [];
-const events = selectUpcomingMeetupEvents(cachedMeetupEvents);
+const buildNow = new Date();
+const events = selectUpcomingMeetupEvents(cachedMeetupEvents, { now: buildNow });
+const nextEvent = selectNextMeetupEvent(events, { now: buildNow });
+const nextEventUrl = nextEvent?.link ?? meetupUrl;
 
 const memberFeedList = (memberFeeds as MemberFeed[]) ?? [];
 const compositeFeedEntries = Array.isArray(compositeFeed?.feeds)
@@ -154,60 +158,46 @@ const formatDate = (value: string) => {
 ---
 
 <Layout>
-  <Header lang={lang} />
+  <Header
+    hasNextEvent={Boolean(nextEvent)}
+    lang={lang}
+    nextEventUrl={nextEventUrl}
+  />
 
   <div class="mx-auto max-w-6xl pt-20">
     <Hero
+      event={nextEvent}
+      fallbackCtaLabel={t("home.hero.fallbackCta")}
+      fallbackUrl={meetupUrl}
+      imageAlt={t("home.hero.imageAlt")}
+      imageSrc="/images/kyoto-tech-community-work-session.jpg"
+      lang={lang}
+      now={buildNow}
+      primaryCtaLabel={t("home.hero.primaryCta")}
+      reassurance={t("home.hero.reassurance")}
+      secondaryCtaLabel={t("home.hero.secondaryCta")}
       title={t("home.header.title")}
       subtitle={t("home.header.subtitle")}
-      ctaUrl="#calendar"
-      ctaLabel={t("home.header.cta")}
-      badge={t("home.header.badge")}
     />
   </div>
 
   <main id="main-content" class="space-y-0">
-    <section id="community-hub" class="scroll-mt-24 bg-white/90 px-6 py-12 md:px-12">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-3xl font-semibold text-slate-900">
-          {t("home.quickLinks.title")}
-        </h2>
-        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {
-            quickLinks.map((link) => (
-              <a
-                class="group flex h-full items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-lg shadow-stone-900/5 transition hover:-translate-y-0.5 hover:border-(--accent) hover:bg-white"
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--accent)/10 text-(--accent)">
-                  <link.icon size={18} aria-hidden="true" />
-                </span>
-                <span class="flex flex-col">
-                  <span class="text-base font-semibold text-slate-900 group-hover:text-(--accent)">
-                    {t(link.titleKey)}
-                  </span>
-                  <span class="mt-1 text-sm text-slate-600">
-                    {t(link.descriptionKey)}
-                  </span>
-                </span>
-                <FaExternalLinkAlt
-                  className="ml-auto self-center shrink-0 text-xs text-slate-400 transition group-hover:text-(--accent)"
-                  aria-hidden="true"
-                />
-              </a>
-            ))
-          }
-        </div>
-      </div>
-    </section>
-
     <section id="calendar" class="scroll-mt-24 bg-white px-6 py-16 md:px-12">
       <div class="mx-auto max-w-5xl">
         <h2 class="text-3xl font-semibold text-slate-900">
           {t("home.calendar.title")}
         </h2>
+
+        <FeedTimestamps
+          client:load
+          generatedAt={compositeFeed?.generatedAt}
+          intervalHours={3}
+          updatedLabel={t("home.communityFeed.updated")}
+          nextLabel={t("home.communityFeed.nextUpdate")}
+        />
+
+        <Calendar events={events} lang={lang} />
+
         <div class="mt-5 grid gap-4 text-sm text-slate-700 md:grid-cols-3">
           {
             calendarLegendItems.map((item) => (
@@ -238,16 +228,6 @@ const formatDate = (value: string) => {
             ))
           }
         </div>
-
-        <Calendar events={events} lang={lang} />
-
-        <FeedTimestamps
-          client:load
-          generatedAt={compositeFeed?.generatedAt}
-          intervalHours={3}
-          updatedLabel={t("home.communityFeed.updated")}
-          nextLabel={t("home.communityFeed.nextUpdate")}
-        />
 
         <div id="locations" class="mt-12 scroll-mt-24">
           <h3 class="text-2xl font-semibold text-slate-900">
@@ -281,6 +261,42 @@ const formatDate = (value: string) => {
               </article>
             ))}
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="community-hub" class="scroll-mt-24 bg-white/90 px-6 py-12 md:px-12">
+      <div class="mx-auto max-w-5xl">
+        <h2 class="text-3xl font-semibold text-slate-900">
+          {t("home.quickLinks.title")}
+        </h2>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            quickLinks.map((link) => (
+              <a
+                class="group flex h-full items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/95 p-4 shadow-lg shadow-stone-900/5 transition hover:-translate-y-0.5 hover:border-(--accent) hover:bg-white"
+                href={link.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--accent)/10 text-(--accent)">
+                  <link.icon size={18} aria-hidden="true" />
+                </span>
+                <span class="flex flex-col">
+                  <span class="text-base font-semibold text-slate-900 group-hover:text-(--accent)">
+                    {t(link.titleKey)}
+                  </span>
+                  <span class="mt-1 text-sm text-slate-600">
+                    {t(link.descriptionKey)}
+                  </span>
+                </span>
+                <FaExternalLinkAlt
+                  className="ml-auto self-center shrink-0 text-xs text-slate-400 transition group-hover:text-(--accent)"
+                  aria-hidden="true"
+                />
+              </a>
+            ))
+          }
         </div>
       </div>
     </section>

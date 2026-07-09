@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PR 1 merged; PR 2 ready for review
+Status: Active — PRs 1–2 merged; PR 3 ready for review
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, locations, conversations, and member work
 
@@ -185,9 +185,9 @@ Turn the hero into the beginning of the joining journey: an invitation, a real v
 
 ### Desktop composition
 
-- Left column: concise headline, one-sentence description, primary RSVP, secondary event link, and a short reassurance line.
-- Right column: a candid community photograph with a next-event card visually attached to it.
-- Avoid a centered text block followed by a disconnected full-width image.
+- Use a candid community photograph as the full hero background rather than a separate image block.
+- Layer concise copy and actions on the left and next-event details on the right, with intentional gradients preserving text contrast.
+- Keep the image, copy, event details, and actions within one visually connected composition.
 
 ### Mobile composition
 
@@ -213,7 +213,7 @@ Joining information must appear before the image on mobile.
 - Add `src/components/NextEventCard.astro` because the same event summary may be reused later.
 - Render date and time with semantic `<time datetime="...">` elements.
 - Use the event's title, start time, venue, and link without duplicating formatting logic in the component.
-- Store the selected hero photograph under `src/assets` and render it through Astro image tooling with explicit dimensions, responsive sizes, and modern formats.
+- Store approved community photographs under `public/images`, process them with the repository image tooling, and render the selected hero background with explicit dimensions and contrast-preserving overlays.
 - Load the hero image eagerly and avoid the current combination of lazy loading with high fetch priority.
 - Add aligned English and Japanese strings in `src/i18n/ui.ts`.
 - Keep the secondary action internal, such as “See all events,” pointing to `#calendar`.
