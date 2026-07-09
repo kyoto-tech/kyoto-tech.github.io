@@ -188,6 +188,14 @@ const formatDate = (value: string) => {
           {t("home.calendar.title")}
         </h2>
 
+        <FeedTimestamps
+          client:load
+          generatedAt={compositeFeed?.generatedAt}
+          intervalHours={3}
+          updatedLabel={t("home.communityFeed.updated")}
+          nextLabel={t("home.communityFeed.nextUpdate")}
+        />
+
         <Calendar events={events} lang={lang} />
 
         <div class="mt-5 grid gap-4 text-sm text-slate-700 md:grid-cols-3">
@@ -220,14 +228,6 @@ const formatDate = (value: string) => {
             ))
           }
         </div>
-
-        <FeedTimestamps
-          client:load
-          generatedAt={compositeFeed?.generatedAt}
-          intervalHours={3}
-          updatedLabel={t("home.communityFeed.updated")}
-          nextLabel={t("home.communityFeed.nextUpdate")}
-        />
 
         <div id="locations" class="mt-12 scroll-mt-24">
           <h3 class="text-2xl font-semibold text-slate-900">
