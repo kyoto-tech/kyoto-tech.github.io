@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import Parser from "rss-parser";
 import {
   fetchRawFeedItems,
@@ -49,30 +50,100 @@ function parseArgs(argv) {
   return args;
 }
 
-function extractMediaUrl(value) {
+const IMAGE_FILE_EXTENSIONS = new Set([
+  ".avif",
+  ".gif",
+  ".jpeg",
+  ".jpg",
+  ".png",
+  ".svg",
+  ".webp",
+]);
+const NON_IMAGE_FILE_EXTENSIONS = new Set([
+  ".m4v",
+  ".mov",
+  ".mp3",
+  ".mp4",
+  ".mpeg",
+  ".mpg",
+  ".ogg",
+  ".ogv",
+  ".wav",
+  ".webm",
+]);
+
+function extractMediaCandidate(value) {
   if (!value) return null;
   if (typeof value === "string") {
-    return value.startsWith("http") ? value : null;
+    return value.startsWith("http") ? { url: value } : null;
   }
   if (Array.isArray(value)) {
     for (const entry of value) {
-      const url = extractMediaUrl(entry);
-      if (url) return url;
+      const candidate = extractMediaCandidate(entry);
+      if (candidate) return candidate;
     }
     return null;
   }
   if (typeof value === "object") {
-    if (typeof value.url === "string" && value.url.startsWith("http")) {
-      return value.url;
-    }
-    if (typeof value.href === "string" && value.href.startsWith("http")) {
-      return value.href;
-    }
-    if (typeof value.$?.url === "string" && value.$.url.startsWith("http")) {
-      return value.$.url;
-    }
+    const url = value.url ?? value.href ?? value.$?.url;
+    if (typeof url !== "string" || !url.startsWith("http")) return null;
+
+    return {
+      url,
+      type: value.type ?? value.$?.type ?? null,
+      medium: value.medium ?? value.$?.medium ?? null,
+    };
   }
   return null;
+}
+
+function getUrlExtension(rawUrl) {
+  try {
+    return path.extname(new URL(rawUrl).pathname).toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
+export function isImageMediaCandidate(
+  candidate,
+  { semanticImage = false } = {},
+) {
+  if (!candidate?.url || typeof candidate.url !== "string") return false;
+
+  const mimeType = String(candidate.type ?? "")
+    .split(";", 1)[0]
+    .trim()
+    .toLowerCase();
+  const medium = String(candidate.medium ?? "").trim().toLowerCase();
+  const extension = getUrlExtension(candidate.url);
+
+  if (mimeType.startsWith("image/")) return true;
+  if (
+    mimeType.startsWith("video/") ||
+    mimeType.startsWith("audio/") ||
+    medium === "video" ||
+    medium === "audio" ||
+    NON_IMAGE_FILE_EXTENSIONS.has(extension)
+  ) {
+    return false;
+  }
+
+  if (IMAGE_FILE_EXTENSIONS.has(extension)) return true;
+  return semanticImage;
+}
+
+function findImageMediaUrl(value, options = {}) {
+  if (Array.isArray(value)) {
+    for (const entry of value) {
+      const imageUrl = findImageMediaUrl(entry, options);
+      if (imageUrl) return imageUrl;
+    }
+    return null;
+  }
+
+  const candidate = extractMediaCandidate(value);
+  return isImageMediaCandidate(candidate, options) ? candidate.url : null;
 }
 
 function toHtmlString(value) {
@@ -144,6 +215,32 @@ function getHtmlAttribute(tag, attribute) {
   return unquoted?.[1] || null;
 }
 
+function extractImageFromTag(tag, baseUrl) {
+  const source =
+    getHtmlAttribute(tag, "src") || getHtmlAttribute(tag, "data-src");
+  const sourceUrl = resolveImageUrl(source, baseUrl);
+  if (sourceUrl) return sourceUrl;
+
+  const srcset = getHtmlAttribute(tag, "srcset");
+  const firstCandidate = srcset?.split(",")[0]?.trim().split(/\s+/)[0];
+  return resolveImageUrl(firstCandidate, baseUrl);
+}
+
+function extractWordpressFeaturedImage(html, baseUrl) {
+  if (!html || typeof html !== "string") return null;
+
+  const imageTags = html.match(/<img\b[^>]*>/gi) || [];
+  for (const imageTag of imageTags) {
+    const className = getHtmlAttribute(imageTag, "class") || "";
+    if (!className.split(/\s+/).includes("wp-post-image")) continue;
+
+    const imageUrl = extractImageFromTag(imageTag, baseUrl);
+    if (imageUrl) return imageUrl;
+  }
+
+  return null;
+}
+
 function extractMetaImageFromHtml(html, baseUrl) {
   if (!html || typeof html !== "string") return null;
 
@@ -169,16 +266,22 @@ function extractMetaImageFromHtml(html, baseUrl) {
       itemProp === "image"
     ) {
       const imageUrl = resolveImageUrl(content, baseUrl);
-      if (imageUrl) return imageUrl;
+      if (
+        imageUrl &&
+        isImageMediaCandidate({ url: imageUrl }, { semanticImage: true })
+      ) {
+        return imageUrl;
+      }
     }
   }
 
   return null;
 }
 
-function extractPageImage(html, pageUrl) {
+export function extractPageImage(html, pageUrl) {
   return (
     extractMetaImageFromHtml(html, pageUrl) ||
+    extractWordpressFeaturedImage(html, pageUrl) ||
     extractFirstImageFromHtml(html, pageUrl)
   );
 }
@@ -233,29 +336,51 @@ function extractYoutubeVideoId(rawItem) {
   return null;
 }
 
-function resolveImage(rawItem, source) {
+export function resolveFeedImage(rawItem, source) {
+  const enclosureUrl = findImageMediaUrl(rawItem.enclosure);
+  if (enclosureUrl) return enclosureUrl;
+
+  const mediaCandidates = [
+    { value: rawItem["media:thumbnail"], semanticImage: true },
+    { value: rawItem.mediaThumbnail, semanticImage: true },
+    {
+      value: rawItem["media:group"]?.["media:thumbnail"],
+      semanticImage: true,
+    },
+    {
+      value: rawItem["media_group"]?.["media:thumbnail"],
+      semanticImage: true,
+    },
+    { value: rawItem["media:content"], semanticImage: false },
+    {
+      value: rawItem["media:group"]?.["media:content"],
+      semanticImage: false,
+    },
+    {
+      value: rawItem["media_group"]?.["media:content"],
+      semanticImage: false,
+    },
+  ];
+  for (const { value, semanticImage } of mediaCandidates) {
+    const mediaUrl = findImageMediaUrl(value, { semanticImage });
+    if (mediaUrl) return mediaUrl;
+  }
+
+  if (isYoutubeUrl(source?.feedUrl) || isYoutubeUrl(source?.siteUrl)) {
+    const videoId = extractYoutubeVideoId(rawItem);
+    if (videoId) {
+      return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+    }
+  }
+
+  return null;
+}
+
+function resolveInlineContentImage(rawItem, source) {
   const baseUrl =
     (typeof rawItem.link === "string" && rawItem.link) ||
     (typeof source?.siteUrl === "string" && source.siteUrl) ||
     null;
-
-  const enclosureUrl =
-    typeof rawItem.enclosure?.url === "string" ? rawItem.enclosure.url : null;
-  if (enclosureUrl?.startsWith("http")) return enclosureUrl;
-
-  const mediaUrlCandidates = [
-    rawItem["media:thumbnail"],
-    rawItem.mediaThumbnail,
-    rawItem["media:content"],
-    rawItem["media:group"]?.["media:thumbnail"],
-    rawItem["media:group"]?.["media:content"],
-    rawItem["media_group"]?.["media:thumbnail"],
-    rawItem["media_group"]?.["media:content"],
-  ];
-  for (const candidate of mediaUrlCandidates) {
-    const mediaUrl = extractMediaUrl(candidate);
-    if (mediaUrl?.startsWith("http")) return mediaUrl;
-  }
 
   const htmlCandidates = [
     rawItem["content:encoded"],
@@ -269,13 +394,6 @@ function resolveImage(rawItem, source) {
   for (const candidate of htmlCandidates) {
     const inlineImage = extractFirstImageFromHtml(candidate, baseUrl);
     if (inlineImage) return inlineImage;
-  }
-
-  if (isYoutubeUrl(source?.feedUrl) || isYoutubeUrl(source?.siteUrl)) {
-    const videoId = extractYoutubeVideoId(rawItem);
-    if (videoId) {
-      return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-    }
   }
 
   return null;
@@ -308,26 +426,39 @@ function normalizeItem(rawItem, source) {
       feedUrl: source.feedUrl,
     },
     summary: truncate(summary, 360),
-    image: resolveImage(rawItem, source),
+    image: resolveFeedImage(rawItem, source),
+    inlineImage: resolveInlineContentImage(rawItem, source),
   };
 }
 
-async function enrichItemWithLinkedPageImage(item) {
-  if (item?.image || typeof item?.link !== "string") return item;
-  if (!item.link.startsWith("http://") && !item.link.startsWith("https://")) {
-    return item;
+export async function enrichItemWithLinkedPageImage(
+  item,
+  { fetchTextFn = fetchText } = {},
+) {
+  const { inlineImage, ...publicItem } = item;
+  if (publicItem.image) return publicItem;
+  if (
+    typeof publicItem.link !== "string" ||
+    (!publicItem.link.startsWith("http://") &&
+      !publicItem.link.startsWith("https://"))
+  ) {
+    return { ...publicItem, image: inlineImage ?? null };
   }
 
   try {
-    const html = await fetchText(item.link, {}, ITEM_PAGE_TIMEOUT_MS, USER_AGENT);
-    const image = extractPageImage(html, item.link);
-    if (!image) return item;
+    const html = await fetchTextFn(
+      publicItem.link,
+      {},
+      ITEM_PAGE_TIMEOUT_MS,
+      USER_AGENT,
+    );
+    const image = extractPageImage(html, publicItem.link);
     return {
-      ...item,
-      image,
+      ...publicItem,
+      image: image ?? inlineImage ?? null,
     };
   } catch {
-    return item;
+    return { ...publicItem, image: inlineImage ?? null };
   }
 }
 
@@ -429,7 +560,13 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error("[feeds] Unhandled error:", error);
-  process.exit(1);
-});
+const isMainModule =
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+
+if (isMainModule) {
+  main().catch((error) => {
+    console.error("[feeds] Unhandled error:", error);
+    process.exit(1);
+  });
+}
