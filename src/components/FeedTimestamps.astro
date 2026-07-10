@@ -1,0 +1,64 @@
+---
+type Props = {
+  generatedAt?: string | null;
+  intervalHours?: number;
+  lang?: "en" | "ja";
+  nextLabel: string;
+  updatedLabel: string;
+};
+
+const {
+  generatedAt,
+  intervalHours = 3,
+  lang = "en",
+  nextLabel,
+  updatedLabel,
+} = Astro.props as Props;
+const generated = generatedAt ? new Date(generatedAt) : null;
+const isValid = generated && !Number.isNaN(generated.valueOf());
+const next = isValid
+  ? new Date(generated.valueOf() + intervalHours * 60 * 60 * 1000)
+  : null;
+const locale = lang === "ja" ? "ja-JP" : "en-US";
+const fallbackFormat = (date: Date) =>
+  date.toLocaleTimeString(locale, {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Asia/Tokyo",
+  });
+---
+
+{
+  isValid && next ? (
+    <div class="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate-600">
+      <span class="inline-flex items-center gap-1.5">
+        <svg aria-hidden="true" viewBox="0 0 20 20" class="h-4 w-4 text-(--accent)" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.86-9.97a.75.75 0 0 0-1.22-.88l-3.24 4.5-1.92-1.92a.75.75 0 0 0-1.06 1.06l2.54 2.54a.75.75 0 0 0 1.14-.09l3.76-5.21Z" clip-rule="evenodd" />
+        </svg>
+        <span>
+          {updatedLabel}: <time datetime={generated.toISOString()} data-local-time>{fallbackFormat(generated)}</time>
+        </span>
+      </span>
+      <span class="inline-flex items-center gap-1.5">
+        <svg aria-hidden="true" viewBox="0 0 20 20" class="h-4 w-4 text-(--accent)" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.69L10.72 5.53a.75.75 0 0 1 1.06-1.06l5 5a.75.75 0 0 1 0 1.06l-5 5a.75.75 0 1 1-1.06-1.06l3.72-3.72H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd" />
+        </svg>
+        <span>
+          {nextLabel}: <time datetime={next.toISOString()} data-local-time>{fallbackFormat(next)}</time>
+        </span>
+      </span>
+    </div>
+  ) : null
+}
+
+<script>
+  const localTimeFormatter = new Intl.DateTimeFormat(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  document.querySelectorAll<HTMLTimeElement>("[data-local-time]").forEach((time) => {
+    const value = new Date(time.dateTime);
+    if (!Number.isNaN(value.valueOf())) time.textContent = localTimeFormatter.format(value);
+  });
+</script>

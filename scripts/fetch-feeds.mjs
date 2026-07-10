@@ -6,6 +6,7 @@ import Parser from "rss-parser";
 import {
   fetchRawFeedItems,
   fetchText,
+  isHttpUrl,
   isYoutubeUrl,
   loadMemberFeeds,
   normalizeAndLimitFeedItems,
@@ -75,7 +76,7 @@ const NON_IMAGE_FILE_EXTENSIONS = new Set([
 function extractMediaCandidate(value) {
   if (!value) return null;
   if (typeof value === "string") {
-    return value.startsWith("http") ? { url: value } : null;
+    return isHttpUrl(value) ? { url: value } : null;
   }
   if (Array.isArray(value)) {
     for (const entry of value) {
@@ -86,7 +87,7 @@ function extractMediaCandidate(value) {
   }
   if (typeof value === "object") {
     const url = value.url ?? value.href ?? value.$?.url;
-    if (typeof url !== "string" || !url.startsWith("http")) return null;
+    if (!isHttpUrl(url)) return null;
 
     return {
       url,
@@ -109,7 +110,7 @@ export function isImageMediaCandidate(
   candidate,
   { semanticImage = false } = {},
 ) {
-  if (!candidate?.url || typeof candidate.url !== "string") return false;
+  if (!candidate?.url || !isHttpUrl(candidate.url)) return false;
 
   const mimeType = String(candidate.type ?? "")
     .split(";", 1)[0]
@@ -166,7 +167,7 @@ function toHtmlString(value) {
 function resolveImageUrl(rawUrl, baseUrl) {
   if (!rawUrl || typeof rawUrl !== "string") return null;
   if (rawUrl.startsWith("http://") || rawUrl.startsWith("https://")) {
-    return rawUrl;
+    return isHttpUrl(rawUrl) ? rawUrl : null;
   }
   if (rawUrl.startsWith("//")) {
     return `https:${rawUrl}`;
@@ -174,7 +175,8 @@ function resolveImageUrl(rawUrl, baseUrl) {
 
   if (!baseUrl) return null;
   try {
-    return new URL(rawUrl, baseUrl).toString();
+    const resolved = new URL(rawUrl, baseUrl).toString();
+    return isHttpUrl(resolved) ? resolved : null;
   } catch {
     return null;
   }
@@ -415,10 +417,12 @@ function normalizeItem(rawItem, source) {
     rawItem.link ||
     `${source.siteUrl}#${rawItem.title || "untitled"}#${publishedAt.toISOString()}`;
 
+  const link = isHttpUrl(rawItem.link) ? rawItem.link : source.siteUrl;
+
   return {
     id: key,
     title: rawItem.title || "Untitled",
-    link: rawItem.link || source.siteUrl,
+    link,
     publishedAt: publishedAt.toISOString(),
     source: {
       name: source.name,
@@ -438,9 +442,7 @@ export async function enrichItemWithLinkedPageImage(
   const { inlineImage, ...publicItem } = item;
   if (publicItem.image) return publicItem;
   if (
-    typeof publicItem.link !== "string" ||
-    (!publicItem.link.startsWith("http://") &&
-      !publicItem.link.startsWith("https://"))
+    !isHttpUrl(publicItem.link)
   ) {
     return { ...publicItem, image: inlineImage ?? null };
   }

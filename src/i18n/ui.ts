@@ -73,7 +73,6 @@ export const ui = {
     "home.calendar.title": "Our Event Calendar",
     "home.calendar.rsvpCount": "RSVPs: {count}",
     "home.calendar.openInMaps": "Open in Maps",
-    "home.calendar.openVenueInMaps": "Open {venue} in Maps",
     "home.upcomingEvents.title": "Upcoming events",
     "home.upcomingEvents.rsvp": "View and RSVP",
     "home.calendar.legend.coffee.title": "Tech & Coffee",
@@ -97,7 +96,6 @@ export const ui = {
     "home.eventCard.venue": "Venue",
     "home.eventCard.details": "View event details",
     "home.eventCard.groupCta": "View the Meetup group",
-    "home.eventCard.going": "going",
 
     "home.footer.copyright":
       "Kyoto Tech Meetup. Crafted by volunteers in Kyoto.",
@@ -183,7 +181,6 @@ export const ui = {
     "home.calendar.title": "イベントカレンダー",
     "home.calendar.rsvpCount": "参加予定: {count}人",
     "home.calendar.openInMaps": "地図で開く",
-    "home.calendar.openVenueInMaps": "{venue}を地図で開く",
     "home.upcomingEvents.title": "今後のイベント",
     "home.upcomingEvents.rsvp": "詳細・参加登録",
     "home.calendar.legend.coffee.title": "Tech & Coffee",
@@ -207,7 +204,6 @@ export const ui = {
     "home.eventCard.venue": "会場",
     "home.eventCard.details": "イベント詳細を見る",
     "home.eventCard.groupCta": "Meetupグループを見る",
-    "home.eventCard.going": "人が参加予定",
 
     "home.footer.copyright":
       "Kyoto Tech Meetup — 京都在住のボランティアによるコミュニティ運営。",

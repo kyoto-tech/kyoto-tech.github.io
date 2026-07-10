@@ -61,7 +61,10 @@ const navItems = [
         <LanguagePicker lang={lang} />
         <a
           href={nextEventUrl ?? calendarUrl}
-          class="rounded-full bg-slate-900 px-4 py-2 text-sm text-white transition hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700 sm:px-5"
+          data-analytics-event="header_rsvp_click"
+          data-analytics-link={hasNextEvent ? "next_event" : "meetup_group"}
+          data-analytics-location="header"
+          class="inline-flex min-h-11 items-center rounded-full bg-slate-900 px-4 py-2 text-sm text-white transition hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700 sm:px-5"
         >
           {
             hasNextEvent ? (
@@ -76,7 +79,7 @@ const navItems = [
         </a>
         <button
           type="button"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700 lg:hidden"
+          class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700 lg:hidden"
           aria-controls={mobileMenuId}
           aria-expanded="false"
           aria-label={t("a11y.openMenu")}
@@ -117,7 +120,7 @@ const navItems = [
   </div>
 </nav>
 
-<script is:inline data-astro-rerun>
+<script>
   {
     const siteNavigation = document.querySelector("[data-site-navigation]");
     const menuButton = siteNavigation?.querySelector("[data-menu-button]");
@@ -126,11 +129,11 @@ const navItems = [
     const closeIcon = menuButton?.querySelector("[data-menu-close-icon]");
 
     if (siteNavigation && menuButton instanceof HTMLButtonElement && menuPanel instanceof HTMLElement) {
-      const setMenuOpen = (open) => {
+      const setMenuOpen = (open: boolean) => {
         menuButton.setAttribute("aria-expanded", String(open));
         menuButton.setAttribute(
           "aria-label",
-          open ? menuButton.dataset.closeLabel : menuButton.dataset.openLabel,
+          (open ? menuButton.dataset.closeLabel : menuButton.dataset.openLabel) ?? "",
         );
         menuPanel.hidden = !open;
         if (openIcon instanceof SVGElement) openIcon.classList.toggle("hidden", open);
@@ -146,6 +149,7 @@ const navItems = [
       });
 
       siteNavigation.addEventListener("keydown", (event) => {
+        if (!(event instanceof KeyboardEvent)) return;
         if (event.key !== "Escape" || menuButton.getAttribute("aria-expanded") !== "true") return;
         setMenuOpen(false);
         menuButton.focus();

@@ -8,7 +8,7 @@ Everything here is maintained by community members; contributions that make the 
 
 - [Astro 7](https://astro.build/) with React islands for dynamic UI.
 - [Tailwind CSS 4 (via `@tailwindcss/vite`)](https://tailwindcss.com/) for utility-first styling plus a small layer of global CSS.
-- [Marked](https://marked.js.org/) for rendering Markdown copy inside Astro components.
+- [React Icons](https://react-icons.github.io/react-icons/) for server-rendered interface icons.
 - ESLint (flat config), TypeScript, Knip, and Astro Check keep the project tidy.
 
 ## Getting Started

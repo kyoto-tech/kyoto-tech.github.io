@@ -4,6 +4,7 @@ import {
   IN_PROGRESS_GRACE_MS,
   isEventTimeOngoing,
 } from "./event-status";
+import { getSafeWebUrl } from "./safe-url";
 
 export const DEFAULT_MEETUP_EVENTS_URL =
   "https://www.meetup.com/kyoto-tech-meetup/events/";
@@ -101,12 +102,11 @@ export function isMeetupEvent(value: unknown): value is MeetupEvent {
   return (
     typeof event.title === "string" &&
     event.title.length > 0 &&
-    typeof event.link === "string" &&
-    event.link.length > 0 &&
+    getSafeWebUrl(event.link) !== null &&
     isValidDateString(event.start) &&
     (event.endTime === null || isValidDateString(event.endTime)) &&
     typeof event.description === "string" &&
-    (event.image === null || typeof event.image === "string") &&
+    (event.image === null || getSafeWebUrl(event.image) !== null) &&
     typeof event.goingCount === "number" &&
     Number.isFinite(event.goingCount) &&
     typeof event.interestedCount === "number" &&

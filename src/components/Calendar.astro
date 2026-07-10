@@ -119,6 +119,9 @@ const eventColorClass = (event: MeetupEvent) => {
                             </span>
                             <a
                               href={event.link}
+                              data-analytics-event="calendar_event_click"
+                              data-analytics-link={event.eventType}
+                              data-analytics-location="desktop_calendar"
                               class="block font-semibold leading-snug underline-offset-2 hover:underline focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                             >
                               {event.title}
@@ -126,11 +129,13 @@ const eventColorClass = (event: MeetupEvent) => {
                             <div class="mt-2 grid gap-1 text-[0.6875rem] font-medium text-white/90">
                               <span
                                 class="inline-flex items-center gap-1.5"
-                                aria-label={t("home.calendar.rsvpCount").replace(
-                                  "{count}",
-                                  String(event.goingCount),
-                                )}
                               >
+                                <span class="sr-only">
+                                  {t("home.calendar.rsvpCount").replace(
+                                    "{count}",
+                                    String(event.goingCount),
+                                  )}
+                                </span>
                                 <FaUserGroup
                                   className="h-3 w-3 shrink-0"
                                   aria-hidden="true"
@@ -144,16 +149,17 @@ const eventColorClass = (event: MeetupEvent) => {
                                   href={mapsUrl}
                                   target="_blank"
                                   rel="noreferrer"
-                                  aria-label={t(
-                                    "home.calendar.openVenueInMaps",
-                                  ).replace("{venue}", venueLabel)}
-                                  class="inline-flex items-center gap-1.5 underline decoration-white/50 underline-offset-2 transition hover:text-white hover:decoration-white focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                                  data-analytics-event="calendar_event_click"
+                                  data-analytics-link="maps"
+                                  data-analytics-location="desktop_calendar"
+                                  class="inline-flex min-h-11 items-center gap-1.5 underline decoration-white/50 underline-offset-2 transition hover:text-white hover:decoration-white focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                                 >
                                   <FaLocationDot
                                     className="h-3 w-3 shrink-0"
                                     aria-hidden="true"
                                   />
                                   <span>{t("home.calendar.openInMaps")}</span>
+                                  <span class="sr-only">: {venueLabel}</span>
                                 </a>
                               )}
                             </div>

@@ -32,10 +32,13 @@ const allLangs = Object.entries(languages) as [keyof typeof languages, string][]
 			<a
 				href={getRelativeLocaleUrl(lang, "/")}
 				data-language={lang}
+				data-analytics-event="language_switch"
+				data-analytics-link={lang}
+				data-analytics-location={variant === "mobile" ? "mobile_navigation" : "header"}
 				class:list={[
 					"rounded-full text-center text-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700",
 					variant === "desktop"
-						? "px-3 py-1"
+						? "inline-flex min-h-11 items-center justify-center px-3 py-1"
 						: "inline-flex min-h-11 items-center justify-center px-4 py-2",
 					isActive
 						? "border border-slate-200 bg-white text-slate-900 shadow"

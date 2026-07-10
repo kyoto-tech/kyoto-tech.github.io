@@ -2,7 +2,17 @@
 import "../styles/global.css";
 import { useTranslations } from "../i18n/utils";
 import { getRelativeLocaleUrl } from "astro:i18n";
-import { ClientRouter } from "astro:transitions";
+import type { MeetupEvent } from "../lib/meetup-events";
+import {
+	buildEventStructuredData,
+	serializeJsonLd,
+} from "../lib/structured-data";
+
+type Props = {
+	events?: MeetupEvent[];
+};
+
+const { events = [] } = Astro.props as Props;
 
 const activeLang = (Astro.currentLocale ?? "en") as "en" | "ja";
 const t = useTranslations(activeLang);
@@ -45,7 +55,8 @@ const ldData = {
 			"description": orgDescription,
 			"sameAs": [
 				"https://www.meetup.com/kyoto-tech-meetup/",
-				"https://github.com/kyoto-tech"
+				"https://github.com/kyoto-tech",
+				"https://www.linkedin.com/company/kyoto-tech-meetup/"
 			],
 			"founder": { "@id": `${SITE_URL}/#ash` },
 			"organizer": { "@id": `${SITE_URL}/#ash` },
@@ -59,6 +70,7 @@ const ldData = {
 				}
 			}
 		},
+		...buildEventStructuredData(events, SITE_URL),
 		{
 			"@type": "Person",
 			"@id": `${SITE_URL}/#ash`,
@@ -181,9 +193,8 @@ const ldData = {
 		<link rel="alternate" hreflang="ja" href={hrefJa} />
 		<link rel="alternate" hreflang="x-default" href={hrefEn} />
 		<link rel="canonical" href={canonicalUrl} />
-		<script type="application/ld+json" is:inline set:html={JSON.stringify(ldData)}></script>
+		<script type="application/ld+json" is:inline set:html={serializeJsonLd(ldData)}></script>
 		<title>{t("meta.title")}</title>
-			<ClientRouter />
 	</head>
 	<body>
 
@@ -193,7 +204,7 @@ const ldData = {
 				src={gtmNoscriptSrc}
 				height="0"
 				width="0"
-				style="display:none;visibility:hidden"
+				class="hidden"
 				title="Google Tag Manager"
 			></iframe>
 		</noscript>
@@ -201,5 +212,28 @@ const ldData = {
 
 		<a class="skip-link" href="#main-content">{t("a11y.skipToMain")}</a>
 		<slot />
+		<script>
+			type AnalyticsWindow = Window & {
+				dataLayer?: Array<Record<string, string>>;
+			};
+
+			document.addEventListener("click", (event) => {
+				if (!(event.target instanceof Element)) return;
+				const target = event.target.closest<HTMLElement>("[data-analytics-event]");
+				if (!target?.dataset.analyticsEvent) return;
+
+				const analyticsWindow = window as AnalyticsWindow;
+				analyticsWindow.dataLayer ??= [];
+				analyticsWindow.dataLayer.push({
+					event: target.dataset.analyticsEvent,
+					...(target.dataset.analyticsLink
+						? { link_name: target.dataset.analyticsLink }
+						: {}),
+					...(target.dataset.analyticsLocation
+						? { link_location: target.dataset.analyticsLocation }
+						: {}),
+				});
+			});
+		</script>
 	</body>
 </html>

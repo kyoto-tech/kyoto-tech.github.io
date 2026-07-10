@@ -48,6 +48,24 @@ test("loadMemberFeeds rejects malformed source entries", async () => {
   );
 });
 
+test("loadMemberFeeds rejects active URL schemes", async () => {
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "feed-reader-"));
+  const filePath = path.join(tempDir, "member-feeds.json");
+  await fs.writeFile(
+    filePath,
+    JSON.stringify([
+      {
+        id: "unsafe",
+        name: "Unsafe",
+        feedUrl: "https://example.com/feed.xml",
+        siteUrl: "javascript:alert(1)",
+      },
+    ]),
+  );
+
+  await expect(loadMemberFeeds(filePath)).rejects.toThrow(/HTTP or HTTPS/);
+});
+
 test("parseDate accepts common RSS date fields and rejects invalid dates", () => {
   expect(
     parseDate({ isoDate: "2026-04-25T05:35:48.687Z" }).toISOString(),
@@ -108,6 +126,25 @@ test("normalizeNotifierItem uses source-stable notifier item IDs", () => {
   expect(item.sourceItemId).toBe("post-1");
   expect(item.summary).toBe("A useful post");
   expect(item.source).toEqual(source);
+});
+
+test("normalizeNotifierItem falls back when an item link uses an active scheme", () => {
+  const source = {
+    id: "example-author",
+    name: "Example Author",
+    feedUrl: "https://example.com/feed.xml",
+    siteUrl: "https://example.com/",
+  };
+  const item = normalizeNotifierItem(
+    {
+      guid: "post-1",
+      link: "javascript:alert(1)",
+      isoDate: "2026-04-25T05:35:48.687Z",
+    },
+    source,
+  );
+
+  expect(item.link).toBe(source.siteUrl);
 });
 
 test("normalizeNotifierItem extracts image URLs from feed item media", () => {

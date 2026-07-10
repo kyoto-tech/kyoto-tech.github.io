@@ -5,11 +5,12 @@ import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
+import securityHeaders from "./scripts/security-headers.mjs";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://kyototechmeetup.com",
-  integrations: [react(), sitemap(), mdx()],
+  integrations: [react(), sitemap(), mdx(), securityHeaders()],
 
   i18n: {
     locales: ["en", "ja"],
