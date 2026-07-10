@@ -196,7 +196,36 @@ function htmlImageUrl(value, baseUrl) {
   }
 }
 
-function extractImageUrl(rawItem, source) {
+function resolveHtmlImageUrl(value, baseUrl) {
+  if (!value || typeof value !== "string") return "";
+  const metaCandidates = Array.from(
+    value.matchAll(/<meta\b[^>]*(?:property|name)=["'](?:og:image|og:image:url|twitter:image)["'][^>]*>/gi),
+  ).map((match) => match[0].match(/content=["']([^"']+)["']/i)?.[1]);
+  const imageTags = Array.from(value.matchAll(/<img\b[^>]*>/gi)).map(
+    (match) => match[0],
+  );
+  const featuredCandidates = imageTags
+    .filter((tag) => /class=["'][^"']*wp-post-image[^"']*["']/i.test(tag))
+    .map((tag) => tag.match(/(?:src|data-src)=["']([^"']+)["']/i)?.[1]);
+  const fallbackCandidates = imageTags
+    .map((tag) => tag.match(/(?:src|data-src)=["']([^"']+)["']/i)?.[1])
+    .filter(Boolean);
+  const candidates = [...metaCandidates, ...featuredCandidates, ...fallbackCandidates];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    try {
+      const absoluteUrl = new URL(candidate, baseUrl).toString();
+      if (isHttpUrl(absoluteUrl)) return absoluteUrl;
+    } catch {
+      // Try the next candidate.
+    }
+  }
+
+  return "";
+}
+
+export function extractImageUrl(rawItem, source) {
   const baseUrl = rawItem.link || source.siteUrl;
   const candidates = [
     enclosureImageUrl(rawItem.enclosure),
@@ -213,6 +242,7 @@ function extractImageUrl(rawItem, source) {
   ];
 
   for (const candidate of candidates) {
+    if (!candidate) continue;
     try {
       const absoluteUrl = new URL(candidate, baseUrl).toString();
       if (isHttpUrl(absoluteUrl)) return absoluteUrl;
@@ -286,6 +316,23 @@ export function normalizeNotifierItem(rawItem, source) {
   };
 }
 
+export async function enrichNotifierItemWithLinkedPageImage(
+  item,
+  { fetchTextFn = fetchText } = {},
+) {
+  if (item.imageUrl || !isHttpUrl(item.link)) return item;
+
+  try {
+    const html = await fetchTextFn(item.link);
+    return {
+      ...item,
+      imageUrl: resolveHtmlImageUrl(html, item.link) || null,
+    };
+  } catch {
+    return item;
+  }
+}
+
 export function normalizeAndLimitFeedItems(
   rawItems,
   source,
@@ -325,7 +372,13 @@ export async function fetchRawFeedItems(
     feedTimeoutMs,
     userAgent,
   });
-  const xml = await fetchTextFn(resolvedFeedUrl, {}, feedTimeoutMs, userAgent);
+  let xml;
+  try {
+    xml = await fetchTextFn(resolvedFeedUrl, {}, feedTimeoutMs, userAgent);
+  } catch (error) {
+    if (!isYoutubeUrl(resolvedFeedUrl)) throw error;
+    xml = await fetchTextFn(resolvedFeedUrl, {}, feedTimeoutMs, userAgent);
+  }
   const parsed = await parser.parseString(xml);
   return parsed?.items || [];
 }

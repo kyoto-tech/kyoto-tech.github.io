@@ -1,4 +1,5 @@
 import {
+  enrichNotifierItemWithLinkedPageImage,
   fetchFeedItems,
   fetchWithTimeout,
   loadMemberFeeds,
@@ -7,6 +8,7 @@ import {
   buildDiscordPayload,
   buildMessage,
   defaultState,
+  initializeNewFeedSources,
   migrateStateItemIds,
   readStateFromGist,
   upsertStateRecord,
@@ -228,7 +230,10 @@ async function main() {
         maxItemsPerFeed: args.maxItemsPerFeed,
         userAgent: USER_AGENT,
       });
-      allItems.push(...items);
+      const enrichedItems = await Promise.all(
+        items.map((item) => enrichNotifierItemWithLinkedPageImage(item)),
+      );
+      allItems.push(...enrichedItems);
     } catch (error) {
       fetchFailures.push({
         source: source.name,
@@ -257,6 +262,7 @@ async function main() {
     (a, b) => new Date(a.publishedAt).valueOf() - new Date(b.publishedAt).valueOf(),
   );
   const isFirstRun = Object.keys(state.items).length === 0;
+  const newlyInitializedSources = initializeNewFeedSources(state, memberFeeds, now);
 
   if (isFirstRun && !args.allowInitialPosts) {
     for (const item of sortedItems) {
@@ -284,7 +290,7 @@ async function main() {
   const deliveryFailures = [];
   let limitedItems = 0;
   let processedItems = 0;
-  let stateChanged = migration.changed;
+  let stateChanged = migration.changed || newlyInitializedSources.size > 0;
 
   if (stateChanged) {
     state.initializedAt = state.initializedAt || now;
@@ -302,6 +308,12 @@ async function main() {
 
   for (const item of sortedItems) {
     const record = upsertStateRecord(state, item, now);
+
+    if (!args.allowInitialPosts && newlyInitializedSources.has(item.source.id)) {
+      record.suppressed = true;
+      stateChanged = true;
+      continue;
+    }
 
     if (record.suppressed) continue;
     if (!hasPendingDestinations(record, destinations)) continue;
@@ -340,6 +352,10 @@ async function main() {
     fetchFailures.forEach((failure) => {
       console.warn(`[notifier] Feed fetch failed for ${failure.source}: ${failure.error}`);
     });
+  }
+
+  if (stateChanged && !args.dryRun && newDeliveries === 0) {
+    await writeStateToGist(gistId, gistToken, state, GIST_OPTIONS);
   }
 
   if (!stateChanged) {

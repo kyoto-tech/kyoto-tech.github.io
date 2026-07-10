@@ -1,6 +1,6 @@
 # Agent Readiness Roadmap
 
-Status: Proposed — Link headers are implemented separately in PR 107
+Status: Core work complete — PRs 107–112 merged; DNSSEC and authoring workflows deferred
 
 ## Purpose
 
@@ -20,7 +20,7 @@ DNS-AID remains deferred until the site has a real agent endpoint or capability 
 - Link headers advertising the sitemap and security contact are implemented in PR 107.
 - The site is a static Astro build deployed to Cloudflare Pages.
 - Meetup events and member feeds are fetched at build time and rendered from committed JSON snapshots.
-- There is no public API, OAuth provider, MCP server, authenticated service, or agent skill registry.
+- There is no public API, OAuth provider, MCP server, or authenticated service. The Agent Skills index and WebMCP read-only tools are live.
 - Cloudflare’s managed Markdown for Agents feature may not be available on the zone’s current Free plan.
 
 ## Delivery order
@@ -32,7 +32,7 @@ DNS-AID remains deferred until the site has a real agent endpoint or capability 
 | C | DNSSEC activation | Registrar access at Hover | Cloudflare DNS answers are cryptographically authenticated |
 | D | DNS-AID evaluation | A real agent endpoint or capability descriptor | Decide whether an SVCB/HTTPS record would describe a genuine service |
 
-PRs A and C can proceed independently. PR B should not begin until the event/feed JSON contract is confirmed and its read-only footprint is reviewed.
+PRs A and B are complete. DNSSEC remains an independent infrastructure project, and WebMCP author/content actions remain deferred until explicit organizer approval and a separate permission review.
 
 ---
 

@@ -109,11 +109,14 @@ public/          # Files served as-is (favicon, images)
 - Cloudflare Pages Functions at `/` and `/ja/` return those files only when the request explicitly accepts `text/markdown`; normal browser requests continue to receive the Astro HTML pages.
 - Verify locally or against a preview with `curl -H 'Accept: text/markdown' -D - https://preview-url/`.
 - The Markdown maintenance skill is published at `/.well-known/agent-skills/markdown-for-agents/SKILL.md`; `npm run agent:skills` regenerates its discovery index digest during builds.
+- The WebMCP maintenance skill is published at `/.well-known/agent-skills/webmcp-maintenance/SKILL.md`; `npm run build` verifies the Markdown, Agent Skills, and WebMCP artifacts before completing.
 
 ## Community Feed Notifier
 
 - The notifier reads approved sources from `src/data/member-feeds.json`.
 - Each feed source has a stable `id`; do not change it casually because notifier state keys are derived from it.
+- New feed sources are recorded in the gist-backed `sources` map and their existing backlog is suppressed; future items are notified without historical backfill.
+- Feed excerpts use the same 280-character normalization for the site and notifications, and notifier items can enrich missing images from linked-page metadata.
 - State lives in the public gist `f95dd7597eec170d738d905e3666bfc6` as `community-feed-state.json`.
 - On the first non-dry run, the notifier seeds the current backlog into the gist without posting. Use the workflow dispatch input `allow_initial_posts` if you intentionally want to announce the backlog.
 - For a lightweight demo, use the workflow dispatch input `demo_mode`. It posts at most 3 items and seeds the rest of the current backlog so later scheduled runs do not replay the full backlog.

@@ -3,6 +3,7 @@ import {
   buildDiscordPayload,
   buildMessage,
   defaultState,
+  initializeNewFeedSources,
   migrateStateItemIds,
   parseState,
   upsertStateRecord,
@@ -32,8 +33,48 @@ test("defaultState creates an empty notifier state", () => {
     initializedAt: null,
     updatedAt: null,
     items: {},
+    sources: {},
     events: {},
     weeklyDigest: {},
+  });
+});
+
+test("initializeNewFeedSources records new sources without treating existing ones as new", () => {
+  const state = defaultState();
+  state.sources["existing"] = { initializedAt: "2026-04-01T00:00:00.000Z" };
+  const sources = [
+    { id: "existing", feedUrl: "https://example.com/existing.xml" },
+    { id: "new-source", feedUrl: "https://example.com/new.xml" },
+  ];
+
+  const newlyInitialized = initializeNewFeedSources(
+    state,
+    sources,
+    "2026-04-25T05:35:48.687Z",
+  );
+
+  expect([...newlyInitialized]).toEqual(["new-source"]);
+  expect(state.sources["new-source"]).toEqual({
+    initializedAt: "2026-04-25T05:35:48.687Z",
+    feedUrl: "https://example.com/new.xml",
+  });
+});
+
+test("initializeNewFeedSources migrates sources represented by existing items", () => {
+  const state = defaultState();
+  state.initializedAt = "2026-04-01T00:00:00.000Z";
+  state.items["existing::post-1"] = sampleItem();
+
+  const newlyInitialized = initializeNewFeedSources(
+    state,
+    [{ id: "example-author", feedUrl: "https://example.com/feed.xml" }],
+    "2026-04-25T05:35:48.687Z",
+  );
+
+  expect([...newlyInitialized]).toEqual([]);
+  expect(state.sources["example-author"]).toEqual({
+    initializedAt: "2026-04-01T00:00:00.000Z",
+    feedUrl: "https://example.com/feed.xml",
   });
 });
 
@@ -53,6 +94,7 @@ test("parseState normalizes missing or malformed state fields", () => {
     initializedAt: null,
     updatedAt: "2026-04-25T05:35:48.687Z",
     items: {},
+    sources: {},
     events: {},
     weeklyDigest: {},
   });

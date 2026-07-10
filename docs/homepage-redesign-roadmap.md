@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PRs 1–7 and 4A merged; PR 8 final QA in review
+Status: Core redesign complete — PRs 1–8 merged; closeout polish and feed operations remain
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, venue details, conversations, and member work
 
@@ -67,6 +67,20 @@ Final invitation and footer
 | 8 | Accessibility, performance, analytics, and final QA | PRs 3–7 | The complete journey is verified and measurable |
 
 PR 1 and PR 2 can be developed in parallel. Later PRs should follow the dependency order above.
+
+## Closeout work
+
+The core redesign is complete, including the member milestone and the shared “happening now” state across the hero, mobile event list, and desktop calendar. The remaining work is intentionally split into small operational and polish PRs:
+
+| PR | Workstream | Depends on | Primary outcome |
+| --- | --- | --- | --- |
+| 9 | Event detail UI polish | 4A and 6 | Align Maps metadata and remove excess calendar spacing |
+| 10 | Shared feed content contract | Existing feed and notifier readers | Keep excerpts, URLs, attribution, and image selection consistent |
+| 11 | YouTube reliability and stale fallback | 10 | Retry transient YouTube failures and preserve each source’s last good snapshot |
+| 12 | Discord source onboarding | Existing gist-backed notifier state | Prevent historical backfill when a feed is newly added |
+| 13 | Final QA and documentation | 9–12 | Verify the full site/feed/notification workflow and close the roadmap |
+
+Keep DNSSEC and any future WebMCP authoring workflows outside this closeout sequence; they remain separate, optional initiatives.
 
 ---
 

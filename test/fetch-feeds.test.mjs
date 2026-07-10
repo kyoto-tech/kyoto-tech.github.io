@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import {
   enrichItemWithLinkedPageImage,
   extractPageImage,
+  getCachedFeedForSource,
   isImageMediaCandidate,
   resolveFeedImage,
 } from "../scripts/fetch-feeds.mjs";
@@ -13,6 +14,11 @@ const blogSource = {
 };
 
 describe("composite feed image selection", () => {
+  test("finds a cached source by stable feed identity", () => {
+    const cached = { feeds: [{ name: "Example Author", feedUrl: blogSource.feedUrl, items: [{ id: "old" }] }] };
+    expect(getCachedFeedForSource(cached, blogSource)?.items).toEqual([{ id: "old" }]);
+  });
+
   test("accepts image enclosures and rejects video enclosures", () => {
     expect(
       isImageMediaCandidate({

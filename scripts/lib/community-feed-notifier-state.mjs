@@ -90,6 +90,7 @@ export function defaultState() {
     initializedAt: null,
     updatedAt: null,
     items: {},
+    sources: {},
     events: {},
     weeklyDigest: {},
   };
@@ -110,6 +111,10 @@ export function parseState(content) {
     items:
       parsed.items && typeof parsed.items === "object" && !Array.isArray(parsed.items)
         ? parsed.items
+        : {},
+    sources:
+      parsed.sources && typeof parsed.sources === "object" && !Array.isArray(parsed.sources)
+        ? parsed.sources
         : {},
     events:
       parsed.events && typeof parsed.events === "object" && !Array.isArray(parsed.events)
@@ -206,6 +211,9 @@ export function migrateStateItemIds(state, sources) {
   if (!state.events || typeof state.events !== "object" || Array.isArray(state.events)) {
     state.events = {};
   }
+  if (!state.sources || typeof state.sources !== "object" || Array.isArray(state.sources)) {
+    state.sources = {};
+  }
   if (!state.weeklyDigest || typeof state.weeklyDigest !== "object" || Array.isArray(state.weeklyDigest)) {
     state.weeklyDigest = {};
   }
@@ -218,6 +226,34 @@ export function migrateStateItemIds(state, sources) {
     changed: migratedCount > 0 || previousVersion !== CURRENT_STATE_VERSION,
     migratedCount,
   };
+}
+
+export function initializeNewFeedSources(state, sources, initializedAt) {
+  const newlyInitialized = new Set();
+  state.sources = state.sources && typeof state.sources === "object" ? state.sources : {};
+  const knownSourceIds = new Set(
+    Object.values(state.items || {})
+      .map((item) => item?.source?.id)
+      .filter(Boolean),
+  );
+
+  for (const source of sources) {
+    if (state.sources[source.id]) continue;
+    if (knownSourceIds.has(source.id)) {
+      state.sources[source.id] = {
+        initializedAt: state.initializedAt || initializedAt,
+        feedUrl: source.feedUrl,
+      };
+      continue;
+    }
+    state.sources[source.id] = {
+      initializedAt,
+      feedUrl: source.feedUrl,
+    };
+    newlyInitialized.add(source.id);
+  }
+
+  return newlyInitialized;
 }
 
 export function upsertStateRecord(state, item, seenAt, options = {}) {
