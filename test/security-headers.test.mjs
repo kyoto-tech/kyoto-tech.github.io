@@ -40,6 +40,9 @@ describe("Cloudflare security headers", () => {
     expect(headers).toContain("Strict-Transport-Security");
     expect(headers).toContain("X-Frame-Options: DENY");
     expect(headers).toContain("Permissions-Policy:");
+    expect(headers).toContain(
+      'Link: </sitemap-index.xml>; rel="sitemap", </.well-known/security.txt>; rel="describedby"; type="text/plain"',
+    );
     expect(headers).toContain("\n/\n  Content-Security-Policy:");
     expect(headers).toContain("\n/ja/\n  Content-Security-Policy:");
   });

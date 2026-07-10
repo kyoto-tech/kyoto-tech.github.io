@@ -72,6 +72,7 @@ export async function writeCloudflareHeaders(outputDirectory) {
     "  X-Frame-Options: DENY",
     "  Referrer-Policy: strict-origin-when-cross-origin",
     "  Permissions-Policy: camera=(), geolocation=(), microphone=(), payment=(), usb=()",
+    '  Link: </sitemap-index.xml>; rel="sitemap", </.well-known/security.txt>; rel="describedby"; type="text/plain"',
   ];
 
   for (const htmlFile of htmlFiles) {
