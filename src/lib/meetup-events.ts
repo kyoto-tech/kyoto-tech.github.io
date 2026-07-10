@@ -31,6 +31,11 @@ export type MeetupEvent = {
   } | null;
 };
 
+type MeetupSnapshot = {
+  events: MeetupEvent[];
+  memberCount: number | null;
+};
+
 export function buildMeetupVenueMapsUrl(
   venue: MeetupEvent["venue"],
 ): string | null {
@@ -128,7 +133,7 @@ function compareMeetupEvents(a: MeetupEvent, b: MeetupEvent): number {
   return linkDifference !== 0 ? linkDifference : a.title.localeCompare(b.title);
 }
 
-export function parseMeetupEventsHtml(html: string): MeetupEvent[] {
+export function parseMeetupSnapshotHtml(html: string): MeetupSnapshot {
   const match = html.match(
     /<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/,
   );
@@ -224,7 +229,7 @@ export function parseMeetupEventsHtml(html: string): MeetupEvent[] {
     return null;
   };
 
-  return Object.entries(apolloState)
+  const events = Object.entries(apolloState)
     .filter(
       ([key, value]) => key.startsWith("Event:") && (value as any)?.dateTime,
     )
@@ -250,6 +255,23 @@ export function parseMeetupEventsHtml(html: string): MeetupEvent[] {
     })
     .filter(isMeetupEvent)
     .sort(compareMeetupEvents);
+
+  const group = Object.entries(apolloState).find(
+    ([key, value]) =>
+      key.startsWith("Group:") &&
+      (value as any)?.urlname === "kyoto-tech-meetup",
+  )?.[1] as any;
+  const parsedMemberCount = group?.stats?.memberCounts?.all;
+  const memberCount =
+    Number.isInteger(parsedMemberCount) && parsedMemberCount >= 0
+      ? parsedMemberCount
+      : null;
+
+  return { events, memberCount };
+}
+
+export function parseMeetupEventsHtml(html: string): MeetupEvent[] {
+  return parseMeetupSnapshotHtml(html).events;
 }
 
 export function selectUpcomingMeetupEvents(
@@ -293,12 +315,12 @@ export function selectNextMeetupEvent(
   return selectUpcomingMeetupEvents(events, options)[0] ?? null;
 }
 
-export async function fetchMeetupEvents({
+export async function fetchMeetupSnapshot({
   eventsUrl = DEFAULT_MEETUP_EVENTS_URL,
   fetchFn = fetch,
   now = new Date(),
   timeoutMs = DEFAULT_MEETUP_TIMEOUT_MS,
-}: FetchMeetupEventsOptions = {}): Promise<MeetupEvent[]> {
+}: FetchMeetupEventsOptions = {}): Promise<MeetupSnapshot> {
   const requestUrl = new URL(eventsUrl);
   requestUrl.searchParams.set("_cb", String(now.valueOf()));
 
@@ -324,8 +346,11 @@ export async function fetchMeetupEvents({
       );
     }
 
-    const events = parseMeetupEventsHtml(await response.text());
-    return selectUpcomingMeetupEvents(events, { now });
+    const snapshot = parseMeetupSnapshotHtml(await response.text());
+    return {
+      events: selectUpcomingMeetupEvents(snapshot.events, { now }),
+      memberCount: snapshot.memberCount,
+    };
   } catch (error) {
     if (controller.signal.aborted) {
       throw new Error(`Meetup request timed out after ${timeoutMs}ms.`, {
@@ -336,4 +361,10 @@ export async function fetchMeetupEvents({
   } finally {
     clearTimeout(timeout);
   }
+}
+
+export async function fetchMeetupEvents(
+  options: FetchMeetupEventsOptions = {},
+): Promise<MeetupEvent[]> {
+  return (await fetchMeetupSnapshot(options)).events;
 }

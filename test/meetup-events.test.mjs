@@ -5,6 +5,7 @@ import {
   isMeetupEvent,
   normalizeMeetupEventTitle,
   parseMeetupEventsHtml,
+  parseMeetupSnapshotHtml,
   selectNextMeetupEvent,
   selectUpcomingMeetupEvents,
 } from "../src/lib/meetup-events.ts";
@@ -127,6 +128,19 @@ test("parseMeetupEventsHtml resolves referenced Meetup event data", () => {
       },
     },
   ]);
+});
+
+test("parseMeetupSnapshotHtml reads the Kyoto Tech group member count", () => {
+  const snapshot = parseMeetupSnapshotHtml(
+    makeMeetupHtml({
+      "Group:38124378": {
+        urlname: "kyoto-tech-meetup",
+        stats: { memberCounts: { all: 214 } },
+      },
+    }),
+  );
+
+  expect(snapshot).toEqual({ events: [], memberCount: 214 });
 });
 
 describe("Meetup event selection", () => {
