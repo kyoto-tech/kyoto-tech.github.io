@@ -272,7 +272,7 @@ Approved English direction:
 - Every skill level
 - Locals + visitors
 
-Supporting line: “Bring a project, a question, or simply your curiosity.”
+Supporting line: “We look forward to welcoming you.”
 
 All statements must be checked against how events actually operate before merge.
 

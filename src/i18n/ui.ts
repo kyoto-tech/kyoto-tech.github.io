@@ -30,7 +30,7 @@ export const ui = {
     "home.firstMeetup.signal3": "Every skill level",
     "home.firstMeetup.signal4": "Locals + visitors",
     "home.firstMeetup.supporting":
-      "Bring a project, a question, or simply your curiosity.",
+      "We look forward to welcoming you.",
     "home.firstMeetup.imageAlt":
       "Kyoto Tech Meetup members working together around laptops in a tatami room",
     "home.header.discordCta": "Join our Discord",
@@ -135,7 +135,7 @@ export const ui = {
     "home.firstMeetup.signal3": "スキルレベル不問",
     "home.firstMeetup.signal4": "京都の人も、旅の人も",
     "home.firstMeetup.supporting":
-      "プロジェクトや質問、あるいは好奇心だけでも大丈夫。",
+      "みなさんをお迎えできるのを楽しみにしています。",
     "home.firstMeetup.imageAlt":
       "畳の部屋でノートパソコンを囲み、一緒に作業するKyoto Tech Meetupのメンバー",
     "home.header.discordCta": "Discordでチャットする",
