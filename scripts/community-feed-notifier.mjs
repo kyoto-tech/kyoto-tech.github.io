@@ -231,7 +231,9 @@ async function main() {
         userAgent: USER_AGENT,
       });
       const enrichedItems = await Promise.all(
-        items.map((item) => enrichNotifierItemWithLinkedPageImage(item)),
+        items.map((item) => enrichNotifierItemWithLinkedPageImage(item, {
+          force: item.source?.imageStrategy === "linked-page-featured",
+        })),
       );
       allItems.push(...enrichedItems);
     } catch (error) {

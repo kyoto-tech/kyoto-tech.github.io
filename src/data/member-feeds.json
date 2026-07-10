@@ -15,7 +15,8 @@
     "id": "daniel-kishimoto",
     "name": "Daniel Kishimoto",
     "siteUrl": "https://danielkishimoto.com/",
-    "feedUrl": "https://danielkishimoto.com/feed/"
+    "feedUrl": "https://danielkishimoto.com/feed/",
+    "imageStrategy": "linked-page-featured"
   },
   {
     "id": "mere-mortal-dev",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T08:13:47.643Z",
+  "generatedAt": "2026-07-10T08:34:57.128Z",
   "itemsPerFeed": 3,
   "feeds": [
     {
@@ -108,6 +108,7 @@
           "link": "https://danielkishimoto.com/blog/2026/06/an-ai-roasted-my-brand/",
           "publishedAt": "2026-06-26T08:08:21.000Z",
           "source": {
+            "imageStrategy": "linked-page-featured",
             "name": "Daniel Kishimoto",
             "siteUrl": "https://danielkishimoto.com/",
             "feedUrl": "https://danielkishimoto.com/feed/"
@@ -121,6 +122,7 @@
           "link": "https://danielkishimoto.com/blog/2026/04/my-design-system-met-claude-design/",
           "publishedAt": "2026-04-22T14:46:18.000Z",
           "source": {
+            "imageStrategy": "linked-page-featured",
             "name": "Daniel Kishimoto",
             "siteUrl": "https://danielkishimoto.com/",
             "feedUrl": "https://danielkishimoto.com/feed/"
@@ -134,6 +136,7 @@
           "link": "https://danielkishimoto.com/blog/2026/02/2-ai-fluency-is-all-you-need/",
           "publishedAt": "2026-02-24T08:17:46.000Z",
           "source": {
+            "imageStrategy": "linked-page-featured",
             "name": "Daniel Kishimoto",
             "siteUrl": "https://danielkishimoto.com/",
             "feedUrl": "https://danielkishimoto.com/feed/"

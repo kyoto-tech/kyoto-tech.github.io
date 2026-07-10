@@ -121,6 +121,25 @@ describe("composite feed image selection", () => {
     expect(item).not.toHaveProperty("inlineImage");
   });
 
+  test("can prefer a linked WordPress featured image over a feed image", async () => {
+    const item = await enrichItemWithLinkedPageImage(
+      {
+        id: "post-1",
+        link: "https://example.com/post/",
+        image: "https://example.com/logo.png",
+        inlineImage: null,
+      },
+      {
+        force: true,
+        fetchTextFn: vi.fn(async () =>
+          '<img class="attachment-post-thumbnail wp-post-image" src="/featured.jpg">',
+        ),
+      },
+    );
+
+    expect(item.image).toBe("https://example.com/featured.jpg");
+  });
+
   test("retains an inline image when linked-page enrichment fails", async () => {
     const item = await enrichItemWithLinkedPageImage(
       {

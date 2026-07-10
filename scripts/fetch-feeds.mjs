@@ -429,6 +429,7 @@ function normalizeItem(rawItem, source) {
     link,
     publishedAt: publishedAt.toISOString(),
     source: {
+      ...(source.imageStrategy ? { imageStrategy: source.imageStrategy } : {}),
       name: source.name,
       siteUrl: source.siteUrl,
       feedUrl: source.feedUrl,
@@ -441,10 +442,10 @@ function normalizeItem(rawItem, source) {
 
 export async function enrichItemWithLinkedPageImage(
   item,
-  { fetchTextFn = fetchText } = {},
+  { fetchTextFn = fetchText, force = false } = {},
 ) {
   const { inlineImage, ...publicItem } = item;
-  if (publicItem.image) return publicItem;
+  if (publicItem.image && !force) return publicItem;
   if (
     !isHttpUrl(publicItem.link)
   ) {
@@ -461,7 +462,7 @@ export async function enrichItemWithLinkedPageImage(
     const image = extractPageImage(html, publicItem.link);
     return {
       ...publicItem,
-      image: image ?? inlineImage ?? null,
+      image: image ?? publicItem.image ?? inlineImage ?? null,
     };
   } catch {
     return { ...publicItem, image: inlineImage ?? null };
@@ -514,7 +515,9 @@ async function main() {
       });
 
       const itemsWithLinkedPageImages = await Promise.all(
-        normalizedItems.map((item) => enrichItemWithLinkedPageImage(item)),
+        normalizedItems.map((item) => enrichItemWithLinkedPageImage(item, {
+          force: item.source?.imageStrategy === "linked-page-featured",
+        })),
       );
 
       feedsWithItems.push({
