@@ -259,18 +259,20 @@ Replace the generic “Small, intentional gatherings” and “People who like t
 
 - Remove both existing end-of-page sections and their persona list.
 - Add one “Your first meetup?” section directly after the hero.
-- Pair one event photograph with four concise, factual expectations.
+- Pair one event photograph with four concise visual signals.
 - Add a second RSVP opportunity after the expectations.
 - Move the language note into this onboarding context or the next-event card.
 
 ### Content direction
 
-Working English direction:
+Approved English direction:
 
-- Our meetups favor conversation and hands-on building together over formal presentations.
-- English and Japanese are both welcome; use whichever feels comfortable.
-- Bring a project, a question, or simply your curiosity. All skill levels are welcome.
-- We welcome locals, nomads, and travelers alike. No matter how long you're in Kyoto, you'll meet friendly people here.
+- Talk + build together
+- English + 日本語
+- Every skill level
+- Locals + visitors
+
+Supporting line: “Bring a project, a question, or simply your curiosity.”
 
 All statements must be checked against how events actually operate before merge.
 
@@ -285,7 +287,7 @@ All statements must be checked against how events actually operate before merge.
 ### Acceptance criteria
 
 - Neither old generic section remains on the page.
-- The replacement uses four short facts and no introductory paragraph.
+- The replacement uses four icon-led signals and one short supporting line.
 - The section explains the experience without relying on professional personas.
 - A direct RSVP action is available at the end of the section.
 - Content is equivalent and reviewed in English and Japanese.

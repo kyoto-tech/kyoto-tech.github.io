@@ -25,14 +25,12 @@ export const ui = {
     "home.hero.imageAlt":
       "Kyoto Tech Meetup members gathered for a community presentation in a tatami room",
     "home.firstMeetup.title": "Your first meetup?",
-    "home.firstMeetup.fact1":
-      "Our meetups favor conversation and hands-on building together over formal presentations.",
-    "home.firstMeetup.fact2":
-      "English and Japanese are both welcome; use whichever feels comfortable.",
-    "home.firstMeetup.fact3":
-      "Bring a project, a question, or simply your curiosity. All skill levels are welcome.",
-    "home.firstMeetup.fact4":
-      "We welcome locals, nomads, and travelers alike. No matter how long you're in Kyoto, you'll meet friendly people here.",
+    "home.firstMeetup.signal1": "Talk + build together",
+    "home.firstMeetup.signal2": "English + 日本語",
+    "home.firstMeetup.signal3": "Every skill level",
+    "home.firstMeetup.signal4": "Locals + visitors",
+    "home.firstMeetup.supporting":
+      "Bring a project, a question, or simply your curiosity.",
     "home.firstMeetup.imageAlt":
       "Kyoto Tech Meetup members working together around laptops in a tatami room",
     "home.header.discordCta": "Join our Discord",
@@ -132,14 +130,12 @@ export const ui = {
     "home.hero.imageAlt":
       "畳の部屋で発表を囲むKyoto Tech Meetupのメンバー",
     "home.firstMeetup.title": "はじめてのミートアップ？",
-    "home.firstMeetup.fact1":
-      "私たちのミートアップでは、形式的な発表よりも、会話と一緒に手を動かすことを大切にしています。",
-    "home.firstMeetup.fact2":
-      "日本語でも英語でも、話しやすいほうでどうぞ。",
-    "home.firstMeetup.fact3":
-      "プロジェクトや質問、あるいは好奇心だけでも大丈夫。スキルレベルを問わず歓迎します。",
-    "home.firstMeetup.fact4":
-      "京都に住む方も、ノマドの方も、旅行中の方も歓迎です。滞在期間にかかわらず、ここで親しみやすい仲間に出会えます。",
+    "home.firstMeetup.signal1": "語って、一緒につくる",
+    "home.firstMeetup.signal2": "日本語 + English",
+    "home.firstMeetup.signal3": "スキルレベル不問",
+    "home.firstMeetup.signal4": "京都の人も、旅の人も",
+    "home.firstMeetup.supporting":
+      "プロジェクトや質問、あるいは好奇心だけでも大丈夫。",
     "home.firstMeetup.imageAlt":
       "畳の部屋でノートパソコンを囲み、一緒に作業するKyoto Tech Meetupのメンバー",
     "home.header.discordCta": "Discordでチャットする",
