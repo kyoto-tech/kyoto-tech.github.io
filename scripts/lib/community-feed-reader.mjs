@@ -86,7 +86,7 @@ export function isYoutubeUrl(value) {
   }
 }
 
-export function fetchWithTimeout(
+export async function fetchWithTimeout(
   url,
   options = {},
   timeoutMs = DEFAULT_FEED_TIMEOUT_MS,
@@ -95,16 +95,18 @@ export function fetchWithTimeout(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
-  return fetch(url, {
-    ...options,
-    signal: controller.signal,
-    headers: {
-      ...(userAgent ? { "user-agent": userAgent } : {}),
-      ...(options.headers || {}),
-    },
-  }).finally(() => {
+  try {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        ...(userAgent ? { "user-agent": userAgent } : {}),
+        ...(options.headers || {}),
+      },
+    });
+  } finally {
     clearTimeout(timeout);
-  });
+  }
 }
 
 export async function fetchText(
