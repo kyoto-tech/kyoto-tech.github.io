@@ -26,7 +26,7 @@ export function buildContentSecurityPolicy(scriptHashes) {
     "object-src 'none'",
     "frame-ancestors 'none'",
     "form-action 'self'",
-    `script-src 'self' ${scriptHashes.join(" ")} https://www.googletagmanager.com`,
+    `script-src 'self' ${scriptHashes.join(" ")} https://www.googletagmanager.com https://static.cloudflareinsights.com`,
     "script-src-attr 'none'",
     "style-src 'self'",
     "style-src-attr 'none'",
