@@ -65,6 +65,8 @@ export const ui = {
       "No posts in the last 31 days. Check back soon.",
     "home.communityFeed.emptyFeed": "No posts yet from this feed.",
     "home.communityFeed.fetchError": "Fetch issue",
+    "home.communityFeed.contribute.title": "Add your feed",
+    "home.communityFeed.contribute.cta": "Edit the feed list on GitHub",
 
     "home.calendar.title": "Our Event Calendar",
     "home.calendar.rsvpCount": "RSVPs: {count}",
@@ -170,6 +172,8 @@ export const ui = {
     "home.communityFeed.emptyFeed":
       "このフィードの記事はまだ取得できていません。",
     "home.communityFeed.fetchError": "取得に失敗しました",
+    "home.communityFeed.contribute.title": "あなたのフィードを追加",
+    "home.communityFeed.contribute.cta": "GitHubでフィード一覧を編集",
 
     "home.calendar.title": "イベントカレンダー",
     "home.calendar.rsvpCount": "参加予定: {count}人",

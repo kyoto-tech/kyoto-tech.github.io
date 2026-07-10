@@ -43,6 +43,8 @@ const meetupUrl =
 const discordUrl = "https://discord.gg/mXFWEHDKeu";
 const githubUrl = "https://github.com/kyoto-tech";
 const contactUrl = "https://forms.gle/NPtc1G1vM9jGBYhp6";
+const memberFeedsEditUrl =
+  "https://github.com/kyoto-tech/kyoto-tech.github.io/edit/main/src/data/member-feeds.json";
 
 const quickLinks = [
   {
@@ -468,6 +470,29 @@ const formatDate = (value: string) => {
             }
           </div>
         </div>
+
+        <aside
+          id="submit-feed"
+          class="flex flex-col gap-5 rounded-2xl bg-slate-950 p-6 text-white shadow-xl shadow-stone-900/10 sm:flex-row sm:items-center sm:justify-between"
+          aria-labelledby="member-feed-contribution-title"
+        >
+          <h3
+            id="member-feed-contribution-title"
+            class="text-2xl font-semibold"
+          >
+            {t("home.communityFeed.contribute.title")}
+          </h3>
+          <a
+            href={memberFeedsEditUrl}
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          >
+            <FaGithub className="h-5 w-5" aria-hidden="true" />
+            {t("home.communityFeed.contribute.cta")}
+            <FaExternalLinkAlt className="h-3 w-3" aria-hidden="true" />
+          </a>
+        </aside>
       </div>
     </section>
   </main>

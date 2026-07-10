@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PRs 1–5 and 4A merged; responsive events in progress
+Status: Active — PRs 1–6 and 4A merged; feed contribution CTA in progress
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, venue details, conversations, and member work
 
@@ -63,7 +63,7 @@ Final invitation and footer
 | 4A | Calendar event details | PR 2 | Calendar events show RSVP counts and direct Maps links without a separate locations section |
 | 5 | Community links and page order | PRs 1 and 4 | Returning members have fast access to frequently used resources and the page has a coherent narrative |
 | 6 | Responsive events | PRs 2, 4A, and 5 | Mobile event discovery becomes easier and lighter |
-| 7 | Member feed refinement | PR 5 | Member work becomes authentic community evidence rather than a long set of carousels |
+| 7 | Feed contribution CTA | PR 5 | Members can add their own feed through a direct GitHub edit path |
 | 8 | Accessibility, performance, analytics, and final QA | PRs 3–7 | The complete journey is verified and measurable |
 
 PR 1 and PR 2 can be developed in parallel. Later PRs should follow the dependency order above.
@@ -430,42 +430,36 @@ Preserve the detailed calendar for existing members while giving mobile visitors
 
 ---
 
-## PR 7: Member feed refinement
+## PR 7: Feed contribution CTA
 
 ### Objective
 
-Use member work as authentic evidence of the community and reduce the length and interaction cost of the current per-source horizontal carousels.
+Make it clear how community members can submit their own feed without redesigning the existing member-feed presentation.
 
 ### Scope
 
-- Rename the section around the idea of work made by people in the community.
-- Present a consolidated set of the latest posts across sources, ordered by publication date.
-- Preserve source attribution and original-language titles and summaries.
-- Limit the initial presentation to a manageable number of posts.
-- End the section with an invitation to meet the people behind the work at the next event.
+- Preserve the existing per-member feed layout and content behavior.
+- Add a compact contribution CTA below the current member feeds with one heading and one button.
+- Link directly to GitHub's edit page for `src/data/member-feeds.json` on `main`.
+- Provide equivalent English and Japanese copy.
 
 ### Implementation notes
 
-- Flatten the normalized feed entries into one sorted collection in `src/pages/index.astro` or a small pure helper.
-- Start with six recent posts; adjust only after reviewing real content density on mobile and desktop.
-- Use a responsive grid rather than nested horizontal scrollers.
-- Use `h3` for member or post-group headings under the section's `h2`; do not skip directly to `h4`.
-- Keep original source links readily available for existing members.
-- Do not machine-translate member-authored content as part of this work.
+- Use the repository's canonical GitHub edit URL so contributors land on the source-of-truth JSON file.
+- Open GitHub in a new tab and retain a visible, descriptive link label.
+- Keep the CTA visually distinct from individual feed cards and subordinate to the feed content.
 
 ### Acceptance criteria
 
-- The section does not require horizontal scrolling.
-- Recent work from different members appears without one source dominating solely because of source order.
-- Every item clearly identifies its source and publication date.
-- The section has a clear link back to the next meetup.
-- Empty and failed-feed states remain understandable.
+- The existing member feed presentation remains unchanged.
+- The CTA appears after all current feed sources.
+- The CTA links to `https://github.com/kyoto-tech/kyoto-tech.github.io/edit/main/src/data/member-feeds.json`.
+- The link purpose is understandable in both locales and from its accessible name alone.
 
 ### Verification
 
-- Unit-test flattening, sorting, per-source attribution, invalid dates, and empty feeds.
-- Verify long English and Japanese-adjacent source content does not overflow cards.
-- Check image loading, alternative text, heading hierarchy, and focus states.
+- Verify the exact edit URL and new-tab behavior.
+- Check CTA wrapping, heading hierarchy, and focus styling on mobile and desktop in both locales.
 - Run `npm run check` and `npm run build`.
 
 ---
