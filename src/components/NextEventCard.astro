@@ -34,7 +34,7 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
     state.kind === "event" ? (
       <>
         <div
-          class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500"
+          class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-600"
           data-event-live
           data-event-start={event?.start}
           data-event-end={event?.endTime ?? undefined}
@@ -77,16 +77,17 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
           </div>
           <div
             class="flex items-start gap-2.5"
-            aria-label={t("home.calendar.rsvpCount").replace(
-              "{count}",
-              String(event?.goingCount ?? 0),
-            )}
           >
             <FaUserGroup
               className="mt-0.5 h-4 w-4 shrink-0"
               aria-hidden="true"
             />
-            <dt class="sr-only">{t("home.eventCard.going")}</dt>
+            <dt class="sr-only">
+              {t("home.calendar.rsvpCount").replace(
+                "{count}",
+                String(event?.goingCount ?? 0),
+              )}
+            </dt>
             <dd aria-hidden="true">{event?.goingCount ?? 0}</dd>
           </div>
           {
@@ -102,13 +103,13 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
                     href={mapsUrl}
                     target="_blank"
                     rel="noreferrer"
-                    aria-label={t("home.calendar.openVenueInMaps").replace(
-                      "{venue}",
-                      venueLabel,
-                    )}
-                    class="font-medium text-slate-700 underline decoration-slate-300 underline-offset-2 transition hover:text-slate-950 hover:decoration-(--accent) focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700"
+                    data-analytics-event="calendar_event_click"
+                    data-analytics-link="maps"
+                    data-analytics-location="hero_event_card"
+                    class="inline-flex min-h-11 items-center font-medium text-slate-700 underline decoration-slate-300 underline-offset-2 transition hover:text-slate-950 hover:decoration-(--accent) focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700"
                   >
                     {t("home.calendar.openInMaps")}
+                    <span class="sr-only">: {venueLabel}</span>
                   </a>
                 </dd>
               </div>
@@ -117,7 +118,10 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
         </dl>
         <a
           href={state.href}
-          class="mt-5 inline-flex items-center gap-2 rounded-md text-sm font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 transition hover:decoration-(--accent) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-700"
+          data-analytics-event="next_event_view"
+          data-analytics-link="event_details"
+          data-analytics-location="hero_event_card"
+          class="mt-5 inline-flex min-h-11 items-center gap-2 rounded-md text-sm font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 transition hover:decoration-(--accent) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-700"
         >
           {t("home.eventCard.details")}
           <span aria-hidden="true">→</span>
@@ -136,7 +140,10 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
         </p>
         <a
           href={state.href}
-          class="mt-5 inline-flex items-center gap-2 rounded-md text-sm font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 transition hover:decoration-(--accent) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-700"
+          data-analytics-event="next_event_view"
+          data-analytics-link="meetup_group"
+          data-analytics-location="hero_event_card"
+          class="mt-5 inline-flex min-h-11 items-center gap-2 rounded-md text-sm font-semibold text-slate-900 underline decoration-slate-300 underline-offset-4 transition hover:decoration-(--accent) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-700"
         >
           {t("home.eventCard.groupCta")}
           <span aria-hidden="true">→</span>

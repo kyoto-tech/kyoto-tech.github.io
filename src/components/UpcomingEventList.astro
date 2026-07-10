@@ -107,6 +107,9 @@ const formatTime = (event: MeetupEvent) => {
                 <h4 class="mt-1 text-xl font-semibold leading-snug text-slate-950">
                   <a
                     href={event.link}
+                    data-analytics-event="calendar_event_click"
+                    data-analytics-link={event.eventType}
+                    data-analytics-location="mobile_event_list"
                     class="rounded-sm underline-offset-4 hover:text-(--accent) hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-700"
                   >
                     {event.title}
@@ -135,11 +138,13 @@ const formatTime = (event: MeetupEvent) => {
                 <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-slate-100 pt-4 text-sm">
                   <span
                     class="inline-flex items-center gap-2 font-medium text-slate-600"
-                    aria-label={t("home.calendar.rsvpCount").replace(
-                      "{count}",
-                      String(event.goingCount),
-                    )}
                   >
+                    <span class="sr-only">
+                      {t("home.calendar.rsvpCount").replace(
+                        "{count}",
+                        String(event.goingCount),
+                      )}
+                    </span>
                     <FaUserGroup className="h-4 w-4" aria-hidden="true" />
                     <span aria-hidden="true">{event.goingCount}</span>
                   </span>
@@ -148,18 +153,21 @@ const formatTime = (event: MeetupEvent) => {
                       href={mapsUrl}
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={t("home.calendar.openVenueInMaps").replace(
-                        "{venue}",
-                        venueLabel,
-                      )}
-                      class="inline-flex items-center gap-2 font-semibold text-slate-700 underline decoration-slate-300 underline-offset-4 hover:text-slate-950 hover:decoration-(--accent) focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700"
+                      data-analytics-event="calendar_event_click"
+                      data-analytics-link="maps"
+                      data-analytics-location="mobile_event_list"
+                      class="inline-flex min-h-11 items-center gap-2 font-semibold text-slate-700 underline decoration-slate-300 underline-offset-4 hover:text-slate-950 hover:decoration-(--accent) focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700"
                     >
                       <FaLocationDot className="h-4 w-4" aria-hidden="true" />
                       {t("home.calendar.openInMaps")}
+                      <span class="sr-only">: {venueLabel}</span>
                     </a>
                   ) : null}
                   <a
                     href={event.link}
+                    data-analytics-event="calendar_event_click"
+                    data-analytics-link="rsvp"
+                    data-analytics-location="mobile_event_list"
                     class="ml-auto inline-flex min-h-11 items-center gap-2 rounded-full bg-slate-950 px-5 py-2.5 font-semibold text-white transition hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-700"
                   >
                     {t("home.upcomingEvents.rsvp")}
@@ -179,6 +187,9 @@ const formatTime = (event: MeetupEvent) => {
         </p>
         <a
           href={meetupUrl}
+          data-analytics-event="calendar_event_click"
+          data-analytics-link="meetup_group"
+          data-analytics-location="mobile_event_list"
           class="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white"
         >
           {t("home.eventCard.groupCta")}

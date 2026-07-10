@@ -2,13 +2,14 @@
 import type { MeetupEvent } from "../lib/meetup-events";
 import { FaUserGroup } from "react-icons/fa6";
 import NextEventCard from "./NextEventCard.astro";
+import { Picture } from "astro:assets";
+import heroImage from "../../assets/raw-images/kyoto-tech-community-presentation.jpeg";
 
 type Props = {
   event: MeetupEvent | null;
   fallbackCtaLabel: string;
   fallbackUrl: string;
   imageAlt: string;
-  imageSrc: string;
   lang?: "en" | "ja";
   memberMilestoneLabel?: string | null;
   now?: Date;
@@ -23,7 +24,6 @@ const {
   fallbackCtaLabel,
   fallbackUrl,
   imageAlt,
-  imageSrc,
   lang = "en",
   memberMilestoneLabel = null,
   now = new Date(),
@@ -36,11 +36,13 @@ const primaryCtaUrl = event?.link ?? fallbackUrl;
 ---
 
 <header class="relative isolate min-h-[50rem] overflow-hidden bg-slate-950 lg:aspect-[1080/719] lg:min-h-0">
-  <img
-    src={imageSrc}
+  <Picture
+    src={heroImage}
     alt={imageAlt}
-    width="1080"
-    height="719"
+    formats={["avif", "webp"]}
+    widths={[480, 640, 800, 1080, 1440]}
+    sizes="100vw"
+    quality={55}
     loading="eager"
     fetchpriority="high"
     decoding="async"
@@ -83,12 +85,18 @@ const primaryCtaUrl = event?.link ?? fallbackUrl;
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
         <a
           href={primaryCtaUrl}
+          data-analytics-event="hero_rsvp_click"
+          data-analytics-link={event ? "next_event" : "meetup_group"}
+          data-analytics-location="hero"
           class="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-slate-950/15 transition hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
           {event ? primaryCtaLabel : fallbackCtaLabel}
         </a>
         <a
           href="#calendar"
+          data-analytics-event="next_event_view"
+          data-analytics-link="calendar"
+          data-analytics-location="hero"
           class="inline-flex min-h-12 items-center justify-center rounded-full border border-white/50 bg-slate-950/25 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:border-white/80 hover:bg-slate-950/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
           {secondaryCtaLabel}

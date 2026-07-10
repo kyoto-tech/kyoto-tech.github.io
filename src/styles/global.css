@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-	--accent: #dd4a48;
-	--accent-dark: #c23c39;
+	--accent: #b83230;
+	--accent-dark: #8f2624;
 }
 
 * {
@@ -42,6 +42,11 @@ body {
 	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
+:where(a, button):focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 3px;
+}
+
 .sr-only {
 	position: absolute;
 	width: 1px;
@@ -69,4 +74,19 @@ body {
 [data-event-live][data-live-state="ongoing"][data-live-emphasis="calendar"] {
 	outline: 2px solid #6ee7b7;
 	outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+	}
 }

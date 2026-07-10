@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PRs 1–6 and 4A merged; feed contribution CTA in progress
+Status: Active — PRs 1–7 and 4A merged; PR 8 final QA in review
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, venue details, conversations, and member work
 

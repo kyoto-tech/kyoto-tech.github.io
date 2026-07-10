@@ -27,6 +27,11 @@ export async function loadMemberFeeds(filePath = DEFAULT_MEMBER_FEEDS_PATH) {
         `Missing required fields in member feed entry: ${JSON.stringify(item)}`,
       );
     }
+    if (!isHttpUrl(String(item.feedUrl)) || !isHttpUrl(String(item.siteUrl))) {
+      throw new Error(
+        `Member feed URLs must use HTTP or HTTPS: ${JSON.stringify(item)}`,
+      );
+    }
 
     return {
       id: String(item.id),
@@ -60,7 +65,7 @@ export function truncate(value, max = 280) {
   return value.length > max ? `${value.slice(0, max - 3).trimEnd()}...` : value;
 }
 
-function isHttpUrl(value) {
+export function isHttpUrl(value) {
   if (!value || typeof value !== "string") return false;
   try {
     const parsed = new URL(value);
@@ -267,11 +272,13 @@ export function normalizeNotifierItem(rawItem, source) {
     stripHtml(rawItem.description) ||
     "";
 
+  const link = isHttpUrl(rawItem.link) ? rawItem.link : source.siteUrl;
+
   return {
     id: buildNotifierItemId(source, rawId),
     sourceItemId: String(rawId),
     title: rawItem.title || "Untitled",
-    link: rawItem.link || source.siteUrl,
+    link,
     publishedAt: publishedAt.toISOString(),
     summary: truncate(summary),
     imageUrl: extractImageUrl(rawItem, source),
