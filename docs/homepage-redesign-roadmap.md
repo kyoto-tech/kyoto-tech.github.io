@@ -30,7 +30,7 @@ First-meetup expectations
   Practical first-visit facts · Secondary RSVP
 
 Community links
-  Meetup · Discord · GitHub · Contact
+  Meetup · Discord · GitHub · LinkedIn · Contact
 
 Upcoming events
   Mobile event list · Desktop calendar · RSVP counts · Maps links
@@ -332,7 +332,7 @@ Give existing members fast access to frequently used resources without interrupt
 
 - Move the current quick links below the first-meetup onboarding section.
 - Rename the section to “Community links.”
-- Preserve the four existing external destinations: Meetup, Discord, GitHub, and Contact.
+- Preserve the external destinations: Meetup, Discord, LinkedIn, GitHub, and Contact.
 - Reorder the remainder of the homepage according to the target structure.
 - Add a fixed-navigation destination for the hub.
 - Restore a compact community-size signal near the hub introduction, backed by Meetup data rather than a hard-coded claim.
@@ -342,6 +342,7 @@ Give existing members fast access to frequently used resources without interrupt
 - Meetup → community Meetup group
 - Discord → community Discord
 - GitHub → community GitHub organization
+- LinkedIn → community LinkedIn company page
 - Contact → organizer contact form
 
 ### Implementation notes

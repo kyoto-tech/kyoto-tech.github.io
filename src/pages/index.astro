@@ -6,7 +6,13 @@ import Calendar from "../components/Calendar.astro";
 import UpcomingEventList from "../components/UpcomingEventList.astro";
 import LiveEventUpdater from "../components/LiveEventUpdater.astro";
 import Footer from "../components/Footer.astro";
-import { FaGithub, FaDiscord, FaMeetup, FaEnvelope } from "react-icons/fa";
+import {
+  FaDiscord,
+  FaEnvelope,
+  FaGithub,
+  FaLinkedin,
+  FaMeetup,
+} from "react-icons/fa";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import {
   FaComments,
@@ -41,6 +47,7 @@ const meetupUrl =
     ? "https://www.meetup.com/ja-JP/kyoto-tech-meetup/"
     : "https://www.meetup.com/kyoto-tech-meetup/";
 const discordUrl = "https://discord.gg/mXFWEHDKeu";
+const linkedinUrl = "https://www.linkedin.com/company/kyoto-tech-meetup/";
 const githubUrl = "https://github.com/kyoto-tech";
 const contactUrl = "https://forms.gle/NPtc1G1vM9jGBYhp6";
 const memberFeedsEditUrl =
@@ -64,6 +71,12 @@ const quickLinks = [
     icon: FaGithub,
     titleKey: "home.quickLinks.github.title",
     descriptionKey: "home.quickLinks.github.description",
+  },
+  {
+    href: linkedinUrl,
+    icon: FaLinkedin,
+    titleKey: "home.quickLinks.linkedin.title",
+    descriptionKey: "home.quickLinks.linkedin.description",
   },
   {
     href: contactUrl,
@@ -262,7 +275,7 @@ const formatDate = (value: string) => {
         <h2 class="text-3xl font-semibold text-slate-900">
           {t("home.quickLinks.title")}
         </h2>
-        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {
             quickLinks.map((link) => (
               <a
@@ -274,7 +287,7 @@ const formatDate = (value: string) => {
                 <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--accent)/10 text-(--accent)">
                   <link.icon size={18} aria-hidden="true" />
                 </span>
-                <span class="flex flex-col">
+                <span class="flex min-w-0 flex-col">
                   <span class="text-base font-semibold text-slate-900 group-hover:text-(--accent)">
                     {t(link.titleKey)}
                   </span>
