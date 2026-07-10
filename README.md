@@ -43,6 +43,7 @@ Everything here is maintained by community members; contributions that make the 
 | `npm run events:pull` | Refreshes the committed Meetup event cache and fails on errors.      |
 | `npm run events:pull:stale-ok` | Refreshes Meetup events or preserves the last valid cache. |
 | `npm run agent:markdown` | Generates the English and Japanese Markdown responses used for agent content negotiation. |
+| `npm run agent:skills` | Generates the agent-skills discovery index and its SHA-256 digests. |
 | `npm run feeds:notify` | Polls approved member feeds and posts unseen items to configured channels. |
 | `npm run feeds:notify:dry-run` | Shows what the notifier would send without posting or updating state. |
 | `npm run preview`  | Serves the production build locally.                                    |
@@ -106,6 +107,7 @@ public/          # Files served as-is (favicon, images)
 - Production builds run this generator after the stale-safe event/feed refreshes.
 - Cloudflare Pages Functions at `/` and `/ja/` return those files only when the request explicitly accepts `text/markdown`; normal browser requests continue to receive the Astro HTML pages.
 - Verify locally or against a preview with `curl -H 'Accept: text/markdown' -D - https://preview-url/`.
+- The Markdown maintenance skill is published at `/.well-known/agent-skills/markdown-for-agents/SKILL.md`; `npm run agent:skills` regenerates its discovery index digest during builds.
 
 ## Community Feed Notifier
 
