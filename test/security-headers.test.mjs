@@ -20,6 +20,7 @@ describe("Cloudflare security headers", () => {
 
     expect(hashes).toEqual([`'sha256-${expected}'`]);
     expect(policy).toContain("script-src 'self'");
+    expect(policy).toContain("https://static.cloudflareinsights.com");
     expect(policy).toContain("script-src-attr 'none'");
     expect(policy).not.toContain("'unsafe-inline'");
     expect(policy).not.toContain("'unsafe-eval'");
