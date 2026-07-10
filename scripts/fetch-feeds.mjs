@@ -6,6 +6,7 @@ import Parser from "rss-parser";
 import {
   fetchRawFeedItems,
   fetchText,
+  extractImageUrl,
   isHttpUrl,
   isYoutubeUrl,
   loadMemberFeeds,
@@ -375,6 +376,9 @@ export function resolveFeedImage(rawItem, source) {
     }
   }
 
+  const sharedImage = extractImageUrl(rawItem, source);
+  if (sharedImage) return sharedImage;
+
   return null;
 }
 
@@ -429,7 +433,7 @@ function normalizeItem(rawItem, source) {
       siteUrl: source.siteUrl,
       feedUrl: source.feedUrl,
     },
-    summary: truncate(summary, 360),
+    summary: truncate(summary),
     image: resolveFeedImage(rawItem, source),
     inlineImage: resolveInlineContentImage(rawItem, source),
   };
@@ -480,9 +484,18 @@ async function readExisting(filePath) {
   }
 }
 
+export function getCachedFeedForSource(existing, source) {
+  return existing?.feeds?.find((feed) =>
+    feed.feedUrl === source.feedUrl ||
+    feed.siteUrl === source.siteUrl ||
+    feed.name === source.name,
+  ) ?? null;
+}
+
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const memberFeeds = await loadMemberFeeds();
+  const existing = args.staleOk ? await readExisting(args.outputPath) : null;
   const parser = new Parser();
   const now = new Date();
   const failures = [];
@@ -505,19 +518,24 @@ async function main() {
       );
 
       feedsWithItems.push({
+        id: source.id,
         name: source.name,
         siteUrl: source.siteUrl,
         feedUrl: source.feedUrl,
         items: itemsWithLinkedPageImages,
       });
     } catch (error) {
-      failures.push({ source: source.name, error: error?.message || String(error) });
+      const message = error?.message || String(error);
+      failures.push({ source: source.name, error: message });
+      const cached = getCachedFeedForSource(existing, source);
       feedsWithItems.push({
+        id: source.id,
         name: source.name,
         siteUrl: source.siteUrl,
         feedUrl: source.feedUrl,
-        items: [],
-        error: error?.message || String(error),
+        items: args.staleOk && Array.isArray(cached?.items) ? cached.items : [],
+        error: message,
+        usedFallback: Boolean(args.staleOk && cached?.items?.length),
       });
     }
   }
@@ -535,7 +553,6 @@ async function main() {
   };
 
   if (totalItems === 0 && args.staleOk) {
-    const existing = await readExisting(args.outputPath);
     if (existing?.feeds?.length) {
       console.warn(
         `[feeds] Using existing data from ${args.outputPath} because fetching produced no items.`,

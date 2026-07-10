@@ -1,8 +1,9 @@
 {
-  "generatedAt": "2026-07-10T03:09:57.119Z",
+  "generatedAt": "2026-07-10T08:13:47.643Z",
   "itemsPerFeed": 3,
   "feeds": [
     {
+      "id": "ash-ryan-arnwine",
       "name": "Ash Ryan Arnwine",
       "siteUrl": "https://www.ashryan.io/",
       "feedUrl": "https://www.ashryan.io/rss/",
@@ -49,6 +50,7 @@
       ]
     },
     {
+      "id": "ashwin-anil",
       "name": "Ashwin Anil",
       "siteUrl": "https://ashwin.im/",
       "feedUrl": "https://ashwin.im/rss.xml",
@@ -95,6 +97,7 @@
       ]
     },
     {
+      "id": "daniel-kishimoto",
       "name": "Daniel Kishimoto",
       "siteUrl": "https://danielkishimoto.com/",
       "feedUrl": "https://danielkishimoto.com/feed/",
@@ -109,7 +112,7 @@
             "siteUrl": "https://danielkishimoto.com/",
             "feedUrl": "https://danielkishimoto.com/feed/"
           },
-          "summary": "The full story behind GMC’s living rebrand, the part nobody saw, the part that didn’t fit in sixty seconds (of the reel). For Generative Media Club’s first birthday, I let an AI tear my brand apart on camera. They paid me for it. Let me be upfront about what this was. It started as paid […]",
+          "summary": "The full story behind GMC’s living rebrand, the part nobody saw, the part that didn’t fit in sixty seconds (of the reel). For Generative Media Club’s first birthday, I let an AI tear my brand apart on camera. They paid me for it. Let me be upfront about what this was. It start...",
           "image": "https://danielkishimoto.com/wp-content/uploads/2026/06/Frame-5-4.png"
         },
         {
@@ -122,7 +125,7 @@
             "siteUrl": "https://danielkishimoto.com/",
             "feedUrl": "https://danielkishimoto.com/feed/"
           },
-          "summary": "I’ve been working on GMC’s rebrand for months. Brand identity, design system, a custom SDK to generate marketing assets. Last week Anthropic launched Claude Design — and it rebuilt my entire brandbook in five minutes. I don’t know whether to laugh or feel validated. Probably both. I wasn’t just working on GMC’s visual identity — […]",
+          "summary": "I’ve been working on GMC’s rebrand for months. Brand identity, design system, a custom SDK to generate marketing assets. Last week Anthropic launched Claude Design — and it rebuilt my entire brandbook in five minutes. I don’t know whether to laugh or feel validated. Probably b...",
           "image": "https://danielkishimoto.com/wp-content/uploads/2026/04/cover-post-1.png"
         },
         {
@@ -135,12 +138,13 @@
             "siteUrl": "https://danielkishimoto.com/",
             "feedUrl": "https://danielkishimoto.com/feed/"
           },
-          "summary": "What is “All you need”? A series cutting through AI hype. No tutorials. No hacks that expire in three months. Just key concepts that actually matter—the ones that stick around while everything else changes. Check the index for what’s coming. Every week there’s a new model. A prompting technique you “have to know.” A Twitter […]",
+          "summary": "What is “All you need”? A series cutting through AI hype. No tutorials. No hacks that expire in three months. Just key concepts that actually matter—the ones that stick around while everything else changes. Check the index for what’s coming. Every week there’s a new model. A p...",
           "image": "https://danielkishimoto.com/wp-content/uploads/2026/02/ai-fluency-2.jpg"
         }
       ]
     },
     {
+      "id": "mere-mortal-dev",
       "name": "Mere Mortal Dev",
       "siteUrl": "https://www.youtube.com/@meremortaldev",
       "feedUrl": "https://www.youtube.com/@meremortaldev",
