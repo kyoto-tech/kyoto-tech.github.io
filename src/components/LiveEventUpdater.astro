@@ -1,0 +1,29 @@
+<script>
+  import { isEventTimeOngoing } from "../lib/event-status";
+
+  const refreshLiveEventStates = () => {
+    document.querySelectorAll<HTMLElement>("[data-event-live]").forEach((root) => {
+      const start = root.dataset.eventStart;
+      if (!start) return;
+
+      const ongoing = isEventTimeOngoing(
+        start,
+        root.dataset.eventEnd || null,
+        new Date(),
+      );
+      root.dataset.liveState = ongoing ? "ongoing" : "upcoming";
+
+      root.querySelectorAll<HTMLElement>("[data-live-only]").forEach((element) => {
+        element.hidden = !ongoing;
+      });
+      root
+        .querySelectorAll<HTMLElement>("[data-upcoming-only]")
+        .forEach((element) => {
+          element.hidden = ongoing;
+        });
+    });
+  };
+
+  refreshLiveEventStates();
+  window.setInterval(refreshLiveEventStates, 30_000);
+</script>

@@ -3,6 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Calendar from "../components/Calendar.astro";
+import UpcomingEventList from "../components/UpcomingEventList.astro";
+import LiveEventUpdater from "../components/LiveEventUpdater.astro";
 import Footer from "../components/Footer.astro";
 import { FaGithub, FaDiscord, FaMeetup, FaEnvelope } from "react-icons/fa";
 import { FaExternalLinkAlt } from "react-icons/fa";
@@ -297,15 +299,24 @@ const formatDate = (value: string) => {
 
         <FeedTimestamps
           client:load
-          generatedAt={compositeFeed?.generatedAt}
+          generatedAt={meetupEventData?.generatedAt}
           intervalHours={3}
           updatedLabel={t("home.communityFeed.updated")}
           nextLabel={t("home.communityFeed.nextUpdate")}
         />
 
-        <Calendar events={events} lang={lang} />
+        <UpcomingEventList
+          events={events}
+          lang={lang}
+          meetupUrl={meetupUrl}
+          now={buildNow}
+        />
 
-        <div class="mt-5 grid gap-4 text-sm text-slate-700 md:grid-cols-3">
+        <div class="hidden md:block">
+          <Calendar events={events} lang={lang} now={buildNow} />
+        </div>
+
+        <div class="mt-5 hidden gap-4 text-sm text-slate-700 md:grid md:grid-cols-3">
           {
             calendarLegendItems.map((item) => (
               <article class="overflow-hidden rounded-xl border border-slate-200 bg-white">
@@ -461,5 +472,6 @@ const formatDate = (value: string) => {
     </section>
   </main>
 
+  <LiveEventUpdater />
   <Footer lang={lang} />
 </Layout>
