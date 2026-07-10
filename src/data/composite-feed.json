@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T16:44:37.381Z",
+  "generatedAt": "2026-07-10T02:47:58.518Z",
   "itemsPerFeed": 3,
   "feeds": [
     {
@@ -7,6 +7,19 @@
       "siteUrl": "https://www.ashryan.io/",
       "feedUrl": "https://www.ashryan.io/rss/",
       "items": [
+        {
+          "id": "https://www.ashryan.io/writing/the-human-touch-still-matters-for-api-platforms/",
+          "title": "The human touch still matters for API platforms",
+          "link": "https://www.ashryan.io/writing/the-human-touch-still-matters-for-api-platforms/",
+          "publishedAt": "2026-07-01T00:00:00.000Z",
+          "source": {
+            "name": "Ash Ryan Arnwine",
+            "siteUrl": "https://www.ashryan.io/",
+            "feedUrl": "https://www.ashryan.io/rss/"
+          },
+          "summary": "Collxn Pulse worked because a real person at an audio fingerprinting API helped unlock messier record matching.",
+          "image": "https://www.ashryan.io/images/writing/the-human-touch-still-matters-for-api-platforms/collxn-pulse-feature.jpg"
+        },
         {
           "id": "https://www.ashryan.io/writing/aligning-coding-agents/",
           "title": "Aligning Coding Agents",
@@ -32,19 +45,6 @@
           },
           "summary": "I guess I can't help myself",
           "image": "https://www.ashryan.io/images/writing/my-third-year-leading-ai-coding-sessions-at-itp-camp/img-7654-885f30ec92.jpeg"
-        },
-        {
-          "id": "69fe85a829ed2100017ed4d1",
-          "title": "Kyoto Tech Meetup Coffee links for May 9",
-          "link": "https://www.ashryan.io/writing/kyoto-tech-meetup-coffee-links-for-may-9/",
-          "publishedAt": "2026-05-09T01:43:20.000Z",
-          "source": {
-            "name": "Ash Ryan Arnwine",
-            "siteUrl": "https://www.ashryan.io/",
-            "feedUrl": "https://www.ashryan.io/rss/"
-          },
-          "summary": "Links. Just the links.",
-          "image": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGNvZmZlZXxlbnwwfHx8fDE3NzgyNjIyNjR8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000"
         }
       ]
     },
@@ -91,6 +91,52 @@
           },
           "summary": "Building a money management app that actually solves real problems",
           "image": null
+        }
+      ]
+    },
+    {
+      "name": "Daniel Kishimoto",
+      "siteUrl": "https://danielkishimoto.com/",
+      "feedUrl": "https://danielkishimoto.com/feed/",
+      "items": [
+        {
+          "id": "https://danielkishimoto.com/?p=1536",
+          "title": "An AI Roasted My Brand.",
+          "link": "https://danielkishimoto.com/blog/2026/06/an-ai-roasted-my-brand/",
+          "publishedAt": "2026-06-26T08:08:21.000Z",
+          "source": {
+            "name": "Daniel Kishimoto",
+            "siteUrl": "https://danielkishimoto.com/",
+            "feedUrl": "https://danielkishimoto.com/feed/"
+          },
+          "summary": "The full story behind GMC’s living rebrand, the part nobody saw, the part that didn’t fit in sixty seconds (of the reel). For Generative Media Club’s first birthday, I let an AI tear my brand apart on camera. They paid me for it. Let me be upfront about what this was. It started as paid […]",
+          "image": "https://danielkishimoto.com/wp-content/uploads/2026/06/ig-claude-partnership.mp4"
+        },
+        {
+          "id": "https://danielkishimoto.com/?p=1480",
+          "title": "My design system met Claude Design",
+          "link": "https://danielkishimoto.com/blog/2026/04/my-design-system-met-claude-design/",
+          "publishedAt": "2026-04-22T14:46:18.000Z",
+          "source": {
+            "name": "Daniel Kishimoto",
+            "siteUrl": "https://danielkishimoto.com/",
+            "feedUrl": "https://danielkishimoto.com/feed/"
+          },
+          "summary": "I’ve been working on GMC’s rebrand for months. Brand identity, design system, a custom SDK to generate marketing assets. Last week Anthropic launched Claude Design — and it rebuilt my entire brandbook in five minutes. I don’t know whether to laugh or feel validated. Probably both. I wasn’t just working on GMC’s visual identity — […]",
+          "image": "https://danielkishimoto.com/wp-content/uploads/2026/04/04222.webm"
+        },
+        {
+          "id": "https://danielkishimoto.com/?p=1454",
+          "title": "[2] AI Fluency is all you need",
+          "link": "https://danielkishimoto.com/blog/2026/02/2-ai-fluency-is-all-you-need/",
+          "publishedAt": "2026-02-24T08:17:46.000Z",
+          "source": {
+            "name": "Daniel Kishimoto",
+            "siteUrl": "https://danielkishimoto.com/",
+            "feedUrl": "https://danielkishimoto.com/feed/"
+          },
+          "summary": "What is “All you need”? A series cutting through AI hype. No tutorials. No hacks that expire in three months. Just key concepts that actually matter—the ones that stick around while everything else changes. Check the index for what’s coming. Every week there’s a new model. A prompting technique you “have to know.” A Twitter […]",
+          "image": "https://danielkishimoto.com/wp-content/uploads/2026/02/chatgpt-o1-thinking.gif"
         }
       ]
     },

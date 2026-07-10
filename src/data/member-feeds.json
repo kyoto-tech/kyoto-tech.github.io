@@ -12,6 +12,12 @@
     "feedUrl": "https://ashwin.im/rss.xml"
   },
   {
+    "id": "daniel-kishimoto",
+    "name": "Daniel Kishimoto",
+    "siteUrl": "https://danielkishimoto.com/",
+    "feedUrl": "https://danielkishimoto.com/feed/"
+  },
+  {
     "id": "mere-mortal-dev",
     "name": "Mere Mortal Dev",
     "siteUrl": "https://www.youtube.com/@meremortaldev",
