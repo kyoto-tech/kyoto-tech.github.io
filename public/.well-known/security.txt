@@ -1,0 +1,4 @@
+Contact: https://forms.gle/NPtc1G1vM9jGBYhp6
+Expires: 2027-07-10T00:00:00.000Z
+Preferred-Languages: en, ja
+Canonical: https://kyototechmeetup.com/.well-known/security.txt

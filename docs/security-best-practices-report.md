@@ -5,13 +5,84 @@ Scope: Astro/TypeScript frontend, React-based server-rendered icons, build-time 
 
 ## Executive summary
 
-No critical or high-severity issue was found. Three medium-severity gaps were remediated in this PR: missing browser security headers, unvalidated remote feed/event URLs, and unsafe serialization at the inline JSON-LD boundary. One accepted low-severity dependency remains: the existing Google Tag Manager container executes third-party JavaScript in the site origin.
+No critical or high-severity application issue was found. Three medium-severity application gaps were remediated in this PR: missing browser security headers, unvalidated remote feed/event URLs, and unsafe serialization at the inline JSON-LD boundary. One accepted low-severity dependency remains: the existing Google Tag Manager container executes third-party JavaScript in the site origin.
 
 The live production response was independently sampled before this PR. It included `X-Content-Type-Options: nosniff` and `Referrer-Policy: strict-origin-when-cross-origin`, but did not include CSP, HSTS, clickjacking protection, or Permissions Policy. The build now generates Cloudflare Pages `_headers` rules with route-specific hashes for every inline script. These headers must be verified again on the production URL after merge.
 
 The Cloudflare preview for this PR was also checked after deployment. It returned the generated CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy` headers; the page loaded GTM without CSP or runtime console errors.
 
-The Cloudflare report mentioned for this review was not present in the workspace or controllable browser session. Its findings still need to be reconciled when the report is attached or pasted.
+The Cloudflare Security Insights export dated 2026-07-10 was reconciled in full. It contains six active insights: one confirmed dangling wildcard DNS record, two confirmed email-authentication gaps, one repository-owned `security.txt` gap remediated in this PR, and two optional AI-crawler policy suggestions. The wildcard record should be handled first because an arbitrary subdomain currently resolves through Cloudflare to an inactive origin.
+
+## Cloudflare Security Insights reconciliation
+
+### CF-001 — Dangling wildcard A record
+
+- Rule ID: `CLOUDFLARE-DANGLING-A`
+- Cloudflare severity: Moderate
+- Status: Confirmed; Cloudflare account action required
+- Location: Cloudflare DNS, wildcard host `*.kyototechmeetup.com`
+- Evidence: on 2026-07-10, `codex-security-check-20260710.kyototechmeetup.com` resolved to Cloudflare proxy addresses `104.21.35.61` and `172.67.214.85`. An HTTPS request reached Cloudflare but returned `522`, independently matching the report's inactive-origin finding.
+- Impact: if the wildcard points at a claimable abandoned resource, an attacker may be able to serve content from a trusted `kyototechmeetup.com` subdomain. Even when takeover is not currently possible, the wildcard exposes unintended hostnames and routes them to a broken origin.
+- Required fix: in Cloudflare DNS, remove the `*` A record if wildcard subdomains are not deliberately used. If they are required, replace the target with an active, verified resource and configure explicit host handling at that origin.
+- Verification: after DNS propagation, `dig +short A <random-label>.kyototechmeetup.com` must return no result. Known, explicitly configured hosts must continue to resolve.
+- False positive notes: public DNS exposes Cloudflare proxy addresses rather than the origin address, but arbitrary-label resolution plus the `522` response confirms the wildcard is active and the routed origin is unavailable.
+
+### CF-002 — SPF record missing
+
+- Rule ID: `CLOUDFLARE-SPF`
+- Cloudflare severity: Moderate
+- Status: Confirmed; DNS action required
+- Location: Cloudflare DNS, TXT record at `kyototechmeetup.com`
+- Evidence: the apex has MX record `10 mx.hover.com.cust.hostedemail.com.` but returned no TXT record on 2026-07-10.
+- Impact: receiving mail systems cannot verify which servers may send mail for the domain, increasing spoofing risk and potentially reducing delivery reliability.
+- Required fix: add one TXT record at the root (`@`) with Hover's documented Hosted Email policy: `v=spf1 include:_spf.hostedemail.com ~all`.
+- Verification: `dig +short TXT kyototechmeetup.com` must return exactly one SPF policy containing the Hover include. Send test mail through every legitimate sender before considering a stricter `-all` policy.
+- Source: [Hover — Understanding Gmail, Microsoft and Yahoo DMARC requirements](https://support.hover.com/support/solutions/articles/201000064593-understanding-gmail-microsoft-and-yahoo-dmarc-requirements-for-hover-email)
+
+### CF-003 — DMARC record missing
+
+- Rule ID: `CLOUDFLARE-DMARC`
+- Cloudflare severity: Low
+- Status: Confirmed; DNS action required
+- Location: Cloudflare DNS, TXT record at `_dmarc.kyototechmeetup.com`
+- Evidence: `_dmarc.kyototechmeetup.com` returned no TXT record on 2026-07-10 while the domain has an active Hover MX record.
+- Impact: domain owners receive no DMARC enforcement or reporting, and receivers lack a domain-level policy for messages that fail SPF/DKIM alignment.
+- Required fix: begin with Hover's documented monitoring policy by adding TXT host `_dmarc` with `v=DMARC1; p=none;`. Add an aggregate-report address (`rua`) only when a controlled mailbox has been selected; do not publish a personal address by default. Review reports before moving to `quarantine` or `reject`.
+- Verification: `dig +short TXT _dmarc.kyototechmeetup.com` must return one syntactically valid DMARC policy.
+- Source: [Hover — Understanding Gmail, Microsoft and Yahoo DMARC requirements](https://support.hover.com/support/solutions/articles/201000064593-understanding-gmail-microsoft-and-yahoo-dmarc-requirements-for-hover-email)
+
+### CF-004 — Security contact file missing
+
+- Rule ID: `CLOUDFLARE-SECURITY-TXT`
+- Cloudflare severity: Low
+- Status: Remediated in this PR; deployment verification pending
+- Location: `public/.well-known/security.txt`, lines 1–4
+- Evidence: the well-known file was absent. The build now publishes a standards-oriented contact record using the community's existing contact form, with English/Japanese language preferences, a canonical production URL, and an explicit expiry date.
+- Impact: without a discoverable disclosure channel, researchers may not know how to report a vulnerability privately.
+- Fix: publish `/.well-known/security.txt` from the repository rather than enabling separate edge-managed content that could drift from source control.
+- Verification: after deployment, `curl https://kyototechmeetup.com/.well-known/security.txt` must return the committed text with HTTP 200 over HTTPS.
+
+### CF-005 — AI bot access policy not configured
+
+- Rule ID: `CLOUDFLARE-AI-BOTS`
+- Cloudflare severity: Moderate
+- Status: Optional product/content-policy decision; not an application vulnerability
+- Location: Cloudflare Security Settings → Configure AI bot policies
+- Evidence: Cloudflare reports the setting as inactive. Cloudflare now distinguishes Search, Agent, and Training behavior; the legacy all-in-one Block AI bots control is scheduled for deprecation on 2026-09-15.
+- Recommendation: allow Search because newcomer discovery is the site's primary goal. Decide separately whether to allow Agent access. Block Training on all pages if the community does not want its published content used for model training. Record the chosen policy so later dashboard changes are intentional.
+- False positive notes: this insight does not demonstrate unauthorized access or compromise. It is a content-distribution preference and should not be treated as required security remediation.
+- Source: [Cloudflare — Block AI Bots](https://developers.cloudflare.com/bots/additional-configurations/block-ai-bots/)
+
+### CF-006 — AI Labyrinth not enabled
+
+- Rule ID: `CLOUDFLARE-AI-LABYRINTH`
+- Cloudflare severity: Low
+- Status: Optional; low priority
+- Location: Cloudflare Security Settings → AI Labyrinth
+- Evidence: Cloudflare reports the feature as inactive. AI Labyrinth adds invisible `nofollow` honeypot links intended to trap crawlers that disregard no-crawl guidance.
+- Recommendation: leave this as an optional follow-up after the explicit AI bot policy is chosen. It may be enabled as defense in depth, but it does not replace DNS cleanup, SPF, DMARC, or application controls.
+- False positive notes: an inactive optional feature is not evidence of an exploitable defect.
+- Source: [Cloudflare — AI Labyrinth](https://developers.cloudflare.com/bots/additional-configurations/ai-labyrinth/)
 
 ## Medium-severity findings (remediated)
 
@@ -75,4 +146,7 @@ The Cloudflare report mentioned for this review was not present in the workspace
 1. Re-run `curl -I https://kyototechmeetup.com/` and `/ja/` after Cloudflare deploys the merge.
 2. Confirm CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy` are present.
 3. Browse both locale routes with the console open and confirm there are no CSP violations from the approved GTM/GA configuration.
-4. Reconcile the separate Cloudflare report when it is supplied; record any edge-only settings or remaining findings here.
+4. Confirm `/.well-known/security.txt` returns HTTP 200 and matches the committed canonical/contact record.
+5. Remove or repair the wildcard DNS record, then confirm a random subdomain no longer resolves.
+6. Publish the Hover SPF and initial DMARC TXT records, wait for DNS propagation, and verify them with independent TXT lookups.
+7. Record the community's choices for Cloudflare Search, Agent, Training, and AI Labyrinth settings; these are policy decisions rather than release blockers.
