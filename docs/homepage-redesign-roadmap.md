@@ -358,7 +358,7 @@ Give existing members fast access to frequently used resources without interrupt
 - Preserve the last valid member count when Meetup is unavailable or the count cannot be parsed; a count failure must not discard otherwise valid event data.
 - Convert the exact count to a conservative public milestone by rounding down to the nearest 25. For example, counts from 225 through 249 render as “225+ members and growing.”
 - Do not render the module when there is no valid cached count or the rounded milestone is below 25.
-- Place the module in the event-led hero as concise community-level social proof, using a neutral translucent treatment rather than an alert color.
+- Place the module beneath the hero actions as understated inline social proof. Keep it free of borders, fills, pill shapes, and hover states so it cannot be mistaken for a button or alert.
 - Add aligned English and Japanese strings, and keep formatting in a small tested helper rather than embedding rounding logic in the template.
 
 ### Acceptance criteria
