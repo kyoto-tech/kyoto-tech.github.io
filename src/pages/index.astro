@@ -119,7 +119,9 @@ const cachedMeetupEvents = Array.isArray(meetupEventData?.events)
   ? (meetupEventData.events as unknown[]).filter(isMeetupEvent)
   : [];
 const buildNow = new Date();
-const events = selectUpcomingMeetupEvents(cachedMeetupEvents, { now: buildNow });
+const events = selectUpcomingMeetupEvents(cachedMeetupEvents, {
+  now: buildNow,
+});
 const nextEvent = selectNextMeetupEvent(events, { now: buildNow });
 const nextEventUrl = nextEvent?.link ?? meetupUrl;
 
@@ -185,12 +187,14 @@ const formatDate = (value: string) => {
       <div
         class="mx-auto grid max-w-5xl overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white shadow-xl shadow-stone-900/8 lg:grid-cols-[0.92fr_1.08fr]"
       >
-        <div class="order-2 min-h-72 overflow-hidden bg-slate-100 lg:order-1 lg:min-h-full">
+        <div
+          class="order-2 min-h-72 overflow-hidden bg-slate-100 lg:order-1 lg:min-h-full"
+        >
           <img
-            src="/images/kyoto-tech-community-work-session.jpg"
+            src="/images/kyoto-tech-community-work-session-2.jpg"
             alt={t("home.firstMeetup.imageAlt")}
-            width="1080"
-            height="719"
+            width="1024"
+            height="682"
             loading="lazy"
             decoding="async"
             class="h-full w-full object-cover object-center"
@@ -198,7 +202,9 @@ const formatDate = (value: string) => {
         </div>
 
         <div class="order-1 p-7 sm:p-9 lg:order-2 lg:p-12">
-          <h2 class="text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-4xl">
+          <h2
+            class="text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-4xl"
+          >
             {t("home.firstMeetup.title")}
           </h2>
 
@@ -217,7 +223,9 @@ const formatDate = (value: string) => {
             }
           </ul>
 
-          <p class="mt-8 border-t border-slate-200 pt-6 text-base leading-relaxed text-slate-600">
+          <p
+            class="mt-8 border-t border-slate-200 pt-6 text-base leading-relaxed text-slate-600"
+          >
             {t("home.firstMeetup.supporting")}
           </p>
 
@@ -225,9 +233,7 @@ const formatDate = (value: string) => {
             href={nextEventUrl}
             class="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-950"
           >
-            {nextEvent
-              ? t("home.hero.primaryCta")
-              : t("home.hero.fallbackCta")}
+            {nextEvent ? t("home.hero.primaryCta") : t("home.hero.fallbackCta")}
             <span aria-hidden="true">→</span>
           </a>
         </div>
@@ -289,35 +295,45 @@ const formatDate = (value: string) => {
             {t("home.locations.note")}
           </p>
           <div class="mt-6 grid gap-5 md:grid-cols-2">
-            {eventLocations.map((location) => (
-              <article class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white">
-                <div class="p-4">
-                  <h4 class="text-lg font-semibold text-slate-900">
-                    {location.name}
-                  </h4>
-                </div>
-                <div class="h-72 bg-slate-100">
-                  <iframe
-                    src={location.embedUrl}
-                    title={t("a11y.mapTitle").replace("{name}", location.name)}
-                    aria-label={t("a11y.mapLabel").replace("{name}", location.name)}
-                    width="100%"
-                    height="100%"
-                    style="border:0; display: block;"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                  >
-                  </iframe>
-                </div>
-              </article>
-            ))}
+            {
+              eventLocations.map((location) => (
+                <article class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white">
+                  <div class="p-4">
+                    <h4 class="text-lg font-semibold text-slate-900">
+                      {location.name}
+                    </h4>
+                  </div>
+                  <div class="h-72 bg-slate-100">
+                    <iframe
+                      src={location.embedUrl}
+                      title={t("a11y.mapTitle").replace(
+                        "{name}",
+                        location.name,
+                      )}
+                      aria-label={t("a11y.mapLabel").replace(
+                        "{name}",
+                        location.name,
+                      )}
+                      width="100%"
+                      height="100%"
+                      style="border:0; display: block;"
+                      allowfullscreen=""
+                      loading="lazy"
+                      referrerpolicy="no-referrer-when-downgrade"
+                    />
+                  </div>
+                </article>
+              ))
+            }
           </div>
         </div>
       </div>
     </section>
 
-    <section id="community-hub" class="scroll-mt-24 bg-white/90 px-6 py-12 md:px-12">
+    <section
+      id="community-hub"
+      class="scroll-mt-24 bg-white/90 px-6 py-12 md:px-12"
+    >
       <div class="mx-auto max-w-5xl">
         <h2 class="text-3xl font-semibold text-slate-900">
           {t("home.quickLinks.title")}
@@ -383,9 +399,7 @@ const formatDate = (value: string) => {
           <div class="space-y-5">
             {
               feedsWithItems.map((feed) => (
-                <article
-                  class="flex h-full flex-col overflow-visible rounded-2xl border border-slate-200/70 bg-white/95 p-5 shadow-lg shadow-stone-900/5 ring-1 ring-white/80"
-                >
+                <article class="flex h-full flex-col overflow-visible rounded-2xl border border-slate-200/70 bg-white/95 p-5 shadow-lg shadow-stone-900/5 ring-1 ring-white/80">
                   <div class="flex flex-wrap items-center gap-3">
                     <h4 class="text-lg font-semibold text-slate-900">
                       {feed.name}
@@ -418,9 +432,7 @@ const formatDate = (value: string) => {
                         style="overflow-x: auto; overflow-y: visible;"
                       >
                         {feed.items.map((item) => (
-                          <div
-                            class="group relative z-0 min-w-[280px] max-w-md flex-1 rounded-xl border border-slate-100 bg-slate-50/70 p-3 pb-10 transition hover:border-(--accent) hover:bg-white hover:z-10 after:clear-both after:block after:content-['']"
-                          >
+                          <div class="group relative z-0 min-w-[280px] max-w-md flex-1 rounded-xl border border-slate-100 bg-slate-50/70 p-3 pb-10 transition hover:border-(--accent) hover:bg-white hover:z-10 after:clear-both after:block after:content-['']">
                             {item.image ? (
                               <div class="float-right ml-3 mb-2 h-24 w-28 overflow-hidden rounded-lg border border-slate-100 bg-slate-100">
                                 <img
@@ -477,7 +489,6 @@ const formatDate = (value: string) => {
         </div>
       </div>
     </section>
-
   </main>
 
   <Footer lang={lang} />
