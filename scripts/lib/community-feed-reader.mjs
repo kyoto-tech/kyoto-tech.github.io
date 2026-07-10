@@ -38,6 +38,7 @@ export async function loadMemberFeeds(filePath = DEFAULT_MEMBER_FEEDS_PATH) {
       name: String(item.name),
       feedUrl: String(item.feedUrl),
       siteUrl: String(item.siteUrl),
+      ...(item.imageStrategy ? { imageStrategy: String(item.imageStrategy) } : {}),
     };
   });
 }
@@ -318,15 +319,15 @@ export function normalizeNotifierItem(rawItem, source) {
 
 export async function enrichNotifierItemWithLinkedPageImage(
   item,
-  { fetchTextFn = fetchText } = {},
+  { fetchTextFn = fetchText, force = false } = {},
 ) {
-  if (item.imageUrl || !isHttpUrl(item.link)) return item;
+  if ((item.imageUrl && !force) || !isHttpUrl(item.link)) return item;
 
   try {
     const html = await fetchTextFn(item.link);
     return {
       ...item,
-      imageUrl: resolveHtmlImageUrl(html, item.link) || null,
+      imageUrl: resolveHtmlImageUrl(html, item.link) || item.imageUrl || null,
     };
   } catch {
     return item;

@@ -26,6 +26,7 @@ test("loadMemberFeeds normalizes valid source entries", async () => {
         name: "Example Author",
         feedUrl: "https://example.com/feed.xml",
         siteUrl: "https://example.com/",
+        imageStrategy: "linked-page-featured",
       },
     ]),
   );
@@ -36,6 +37,7 @@ test("loadMemberFeeds normalizes valid source entries", async () => {
       name: "Example Author",
       feedUrl: "https://example.com/feed.xml",
       siteUrl: "https://example.com/",
+      imageStrategy: "linked-page-featured",
     },
   ]);
 });
@@ -220,6 +222,22 @@ test("enrichNotifierItemWithLinkedPageImage finds WordPress featured images", as
   const enriched = await enrichNotifierItemWithLinkedPageImage(item, {
     fetchTextFn: async () => '<img class="wp-post-image" src="/featured.jpg">',
   });
+
+  expect(enriched.imageUrl).toBe("https://example.com/featured.jpg");
+});
+
+test("enrichNotifierItemWithLinkedPageImage can replace a feed logo", async () => {
+  const enriched = await enrichNotifierItemWithLinkedPageImage(
+    {
+      imageUrl: "https://example.com/logo.png",
+      link: "https://example.com/post-1",
+    },
+    {
+      force: true,
+      fetchTextFn: async () =>
+        '<img class="attachment-post-thumbnail wp-post-image" src="/featured.jpg">',
+    },
+  );
 
   expect(enriched.imageUrl).toBe("https://example.com/featured.jpg");
 });

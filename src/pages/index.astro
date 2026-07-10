@@ -106,9 +106,11 @@ const calendarLegendItems = [
 ] as const;
 
 type MemberFeed = {
+  id?: string;
   name: string;
   siteUrl: string;
   feedUrl: string;
+  imageStrategy?: string;
 };
 
 type CompositeItem = {
@@ -465,14 +467,26 @@ const formatDate = (value: string) => {
                         {feed.items.map((item) => (
                           <div class="group relative z-0 min-w-[280px] max-w-md flex-1 rounded-xl border border-slate-100 bg-slate-50/70 p-3 pb-10 transition hover:border-(--accent) hover:bg-white hover:z-10 after:clear-both after:block after:content-['']">
                             {item.image ? (
-                              <div class="float-right ml-3 mb-2 h-24 w-28 overflow-hidden rounded-lg border border-slate-100 bg-slate-100">
-                                <img
-                                  src={item.image}
-                                  alt=""
-                                  loading="lazy"
-                                  decoding="async"
-                                  class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
-                                />
+                                <div
+                                  class:list={[
+                                    "float-right ml-3 mb-2 h-24 w-28 overflow-hidden rounded-lg border border-slate-100",
+                                    item.source?.imageStrategy === "linked-page-featured"
+                                      ? "bg-slate-950"
+                                      : "bg-slate-100",
+                                  ]}
+                                >
+                                  <img
+                                    src={item.image}
+                                    alt=""
+                                    loading="lazy"
+                                    decoding="async"
+                                    class:list={[
+                                      "h-full w-full transition duration-300",
+                                      item.source?.imageStrategy === "linked-page-featured"
+                                        ? "object-contain"
+                                        : "object-cover group-hover:scale-[1.02]",
+                                    ]}
+                                  />
                               </div>
                             ) : null}
                             <div class="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
