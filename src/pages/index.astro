@@ -2,11 +2,16 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
-import WhyJoin from "../components/WhyJoin.astro";
 import Calendar from "../components/Calendar.astro";
 import Footer from "../components/Footer.astro";
 import { FaGithub, FaDiscord, FaMeetup, FaEnvelope } from "react-icons/fa";
 import { FaExternalLinkAlt } from "react-icons/fa";
+import {
+  FaComments,
+  FaEarthAsia,
+  FaLanguage,
+  FaLayerGroup,
+} from "react-icons/fa6";
 import FeedTimestamps from "../components/FeedTimestamps.jsx";
 import { useTranslations } from "../i18n/utils";
 import memberFeeds from "../data/member-feeds.json";
@@ -21,6 +26,13 @@ import {
 
 const { lang = "en" } = Astro.props;
 const t = useTranslations(lang);
+
+const firstMeetupSignals = [
+  { icon: FaComments, label: t("home.firstMeetup.signal1") },
+  { icon: FaLanguage, label: t("home.firstMeetup.signal2") },
+  { icon: FaLayerGroup, label: t("home.firstMeetup.signal3") },
+  { icon: FaEarthAsia, label: t("home.firstMeetup.signal4") },
+] as const;
 
 const meetupUrl =
   lang === "ja"
@@ -102,27 +114,14 @@ type CompositeFeed = MemberFeed & {
   error?: string;
 };
 
-const benefits = [
-  {
-    title: t("home.benefit1.title"),
-    description: t("home.benefit1.description"),
-  },
-  {
-    title: t("home.benefit2.title"),
-    description: t("home.benefit2.description"),
-  },
-  {
-    title: t("home.benefit3.title"),
-    description: t("home.benefit3.description"),
-  },
-];
-
 const locale = lang === "ja" ? "ja-JP" : "en-US";
 const cachedMeetupEvents = Array.isArray(meetupEventData?.events)
   ? (meetupEventData.events as unknown[]).filter(isMeetupEvent)
   : [];
 const buildNow = new Date();
-const events = selectUpcomingMeetupEvents(cachedMeetupEvents, { now: buildNow });
+const events = selectUpcomingMeetupEvents(cachedMeetupEvents, {
+  now: buildNow,
+});
 const nextEvent = selectNextMeetupEvent(events, { now: buildNow });
 const nextEventUrl = nextEvent?.link ?? meetupUrl;
 
@@ -164,7 +163,7 @@ const formatDate = (value: string) => {
     nextEventUrl={nextEventUrl}
   />
 
-  <div class="mx-auto max-w-6xl pt-20">
+  <div>
     <Hero
       event={nextEvent}
       fallbackCtaLabel={t("home.hero.fallbackCta")}
@@ -174,7 +173,6 @@ const formatDate = (value: string) => {
       lang={lang}
       now={buildNow}
       primaryCtaLabel={t("home.hero.primaryCta")}
-      reassurance={t("home.hero.reassurance")}
       secondaryCtaLabel={t("home.hero.secondaryCta")}
       title={t("home.header.title")}
       subtitle={t("home.header.subtitle")}
@@ -182,6 +180,66 @@ const formatDate = (value: string) => {
   </div>
 
   <main id="main-content" class="space-y-0">
+    <section
+      id="first-meetup"
+      class="scroll-mt-24 bg-white px-6 py-14 md:px-12 md:py-20"
+    >
+      <div
+        class="mx-auto grid max-w-5xl overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white shadow-xl shadow-stone-900/8 lg:grid-cols-[0.92fr_1.08fr]"
+      >
+        <div
+          class="order-2 min-h-72 overflow-hidden bg-slate-100 lg:order-1 lg:min-h-full"
+        >
+          <img
+            src="/images/kyoto-tech-community-work-session-2.jpg"
+            alt={t("home.firstMeetup.imageAlt")}
+            width="1024"
+            height="682"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover object-center"
+          />
+        </div>
+
+        <div class="order-1 p-7 sm:p-9 lg:order-2 lg:p-12">
+          <h2
+            class="text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-4xl"
+          >
+            {t("home.firstMeetup.title")}
+          </h2>
+
+          <ul class="mt-8 grid grid-cols-2 gap-x-6 gap-y-7">
+            {
+              firstMeetupSignals.map(({ icon: Icon, label }) => (
+                <li class="min-w-0">
+                  <span class="flex h-11 w-11 items-center justify-center rounded-full bg-orange-50 text-(--accent)">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <span class="mt-3 block text-sm font-semibold leading-snug text-slate-900 sm:text-base">
+                    {label}
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <p
+            class="mt-8 border-t border-slate-200 pt-6 text-base leading-relaxed text-slate-600"
+          >
+            {t("home.firstMeetup.supporting")}
+          </p>
+
+          <a
+            href={nextEventUrl}
+            class="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-950"
+          >
+            {nextEvent ? t("home.hero.primaryCta") : t("home.hero.fallbackCta")}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <section id="calendar" class="scroll-mt-24 bg-white px-6 py-16 md:px-12">
       <div class="mx-auto max-w-5xl">
         <h2 class="text-3xl font-semibold text-slate-900">
@@ -237,35 +295,45 @@ const formatDate = (value: string) => {
             {t("home.locations.note")}
           </p>
           <div class="mt-6 grid gap-5 md:grid-cols-2">
-            {eventLocations.map((location) => (
-              <article class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white">
-                <div class="p-4">
-                  <h4 class="text-lg font-semibold text-slate-900">
-                    {location.name}
-                  </h4>
-                </div>
-                <div class="h-72 bg-slate-100">
-                  <iframe
-                    src={location.embedUrl}
-                    title={t("a11y.mapTitle").replace("{name}", location.name)}
-                    aria-label={t("a11y.mapLabel").replace("{name}", location.name)}
-                    width="100%"
-                    height="100%"
-                    style="border:0; display: block;"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                  >
-                  </iframe>
-                </div>
-              </article>
-            ))}
+            {
+              eventLocations.map((location) => (
+                <article class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white">
+                  <div class="p-4">
+                    <h4 class="text-lg font-semibold text-slate-900">
+                      {location.name}
+                    </h4>
+                  </div>
+                  <div class="h-72 bg-slate-100">
+                    <iframe
+                      src={location.embedUrl}
+                      title={t("a11y.mapTitle").replace(
+                        "{name}",
+                        location.name,
+                      )}
+                      aria-label={t("a11y.mapLabel").replace(
+                        "{name}",
+                        location.name,
+                      )}
+                      width="100%"
+                      height="100%"
+                      style="border:0; display: block;"
+                      allowfullscreen=""
+                      loading="lazy"
+                      referrerpolicy="no-referrer-when-downgrade"
+                    />
+                  </div>
+                </article>
+              ))
+            }
           </div>
         </div>
       </div>
     </section>
 
-    <section id="community-hub" class="scroll-mt-24 bg-white/90 px-6 py-12 md:px-12">
+    <section
+      id="community-hub"
+      class="scroll-mt-24 bg-white/90 px-6 py-12 md:px-12"
+    >
       <div class="mx-auto max-w-5xl">
         <h2 class="text-3xl font-semibold text-slate-900">
           {t("home.quickLinks.title")}
@@ -331,9 +399,7 @@ const formatDate = (value: string) => {
           <div class="space-y-5">
             {
               feedsWithItems.map((feed) => (
-                <article
-                  class="flex h-full flex-col overflow-visible rounded-2xl border border-slate-200/70 bg-white/95 p-5 shadow-lg shadow-stone-900/5 ring-1 ring-white/80"
-                >
+                <article class="flex h-full flex-col overflow-visible rounded-2xl border border-slate-200/70 bg-white/95 p-5 shadow-lg shadow-stone-900/5 ring-1 ring-white/80">
                   <div class="flex flex-wrap items-center gap-3">
                     <h4 class="text-lg font-semibold text-slate-900">
                       {feed.name}
@@ -366,9 +432,7 @@ const formatDate = (value: string) => {
                         style="overflow-x: auto; overflow-y: visible;"
                       >
                         {feed.items.map((item) => (
-                          <div
-                            class="group relative z-0 min-w-[280px] max-w-md flex-1 rounded-xl border border-slate-100 bg-slate-50/70 p-3 pb-10 transition hover:border-(--accent) hover:bg-white hover:z-10 after:clear-both after:block after:content-['']"
-                          >
+                          <div class="group relative z-0 min-w-[280px] max-w-md flex-1 rounded-xl border border-slate-100 bg-slate-50/70 p-3 pb-10 transition hover:border-(--accent) hover:bg-white hover:z-10 after:clear-both after:block after:content-['']">
                             {item.image ? (
                               <div class="float-right ml-3 mb-2 h-24 w-28 overflow-hidden rounded-lg border border-slate-100 bg-slate-100">
                                 <img
@@ -421,47 +485,6 @@ const formatDate = (value: string) => {
                 </article>
               ))
             }
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="why-join" class="bg-white/95 px-6 py-16 md:px-12">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-3xl font-semibold text-slate-900">
-          {t("home.whyJoin.title")}
-        </h2>
-        <WhyJoin items={benefits} />
-      </div>
-    </section>
-
-    <section id="who-comes" class="bg-white/95 px-6 py-16 md:px-12">
-      <div class="mx-auto flex max-w-5xl flex-col gap-10 lg:flex-row">
-        <div class="flex-1">
-          <h2 class="text-3xl font-semibold text-slate-900">
-            {t("home.whoComes.title")}
-          </h2>
-          <p class="mt-4 text-slate-600">{t("home.whoComes.intro")}</p>
-          <ul
-            class="mt-6 list-disc space-y-3 pl-5 text-base leading-relaxed text-slate-600"
-          >
-            <li>{t("home.whoComes.item1")}</li>
-            <li>{t("home.whoComes.item2")}</li>
-            <li>{t("home.whoComes.item3")}</li>
-            <li>{t("home.whoComes.item4")}</li>
-            <li>{t("home.whoComes.item5")}</li>
-          </ul>
-        </div>
-        <div class="flex-1 space-y-4">
-          <div
-            class="rounded-2xl bg-white/90 p-6 shadow-lg shadow-stone-900/10 ring-1 ring-white/70"
-          >
-            <h3 class="text-xl font-semibold text-slate-900">
-              {t("home.languages.title")}
-            </h3>
-            <p class="mt-3 text-base leading-relaxed text-slate-600">
-              {t("home.languages.description")}
-            </p>
           </div>
         </div>
       </div>

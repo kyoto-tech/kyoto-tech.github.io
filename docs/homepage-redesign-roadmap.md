@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PRs 1–3 merged; PR 4 is next
+Status: Active — PRs 1–3 merged; PR 4 ready for review
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, locations, conversations, and member work
 
@@ -27,7 +27,7 @@ Event-led hero
   Clear invitation · Next-event details · Direct RSVP · Community photograph
 
 First-meetup expectations
-  Three practical facts · Secondary RSVP
+  Practical first-visit facts · Secondary RSVP
 
 Community Hub
   Events · Discord · Locations · Member posts · GitHub · Contact
@@ -259,19 +259,20 @@ Replace the generic “Small, intentional gatherings” and “People who like t
 
 - Remove both existing end-of-page sections and their persona list.
 - Add one “Your first meetup?” section directly after the hero.
-- Pair one event photograph with three concise, factual expectations.
+- Pair one event photograph with four concise visual signals.
 - Add a second RSVP opportunity after the expectations.
 - Move the language note into this onboarding context or the next-event card.
 
 ### Content direction
 
-Working English direction:
+Approved English direction:
 
-> Come by yourself or bring a friend. Grab a drink, join a table, and talk about whatever you are building, learning, or curious about.
+- Talk + build together
+- English + 日本語
+- Every skill level
+- Locals + visitors
 
-- No talks or slide decks
-- English and Japanese are welcome
-- Bring a project, a question, or simply your curiosity
+Supporting line: “We look forward to welcoming you.”
 
 All statements must be checked against how events actually operate before merge.
 
@@ -286,7 +287,7 @@ All statements must be checked against how events actually operate before merge.
 ### Acceptance criteria
 
 - Neither old generic section remains on the page.
-- The replacement uses no more than one short paragraph and three short facts.
+- The replacement uses four icon-led signals and one short supporting line.
 - The section explains the experience without relying on professional personas.
 - A direct RSVP action is available at the end of the section.
 - Content is equivalent and reviewed in English and Japanese.
