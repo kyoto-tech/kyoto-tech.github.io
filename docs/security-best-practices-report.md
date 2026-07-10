@@ -9,6 +9,8 @@ No critical or high-severity issue was found. Three medium-severity gaps were re
 
 The live production response was independently sampled before this PR. It included `X-Content-Type-Options: nosniff` and `Referrer-Policy: strict-origin-when-cross-origin`, but did not include CSP, HSTS, clickjacking protection, or Permissions Policy. The build now generates Cloudflare Pages `_headers` rules with route-specific hashes for every inline script. These headers must be verified again on the production URL after merge.
 
+The Cloudflare preview for this PR was also checked after deployment. It returned the generated CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy` headers; the page loaded GTM without CSP or runtime console errors.
+
 The Cloudflare report mentioned for this review was not present in the workspace or controllable browser session. Its findings still need to be reconciled when the report is attached or pasted.
 
 ## Medium-severity findings (remediated)
