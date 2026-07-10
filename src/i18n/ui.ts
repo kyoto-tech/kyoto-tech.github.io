@@ -25,14 +25,14 @@ export const ui = {
     "home.hero.imageAlt":
       "Kyoto Tech Meetup members gathered for a community presentation in a tatami room",
     "home.firstMeetup.title": "Your first meetup?",
-    "home.firstMeetup.intro":
-      "Come on your own or with a friend—grab a seat, say hello, and take part at your own pace.",
     "home.firstMeetup.fact1":
-      "Most meetups favor conversation and making together over formal presentations.",
+      "Our meetups favor conversation and hands-on building together over formal presentations.",
     "home.firstMeetup.fact2":
       "English and Japanese are both welcome; use whichever feels comfortable.",
     "home.firstMeetup.fact3":
-      "Bring a project, a question, or simply your curiosity.",
+      "Bring a project, a question, or simply your curiosity. All skill levels are welcome.",
+    "home.firstMeetup.fact4":
+      "We welcome locals, nomads, and travelers alike. No matter how long you're in Kyoto, you'll meet friendly people here.",
     "home.firstMeetup.imageAlt":
       "Kyoto Tech Meetup members working together around laptops in a tatami room",
     "home.header.discordCta": "Join our Discord",
@@ -132,14 +132,14 @@ export const ui = {
     "home.hero.imageAlt":
       "畳の部屋で発表を囲むKyoto Tech Meetupのメンバー",
     "home.firstMeetup.title": "はじめてのミートアップ？",
-    "home.firstMeetup.intro":
-      "ひとりでも友だちとでも大丈夫。席を見つけて声をかけ、自分のペースで参加してください。",
     "home.firstMeetup.fact1":
-      "多くの回では、発表を聞くだけでなく、会話やものづくりに参加するスタイルを大切にしています。",
+      "私たちのミートアップでは、形式的な発表よりも、会話と一緒に手を動かすことを大切にしています。",
     "home.firstMeetup.fact2":
       "日本語でも英語でも、話しやすいほうでどうぞ。",
     "home.firstMeetup.fact3":
-      "プロジェクトや質問、気になっていること。好奇心だけでも十分です。",
+      "プロジェクトや質問、あるいは好奇心だけでも大丈夫。スキルレベルを問わず歓迎します。",
+    "home.firstMeetup.fact4":
+      "京都に住む方も、ノマドの方も、旅行中の方も歓迎です。滞在期間にかかわらず、ここで親しみやすい仲間に出会えます。",
     "home.firstMeetup.imageAlt":
       "畳の部屋でノートパソコンを囲み、一緒に作業するKyoto Tech Meetupのメンバー",
     "home.header.discordCta": "Discordでチャットする",

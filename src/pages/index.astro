@@ -148,7 +148,7 @@ const formatDate = (value: string) => {
     nextEventUrl={nextEventUrl}
   />
 
-  <div class="mx-auto max-w-6xl pt-20">
+  <div>
     <Hero
       event={nextEvent}
       fallbackCtaLabel={t("home.hero.fallbackCta")}
@@ -167,7 +167,7 @@ const formatDate = (value: string) => {
   <main id="main-content" class="space-y-0">
     <section
       id="first-meetup"
-      class="scroll-mt-24 bg-stone-50 px-6 py-14 md:px-12 md:py-20"
+      class="scroll-mt-24 bg-white px-6 py-14 md:px-12 md:py-20"
     >
       <div
         class="mx-auto grid max-w-5xl overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white shadow-xl shadow-stone-900/8 lg:grid-cols-[0.92fr_1.08fr]"
@@ -188,16 +188,14 @@ const formatDate = (value: string) => {
           <h2 class="text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-4xl">
             {t("home.firstMeetup.title")}
           </h2>
-          <p class="mt-4 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
-            {t("home.firstMeetup.intro")}
-          </p>
 
-          <ol class="mt-8 border-y border-slate-200">
+          <ol class="mt-6 border-y border-slate-200">
             {
               [
                 t("home.firstMeetup.fact1"),
                 t("home.firstMeetup.fact2"),
                 t("home.firstMeetup.fact3"),
+                t("home.firstMeetup.fact4"),
               ].map((fact, index) => (
                 <li class="grid grid-cols-[2rem_1fr] gap-3 border-b border-slate-200 py-4 last:border-b-0">
                   <span

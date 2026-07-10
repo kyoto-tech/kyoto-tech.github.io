@@ -27,7 +27,7 @@ Event-led hero
   Clear invitation · Next-event details · Direct RSVP · Community photograph
 
 First-meetup expectations
-  Three practical facts · Secondary RSVP
+  Practical first-visit facts · Secondary RSVP
 
 Community Hub
   Events · Discord · Locations · Member posts · GitHub · Contact
@@ -259,7 +259,7 @@ Replace the generic “Small, intentional gatherings” and “People who like t
 
 - Remove both existing end-of-page sections and their persona list.
 - Add one “Your first meetup?” section directly after the hero.
-- Pair one event photograph with three concise, factual expectations.
+- Pair one event photograph with four concise, factual expectations.
 - Add a second RSVP opportunity after the expectations.
 - Move the language note into this onboarding context or the next-event card.
 
@@ -267,11 +267,10 @@ Replace the generic “Small, intentional gatherings” and “People who like t
 
 Working English direction:
 
-> Come on your own or with a friend—grab a seat, say hello, and take part at your own pace.
-
-- Most meetups favor conversation and making together over formal presentations.
+- Our meetups favor conversation and hands-on building together over formal presentations.
 - English and Japanese are both welcome; use whichever feels comfortable.
-- Bring a project, a question, or simply your curiosity.
+- Bring a project, a question, or simply your curiosity. All skill levels are welcome.
+- We welcome locals, nomads, and travelers alike. No matter how long you're in Kyoto, you'll meet friendly people here.
 
 All statements must be checked against how events actually operate before merge.
 
@@ -286,7 +285,7 @@ All statements must be checked against how events actually operate before merge.
 ### Acceptance criteria
 
 - Neither old generic section remains on the page.
-- The replacement uses no more than one short paragraph and three short facts.
+- The replacement uses four short facts and no introductory paragraph.
 - The section explains the experience without relying on professional personas.
 - A direct RSVP action is available at the end of the section.
 - Content is equivalent and reviewed in English and Japanese.
