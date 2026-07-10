@@ -56,7 +56,7 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
           {state.title}
         </h2>
         <dl class="mt-4 grid gap-2.5 text-sm text-slate-600">
-          <div class="flex items-start gap-2.5">
+          <div class="flex items-center gap-2.5">
             <svg aria-hidden="true" viewBox="0 0 24 24" class="mt-0.5 h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 3v3m10-3v3M4.5 9.5h15M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" />
             </svg>
@@ -67,7 +67,7 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
               </time>
             </dd>
           </div>
-          <div class="flex items-start gap-2.5">
+          <div class="flex items-center gap-2.5">
             <svg aria-hidden="true" viewBox="0 0 24 24" class="mt-0.5 h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
               <circle cx="12" cy="10" r="2.5" />
@@ -76,7 +76,7 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
             <dd>{state.venueName ?? t("home.eventCard.venueTba")}</dd>
           </div>
           <div
-            class="flex items-start gap-2.5"
+            class="flex items-center gap-2.5"
           >
             <FaUserGroup
               className="mt-0.5 h-4 w-4 shrink-0"
@@ -92,7 +92,7 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
           </div>
           {
             mapsUrl ? (
-              <div class="flex items-start gap-2.5">
+              <div class="flex items-center gap-2.5">
                 <FaLocationDot
                   className="mt-0.5 h-4 w-4 shrink-0"
                   aria-hidden="true"
@@ -106,7 +106,7 @@ const venueLabel = event?.venue?.name ?? event?.venue?.address ?? "";
                     data-analytics-event="calendar_event_click"
                     data-analytics-link="maps"
                     data-analytics-location="hero_event_card"
-                    class="inline-flex min-h-11 items-center font-medium text-slate-700 underline decoration-slate-300 underline-offset-2 transition hover:text-slate-950 hover:decoration-(--accent) focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700"
+                    class="inline-flex min-h-0 items-center py-1 font-medium leading-tight text-slate-700 underline decoration-slate-300 underline-offset-2 transition hover:text-slate-950 hover:decoration-(--accent) focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700"
                   >
                     {t("home.calendar.openInMaps")}
                     <span class="sr-only">: {venueLabel}</span>
