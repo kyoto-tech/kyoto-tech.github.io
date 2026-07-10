@@ -81,6 +81,7 @@ public/          # Files served as-is (favicon, images)
 ## Product Roadmaps
 
 - [Homepage redesign roadmap](docs/homepage-redesign-roadmap.md) — an event-led newcomer journey and Community Hub, organized as independently shippable pull requests.
+- [Agent readiness roadmap](docs/agent-readiness-roadmap.md) — Markdown negotiation, WebMCP discovery/content workflows, and DNSSEC, with DNS-AID deferred until a real agent endpoint exists.
 
 ## Deployment
 
