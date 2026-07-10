@@ -1,5 +1,11 @@
 ---
-import { FaGithub, FaDiscord, FaMeetup, FaEnvelope } from "react-icons/fa";
+import {
+	FaDiscord,
+	FaEnvelope,
+	FaGithub,
+	FaLinkedin,
+	FaMeetup,
+} from "react-icons/fa";
 import { useTranslations } from "../i18n/utils";
 
 type Props = {
@@ -14,6 +20,7 @@ const meetupUrl =
 		? "https://www.meetup.com/ja-JP/kyoto-tech-meetup/"
 		: "https://www.meetup.com/kyoto-tech-meetup/";
 const contactUrl = "https://forms.gle/NPtc1G1vM9jGBYhp6";
+const linkedinUrl = "https://www.linkedin.com/company/kyoto-tech-meetup/";
 ---
 
 <footer class="bg-stone-950 px-6 py-12 text-slate-100 md:px-12">
@@ -41,6 +48,16 @@ const contactUrl = "https://forms.gle/NPtc1G1vM9jGBYhp6";
 						rel="noreferrer"
 					>
 						<FaDiscord className="text-lg" /> {t("home.footer.discord")}
+					</a>
+				</li>
+				<li>
+					<a
+						class="flex items-center gap-2 transition hover:text-white"
+						href={linkedinUrl}
+						target="_blank"
+						rel="noreferrer"
+					>
+						<FaLinkedin className="text-lg" /> {t("home.footer.linkedin")}
 					</a>
 				</li>
 				<li>

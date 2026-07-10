@@ -104,6 +104,7 @@ export const ui = {
     "home.footer.socialNavLabel": "Social links",
         "home.footer.github": "GitHub",
         "home.footer.discord": "Discord",
+        "home.footer.linkedin": "LinkedIn",
         "home.footer.meetup": "Meetup",
         "home.footer.contact": "Contact",
 
@@ -213,6 +214,7 @@ export const ui = {
     "home.footer.socialNavLabel": "ソーシャルリンク",
         "home.footer.github": "GitHub",
         "home.footer.discord": "Discord",
+        "home.footer.linkedin": "LinkedIn",
         "home.footer.meetup": "Meetup",
         "home.footer.contact": "お問い合わせ",
 
