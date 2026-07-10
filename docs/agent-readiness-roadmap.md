@@ -9,7 +9,7 @@ Make the site easier for useful agents to understand and navigate without invent
 This roadmap covers three related workstreams:
 
 1. Markdown negotiation for efficient agent consumption.
-2. WebMCP tools for structured, user-controlled discovery and content workflows.
+2. WebMCP tools for structured, read-only discovery of events and published community content.
 3. DNSSEC for authenticated DNS responses.
 
 DNS-AID remains deferred until the site has a real agent endpoint or capability descriptor to advertise. DNSSEC is useful independently, but signing an empty or misleading agent inventory would not improve the site’s integrity.
@@ -29,11 +29,10 @@ DNS-AID remains deferred until the site has a real agent endpoint or capability 
 | --- | --- | --- | --- |
 | A | Markdown response negotiation | Existing static build | `/` and `/ja/` return useful Markdown when requested with `Accept: text/markdown` while browsers continue receiving HTML |
 | B | WebMCP read-only discovery | A stable event/feed data contract | Agents can find events, RSVP destinations, community links, and published member content through structured tools |
-| C | WebMCP author/content actions | PR B and explicit organizer approval | Agents can help prepare content or open contribution workflows without publishing or sending anything automatically |
-| D | DNSSEC activation | Registrar access at Hover | Cloudflare DNS answers are cryptographically authenticated |
-| E | DNS-AID evaluation | A real agent endpoint or capability descriptor | Decide whether an SVCB/HTTPS record would describe a genuine service |
+| C | DNSSEC activation | Registrar access at Hover | Cloudflare DNS answers are cryptographically authenticated |
+| D | DNS-AID evaluation | A real agent endpoint or capability descriptor | Decide whether an SVCB/HTTPS record would describe a genuine service |
 
-PRs A and D can proceed independently. PR C should not begin until PR B has been exercised with a browser agent and its permission boundaries are clear.
+PRs A and C can proceed independently. PR B should not begin until the event/feed JSON contract is confirmed and its read-only footprint is reviewed.
 
 ---
 
@@ -91,7 +90,7 @@ Cloudflare Pages Function (route only localized homepages)
 
 ### Objective
 
-Expose read-only tools that help an agent guide a person to the next Kyoto Tech Meetup without creating a second source of truth or performing external actions.
+Expose a deliberately small set of read-only tools that help an agent guide a person to the next Kyoto Tech Meetup and browse the existing “What members are publishing” section without creating a second source of truth or performing external actions.
 
 WebMCP is still an evolving Community Group specification, not a final web standard. The implementation should feature-detect the API and do nothing on browsers that do not support it.
 
@@ -103,8 +102,9 @@ WebMCP is still an evolving Community Group specification, not a final web stand
 | `list_upcoming_meetups` | Optional `limit`, `language` | A bounded list of normalized events | None |
 | `get_event_details` | `eventId` | One event with date, venue, RSVP, map, and source metadata | None |
 | `get_community_links` | Optional `language` | Meetup, Discord, GitHub, LinkedIn, contact, and calendar links | None |
-| `get_member_posts` | Optional `limit`, `source` | Recent member-feed items with attribution and timestamps | None |
-| `find_member_posts` | `query` plus optional `source` | Matching cached member-feed items | None |
+| `list_member_posts` | Optional `limit`, `source` | Recent “What members are publishing” items with attribution and timestamps | None |
+| `get_member_post` | `postId` | One published member item with title, excerpt, source, timestamp, and link | None |
+| `search_member_posts` | `query` plus optional `source` | Matching cached member-feed items | None |
 
 ### Data and safety contract
 
@@ -117,6 +117,8 @@ WebMCP is still an evolving Community Group specification, not a final web stand
 - Return links for the agent or user to review and follow; do not automatically navigate or open a new site.
 - Use localized titles/descriptions where available, with English fallback behavior matching the site’s existing i18n rules.
 
+The member-content footprint is intentionally limited to the content already selected, normalized, and rendered in the homepage’s “What members are publishing” section. WebMCP does not become a new feed reader, authoring surface, submission workflow, or publishing channel.
+
 ### API compatibility
 
 Implement a small adapter because the API is changing:
@@ -128,7 +130,7 @@ Implement a small adapter because the API is changing:
 
 ### Acceptance criteria
 
-- A supporting browser reports the six read-only tools with accurate names, descriptions, and JSON Schemas.
+- A supporting browser reports the seven read-only tools with accurate names, descriptions, and JSON Schemas.
 - A normal browser sees no console errors and no visible UI change.
 - An agent can find the next event and receive a valid RSVP URL without being given permission to submit anything.
 - Member-feed results preserve attribution and do not execute or interpret feed content as instructions.
@@ -145,42 +147,7 @@ Implement a small adapter because the API is changing:
 
 ---
 
-## PR C — WebMCP author and content workflows
-
-### Objective
-
-Help organizers and members prepare contributions while keeping every state-changing action explicit, reviewable, and human-controlled.
-
-### Proposed tools
-
-| Tool | Inputs | Behavior | Default safety |
-| --- | --- | --- | --- |
-| `get_feed_submission_guide` | Optional `language` | Returns the existing GitHub feed-submission instructions and edit URL | Read-only |
-| `prepare_feed_submission` | `name`, `feedUrl`, `siteUrl`, optional `description` | Validates fields and returns a proposed `member-feeds.json` entry or a GitHub edit URL; does not write | Draft-only |
-| `validate_feed_source` | `feedUrl` | Checks scheme, hostname, and expected feed shape using the same allowlist rules as the build | Read-only; network request must be bounded |
-| `draft_member_post` | `title`, `url`, optional `summary`, `source` | Returns a proposed member-post record for review; does not publish | Draft-only |
-| `get_content_guidelines` | Optional `language` | Returns concise contribution and attribution guidance | Read-only |
-| `open_github_edit_workflow` | `target` | Returns the exact GitHub edit URL for a human to review | Navigation handoff only |
-
-### Explicit non-goals
-
-- No GitHub token access in the browser.
-- No automatic commits, pull requests, RSS registration, feed publishing, or social posting.
-- No tool that accepts arbitrary Markdown/HTML and injects it into the site.
-- No author identity claims beyond the fields the contributor explicitly supplies.
-- No publication based solely on an agent’s tool call; a human must review and submit through GitHub.
-
-### Acceptance criteria
-
-- Every mutating-looking tool returns a draft or a human handoff, never a completed write.
-- Draft output is validated with the same schemas and URL rules used by the build scripts.
-- GitHub URLs are constructed from fixed repository paths and validated before return.
-- The UI remains usable without WebMCP support.
-- The tool descriptions clearly state that the agent is preparing a draft, not publishing it.
-
----
-
-## PR D — DNSSEC
+## PR C — DNSSEC
 
 ### Objective
 
@@ -226,16 +193,12 @@ DNSSEC protects the authenticity and integrity of DNS answers. It does not provi
 
 - Confirm the event/feed JSON shapes are stable enough to expose as public tool output.
 - Choose the first browser/runtime for WebMCP verification.
-
-### Before PR C
-
-- Have organizers approve the draft-only contribution workflow and GitHub handoff.
 - Complete a prompt-injection review of remote event/feed content.
 
-### After PRs A–D
+### After PRs A–C
 
 - Markdown check passes for `/` and `/ja/`.
-- WebMCP tools are discoverable in a supporting browser and fail closed elsewhere.
+- WebMCP tools are discoverable in a supporting browser and fail closed elsewhere, with the member-content tools limited to the published homepage feed.
 - DNSSEC is active and independently validated.
 - Newcomers can ask an agent for the next meetup and receive a current, attributable RSVP path without the agent being granted publishing or account authority.
 
