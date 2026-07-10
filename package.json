@@ -8,7 +8,8 @@
   "scripts": {
     "astro": "astro",
     "astrocheck": "astro check",
-    "build": "npm run feeds:pull:stale-ok && npm run events:pull:stale-ok && astro build",
+    "agent:markdown": "node scripts/agent-markdown.mjs",
+    "build": "npm run feeds:pull:stale-ok && npm run events:pull:stale-ok && npm run agent:markdown && astro build",
     "check": "npm run lint; npm run tsc; npm run knip; npm run test; npm run astrocheck; npm run images:check",
     "dev": "astro dev",
     "feeds:notify": "node scripts/community-feed-notifier.mjs",

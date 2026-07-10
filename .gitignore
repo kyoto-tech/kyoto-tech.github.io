@@ -4,6 +4,10 @@ dist/
 # generated types
 .astro/
 
+# build-generated agent Markdown
+public/agent-home.en.md
+public/agent-home.ja.md
+
 # dependencies
 node_modules/
 
