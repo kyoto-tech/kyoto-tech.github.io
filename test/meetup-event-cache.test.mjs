@@ -46,11 +46,11 @@ describe("Meetup event cache", () => {
 
   test("writes a successful refresh atomically", async () => {
     const events = [makeMeetupEvent()];
-    const fetchEventsFn = vi.fn(async () => events);
+    const fetchSnapshotFn = vi.fn(async () => ({ events, memberCount: 214 }));
 
     const result = await refreshMeetupEventCache({
       eventsUrl: "https://example.com/events",
-      fetchEventsFn,
+      fetchSnapshotFn,
       logger,
       now: fixedNow,
       outputPath,
@@ -58,13 +58,14 @@ describe("Meetup event cache", () => {
     });
 
     expect(result.status).toBe("updated");
-    expect(fetchEventsFn).toHaveBeenCalledWith({
+    expect(fetchSnapshotFn).toHaveBeenCalledWith({
       eventsUrl: "https://example.com/events",
       now: fixedNow,
       timeoutMs: 4321,
     });
     await expect(readMeetupEventCache(outputPath)).resolves.toEqual({
       generatedAt: fixedNow.toISOString(),
+      memberCount: 214,
       events,
     });
     expect(logger.info).toHaveBeenCalledOnce();
@@ -79,7 +80,7 @@ describe("Meetup event cache", () => {
     const before = await fs.readFile(outputPath, "utf8");
 
     const result = await refreshMeetupEventCache({
-      fetchEventsFn: async () => {
+      fetchSnapshotFn: async () => {
         throw new Error("Meetup unavailable");
       },
       logger,
@@ -101,7 +102,7 @@ describe("Meetup event cache", () => {
     await fs.writeFile(outputPath, JSON.stringify(existing));
 
     const result = await refreshMeetupEventCache({
-      fetchEventsFn: async () => {
+      fetchSnapshotFn: async () => {
         throw new Error("Meetup unavailable");
       },
       logger,
@@ -115,7 +116,7 @@ describe("Meetup event cache", () => {
   test("strict mode fails instead of writing fallback data", async () => {
     await expect(
       refreshMeetupEventCache({
-        fetchEventsFn: async () => {
+        fetchSnapshotFn: async () => {
           throw new Error("Meetup unavailable");
         },
         logger,
@@ -131,7 +132,7 @@ describe("Meetup event cache", () => {
 
     await expect(
       refreshMeetupEventCache({
-        fetchEventsFn: async () => {
+        fetchSnapshotFn: async () => {
           throw new Error("Meetup unavailable");
         },
         logger,
@@ -139,6 +140,32 @@ describe("Meetup event cache", () => {
         staleOk: true,
       }),
     ).rejects.toThrow("no valid cache exists");
+  });
+
+  test("preserves the last valid member count when fresh events omit it", async () => {
+    const existing = {
+      generatedAt: "2026-07-09T03:00:00.000Z",
+      memberCount: 214,
+      events: [makeMeetupEvent()],
+    };
+    await fs.writeFile(outputPath, JSON.stringify(existing));
+    const freshEvents = [makeMeetupEvent({ title: "Fresh event" })];
+
+    const result = await refreshMeetupEventCache({
+      fetchSnapshotFn: async () => ({
+        events: freshEvents,
+        memberCount: null,
+      }),
+      logger,
+      now: fixedNow,
+      outputPath,
+    });
+
+    expect(result.payload).toEqual({
+      generatedAt: fixedNow.toISOString(),
+      memberCount: 214,
+      events: freshEvents,
+    });
   });
 });
 
@@ -152,6 +179,13 @@ test("cache validation and CLI parsing reject invalid inputs", () => {
   expect(isValidMeetupEventCache({ generatedAt: "invalid", events: [] })).toBe(
     false,
   );
+  expect(
+    isValidMeetupEventCache({
+      generatedAt: fixedNow.toISOString(),
+      memberCount: -1,
+      events: [],
+    }),
+  ).toBe(false);
   expect(() => parseArgs(["--timeout", "0"])).toThrow("positive number");
   expect(parseArgs(["--stale-ok", "--timeout", "5000"])).toMatchObject({
     staleOk: true,

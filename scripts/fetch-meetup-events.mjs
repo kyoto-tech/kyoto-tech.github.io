@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import {
   DEFAULT_MEETUP_EVENTS_URL,
   DEFAULT_MEETUP_TIMEOUT_MS,
-  fetchMeetupEvents,
+  fetchMeetupSnapshot,
   isMeetupEvent,
 } from "../src/lib/meetup-events.ts";
 
@@ -57,6 +57,13 @@ export function isValidMeetupEventCache(value) {
   ) {
     return false;
   }
+  if (
+    value.memberCount !== undefined &&
+    value.memberCount !== null &&
+    (!Number.isInteger(value.memberCount) || value.memberCount < 0)
+  ) {
+    return false;
+  }
 
   return value.events.every(isMeetupEvent);
 }
@@ -79,7 +86,7 @@ async function writeMeetupEventCache(outputPath, payload) {
 
 export async function refreshMeetupEventCache({
   eventsUrl = DEFAULT_EVENTS_URL,
-  fetchEventsFn = fetchMeetupEvents,
+  fetchSnapshotFn = fetchMeetupSnapshot,
   logger = console,
   now = new Date(),
   outputPath = DEFAULT_OUTPUT_PATH,
@@ -87,9 +94,21 @@ export async function refreshMeetupEventCache({
   timeoutMs = DEFAULT_TIMEOUT_MS,
 } = {}) {
   try {
-    const events = await fetchEventsFn({ eventsUrl, now, timeoutMs });
+    const snapshot = await fetchSnapshotFn({ eventsUrl, now, timeoutMs });
+    const events = snapshot?.events;
+    if (!Array.isArray(events) || !events.every(isMeetupEvent)) {
+      throw new Error("Meetup response did not contain valid event data.");
+    }
+
+    const parsedMemberCount = snapshot?.memberCount;
+    const existing = await readMeetupEventCache(outputPath);
+    const memberCount =
+      Number.isInteger(parsedMemberCount) && parsedMemberCount >= 0
+        ? parsedMemberCount
+        : (existing?.memberCount ?? null);
     const payload = {
       generatedAt: now.toISOString(),
+      memberCount,
       events,
     };
 

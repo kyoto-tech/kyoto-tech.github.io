@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PRs 1–4 merged; calendar event details in progress
+Status: Active — PRs 1–4 and 4A merged; Community links and page order in progress
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, venue details, conversations, and member work
 
@@ -8,7 +8,7 @@ Secondary audience: Existing community members looking for events, venue details
 
 Redesign the homepage so a first-time visitor can understand the meetup and reach an RSVP as quickly as possible, while preserving the site's role as a useful community resource hub.
 
-The redesign should replace generic, text-heavy marketing sections with concrete information, real community evidence, and direct actions. Existing members should be able to bypass newcomer-oriented content through clear navigation and task-based shortcuts.
+The redesign should replace generic, text-heavy marketing sections with concrete information, real community evidence, and direct actions. Existing members should be able to bypass newcomer-oriented content through clear navigation and recognizable links to frequently used resources.
 
 ## Audience priority
 
@@ -21,7 +21,7 @@ Prioritizing new visitors does not mean burying member resources. The homepage s
 
 ```text
 Fixed navigation
-  Next meetup · Calendar · Locations · Community Hub · Language · RSVP
+  Next meetup · Calendar · Community links · Language · RSVP
 
 Event-led hero
   Clear invitation · Next-event details · Direct RSVP · Community photograph
@@ -29,8 +29,8 @@ Event-led hero
 First-meetup expectations
   Practical first-visit facts · Secondary RSVP
 
-Community Hub
-  Events · Discord · Member posts · GitHub · Contact
+Community links
+  Meetup · Discord · GitHub · Contact
 
 Upcoming events
   Mobile event list · Desktop calendar · RSVP counts · Maps links
@@ -61,7 +61,7 @@ Final invitation and footer
 | 3 | Event-led hero | PR 2 | New visitors see and can RSVP for the next event immediately |
 | 4 | First-meetup onboarding | PR 3 | Generic end-of-page marketing sections are replaced with practical guidance |
 | 4A | Calendar event details | PR 2 | Calendar events show RSVP counts and direct Maps links without a separate locations section |
-| 5 | Community Hub and page order | PRs 1 and 4 | Returning members have task-based shortcuts and the page has a coherent narrative |
+| 5 | Community links and page order | PRs 1 and 4 | Returning members have fast access to frequently used resources and the page has a coherent narrative |
 | 6 | Responsive events | PRs 2, 4A, and 5 | Mobile event discovery becomes easier and lighter |
 | 7 | Member feed refinement | PR 5 | Member work becomes authentic community evidence rather than a long set of carousels |
 | 8 | Accessibility, performance, analytics, and final QA | PRs 3–7 | The complete journey is verified and measurable |
@@ -322,33 +322,31 @@ Make each calendar event more useful at a glance and consolidate venue discovery
 
 ---
 
-## PR 5: Community Hub and page order
+## PR 5: Community links and page order
 
 ### Objective
 
-Give existing members fast, task-oriented access to resources without interrupting the newcomer joining path.
+Give existing members fast access to frequently used resources without interrupting the newcomer joining path.
 
 ### Scope
 
 - Move the current quick links below the first-meetup onboarding section.
-- Rename the section to “Community Hub.”
-- Mix internal destination links with external community services.
+- Rename the section to “Community links.”
+- Preserve the four existing external destinations: Meetup, Discord, GitHub, and Contact.
 - Reorder the remainder of the homepage according to the target structure.
 - Add a fixed-navigation destination for the hub.
 - Restore a compact community-size signal near the hub introduction, backed by Meetup data rather than a hard-coded claim.
 
-### Suggested shortcuts
+### Resource links
 
-- Upcoming events → `#calendar`
+- Meetup → community Meetup group
 - Discord → community Discord
-- Member posts → `#community-feed`
 - GitHub → community GitHub organization
-- Contact organizers → contact form
+- Contact → organizer contact form
 
 ### Implementation notes
 
 - Rename `#quick-links` to `#community-hub` in `src/pages/index.astro`.
-- Update the link data to describe tasks rather than repeat service names alone.
 - Show external-link indicators only for external destinations.
 - Keep the link cards concise; one label and, at most, one short supporting line.
 - Update header anchors and localized navigation strings.
@@ -360,12 +358,12 @@ Give existing members fast, task-oriented access to resources without interrupti
 - Preserve the last valid member count when Meetup is unavailable or the count cannot be parsed; a count failure must not discard otherwise valid event data.
 - Convert the exact count to a conservative public milestone by rounding down to the nearest 25. For example, counts from 225 through 249 render as “225+ members and growing.”
 - Do not render the module when there is no valid cached count or the rounded milestone is below 25.
-- Keep the module out of the event-led hero. Place it as concise community-level social proof near the Community Hub introduction.
+- Use the module as a small eyebrow above the hero heading. Keep it free of borders, fills, pill shapes, and hover states so it cannot be mistaken for a button or alert.
 - Add aligned English and Japanese strings, and keep formatting in a small tested helper rather than embedding rounding logic in the template.
 
 ### Acceptance criteria
 
-- A returning visitor can reach every core resource from either the header or Community Hub.
+- A returning visitor can reach every core resource from either the header or Community links.
 - The newcomer path remains hero → expectations → RSVP before the resource hub begins.
 - Internal and external destinations are visually distinguishable without excessive decoration.
 - Mobile navigation exposes the same essential destinations as desktop navigation.
@@ -565,7 +563,7 @@ These decisions should not block PR 1 or PR 2, but they must be resolved before 
 - A member login or private portal
 - Machine translation of member-authored posts
 - Replacing Meetup as the RSVP system
-- Splitting the Community Hub into a separate route before the resource set requires it
+- Splitting Community links into a separate route before the resource set requires it
 
 ## Definition of success
 
@@ -573,7 +571,7 @@ The redesign is successful when:
 
 - A new visitor can identify and reach the next meetup's RSVP from the first viewport.
 - First-time concerns are answered with concise, factual guidance instead of generic marketing copy.
-- Returning members can reach core resources directly from navigation or the Community Hub.
+- Returning members can reach core resources directly from navigation or Community links.
 - The mobile event experience does not depend on horizontal calendar scrolling.
 - Real event imagery and member work provide the page's primary social proof.
 - Both locale routes respect explicit visitor choice.
