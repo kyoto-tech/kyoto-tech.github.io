@@ -4,15 +4,17 @@ import {
   type MeetupEvent,
 } from "../lib/meetup-events";
 import { buildFiveWeekCalendar } from "../lib/calendar-grid";
+import { isOngoingEvent } from "../lib/event-status";
 import { useTranslations } from "../i18n/utils";
 import { FaLocationDot, FaUserGroup } from "react-icons/fa6";
 
 type Props = {
   events: MeetupEvent[];
   lang?: "en" | "ja";
+  now?: Date;
 };
 
-const { events, lang = "en" } = Astro.props as Props;
+const { events, lang = "en", now = new Date() } = Astro.props as Props;
 const t = useTranslations(lang);
 const locale = lang === "ja" ? "ja-JP" : "en-US";
 const weeks = buildFiveWeekCalendar(events);
@@ -90,6 +92,7 @@ const eventColorClass = (event: MeetupEvent) => {
                         const mapsUrl = buildMeetupVenueMapsUrl(event.venue);
                         const venueLabel =
                           event.venue?.name ?? event.venue?.address ?? "";
+                        const ongoing = isOngoingEvent(event, now);
 
                         return (
                           <article
@@ -97,7 +100,23 @@ const eventColorClass = (event: MeetupEvent) => {
                               "rounded-lg px-2 py-2 text-xs text-white shadow-sm transition",
                               eventColorClass(event),
                             ]}
+                            data-event-live
+                            data-event-start={event.start}
+                            data-event-end={event.endTime ?? undefined}
+                            data-live-state={ongoing ? "ongoing" : "upcoming"}
+                            data-live-emphasis="calendar"
                           >
+                            <span
+                              class="mb-1.5 inline-flex items-center gap-1 rounded-full bg-white/95 px-1.5 py-0.5 text-[0.625rem] font-bold uppercase tracking-wide text-emerald-700"
+                              data-live-only
+                              hidden={!ongoing}
+                            >
+                              <span
+                                class="h-1.5 w-1.5 rounded-full bg-emerald-500"
+                                aria-hidden="true"
+                              />
+                              {t("home.eventCard.liveNow")}
+                            </span>
                             <a
                               href={event.link}
                               class="block font-semibold leading-snug underline-offset-2 hover:underline focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"

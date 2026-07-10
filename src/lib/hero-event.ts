@@ -1,7 +1,7 @@
 import type { MeetupEvent } from "./meetup-events";
+import { isOngoingEvent } from "./event-status";
 
 const TIME_ZONE = "Asia/Tokyo";
-const IN_PROGRESS_GRACE_MS = 4 * 60 * 60 * 1000;
 
 type HeroEventOptions = {
   fallbackUrl: string;
@@ -24,16 +24,6 @@ type HeroEventState =
       title: string;
       venueName: string | null;
     };
-
-function isOngoingEvent(event: MeetupEvent, now: Date): boolean {
-  const startMs = new Date(event.start).valueOf();
-  const nowMs = now.valueOf();
-  const endMs = event.endTime
-    ? new Date(event.endTime).valueOf()
-    : startMs + IN_PROGRESS_GRACE_MS;
-
-  return startMs <= nowMs && endMs >= nowMs;
-}
 
 export function getHeroEventState(
   event: MeetupEvent | null,

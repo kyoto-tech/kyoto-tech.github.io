@@ -1,12 +1,15 @@
 /* global fetch, URL, AbortController, setTimeout, clearTimeout */
 import { classifyEventType, type EventType } from "./event-types";
+import {
+  IN_PROGRESS_GRACE_MS,
+  isEventTimeOngoing,
+} from "./event-status";
 
 export const DEFAULT_MEETUP_EVENTS_URL =
   "https://www.meetup.com/kyoto-tech-meetup/events/";
 export const DEFAULT_MEETUP_TIMEOUT_MS = 12000;
 
 const DEFAULT_EVENT_WINDOW_DAYS = 60;
-const DEFAULT_IN_PROGRESS_GRACE_MS = 4 * 60 * 60 * 1000;
 const MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 const EVENT_TYPES = new Set<EventType>(["coffee", "hack-day", "special"]);
 const coffeeWeekdaySuffixPattern =
@@ -277,7 +280,7 @@ export function parseMeetupEventsHtml(html: string): MeetupEvent[] {
 export function selectUpcomingMeetupEvents(
   events: readonly MeetupEvent[],
   {
-    inProgressGraceMs = DEFAULT_IN_PROGRESS_GRACE_MS,
+    inProgressGraceMs = IN_PROGRESS_GRACE_MS,
     now = new Date(),
     windowDays = DEFAULT_EVENT_WINDOW_DAYS,
   }: SelectMeetupEventsOptions = {},
@@ -293,15 +296,13 @@ export function selectUpcomingMeetupEvents(
     .filter(isMeetupEvent)
     .filter((event) => {
       const startMs = new Date(event.start).valueOf();
-      const endMs = event.endTime
-        ? new Date(event.endTime).valueOf()
-        : null;
       const upcoming = startMs >= nowMs;
-      const inProgress =
-        startMs <= nowMs &&
-        (endMs !== null
-          ? endMs >= nowMs
-          : nowMs - startMs <= inProgressGraceMs);
+      const inProgress = isEventTimeOngoing(
+        event.start,
+        event.endTime,
+        now,
+        inProgressGraceMs,
+      );
 
       return (upcoming || inProgress) && startMs <= cutoffMs;
     })

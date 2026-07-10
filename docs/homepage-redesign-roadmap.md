@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PRs 1–4 and 4A merged; Community links and page order in progress
+Status: Active — PRs 1–5 and 4A merged; responsive events in progress
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, venue details, conversations, and member work
 
@@ -393,6 +393,12 @@ Preserve the detailed calendar for existing members while giving mobile visitors
 - Include date, time, venue status, event type, and a direct RSVP action.
 - Render the list at mobile widths and retain the existing server-rendered calendar grid at tablet and desktop widths.
 - Preserve a useful no-events state linking to the Meetup group.
+
+### Event details consistency
+
+- Add the cached RSVP count to the hero's next-event card.
+- Add the same validated “Open in Maps” action used by calendar events to the hero card when a physical address is available.
+- Keep RSVP counts and Maps behavior consistent across the hero, mobile list, and desktop calendar.
 
 ### Happening-now state
 

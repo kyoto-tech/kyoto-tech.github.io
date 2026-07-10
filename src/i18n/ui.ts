@@ -70,6 +70,8 @@ export const ui = {
     "home.calendar.rsvpCount": "RSVPs: {count}",
     "home.calendar.openInMaps": "Open in Maps",
     "home.calendar.openVenueInMaps": "Open {venue} in Maps",
+    "home.upcomingEvents.title": "Upcoming events",
+    "home.upcomingEvents.rsvp": "View and RSVP",
     "home.calendar.legend.coffee.title": "Tech & Coffee",
     "home.calendar.legend.coffee.description":
       "Weekly casual hangouts",
@@ -173,6 +175,8 @@ export const ui = {
     "home.calendar.rsvpCount": "参加予定: {count}人",
     "home.calendar.openInMaps": "地図で開く",
     "home.calendar.openVenueInMaps": "{venue}を地図で開く",
+    "home.upcomingEvents.title": "今後のイベント",
+    "home.upcomingEvents.rsvp": "詳細・参加登録",
     "home.calendar.legend.coffee.title": "Tech & Coffee",
     "home.calendar.legend.coffee.description":
       "毎週のカジュアルな交流会",
