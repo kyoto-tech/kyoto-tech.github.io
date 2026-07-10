@@ -22,10 +22,19 @@ export const ui = {
     "home.hero.primaryCta": "RSVP for the next meetup",
     "home.hero.fallbackCta": "Follow us on Meetup",
     "home.hero.secondaryCta": "See all events",
-    "home.hero.reassurance":
-      "English and Japanese welcome · First-timers encouraged",
     "home.hero.imageAlt":
-      "Kyoto Tech Meetup members working together in a tatami room",
+      "Kyoto Tech Meetup members gathered for a community presentation in a tatami room",
+    "home.firstMeetup.title": "Your first meetup?",
+    "home.firstMeetup.intro":
+      "Come on your own or with a friend—grab a seat, say hello, and take part at your own pace.",
+    "home.firstMeetup.fact1":
+      "Most meetups favor conversation and making together over formal presentations.",
+    "home.firstMeetup.fact2":
+      "English and Japanese are both welcome; use whichever feels comfortable.",
+    "home.firstMeetup.fact3":
+      "Bring a project, a question, or simply your curiosity.",
+    "home.firstMeetup.imageAlt":
+      "Kyoto Tech Meetup members working together around laptops in a tatami room",
     "home.header.discordCta": "Join our Discord",
     "home.header.githubCta": "View our GitHub",
     "nav.nextMeetup": "Next meetup",
@@ -44,19 +53,6 @@ export const ui = {
     "home.quickLinks.github.description": "Build with us",
     "home.quickLinks.contact.title": "Contact",
     "home.quickLinks.contact.description": "Reach out to us",
-    "home.whyJoin.title": "Small, intentional gatherings",
-
-    "home.benefit1.title": "Conversation, not conferences",
-    "home.benefit1.description":
-      "Small, high-signal gatherings where people actually talk to each other about what they're building, learning, and struggling with. No stage, no slide decks, no pressure.",
-
-    "home.benefit2.title": "Community",
-    "home.benefit2.description":
-      "Meet a mix of locals and visitors: software engineers, founders, designers, researchers, and remote workers from all over the world. It's a uniquely international, high-signal environment.",
-
-    "home.benefit3.title": "Collaboration",
-    "home.benefit3.description":
-      "Use the meetup to find co-founders, collaborators, study buddies, or just people who care about the same weird tech rabbit holes you do.",
 
     "home.communityFeed.title": "What members are publishing",
     "home.communityFeed.description":
@@ -73,22 +69,6 @@ export const ui = {
       "No posts in the last 31 days. Check back soon.",
     "home.communityFeed.emptyFeed": "No posts yet from this feed.",
     "home.communityFeed.fetchError": "Fetch issue",
-
-    "home.whoComes.title": "People who like to build in public",
-    "home.whoComes.intro": "You'll probably like it here if you are:",
-    "home.whoComes.item1":
-      "A software engineer or researcher working with web, AI, or creative tech",
-    "home.whoComes.item2": "A founder or early-stage startup person",
-    "home.whoComes.item3":
-      "A designer, PM, or DX / DevRel person who likes talking product",
-    "home.whoComes.item4":
-      "A grad student or visiting researcher looking for a local tech community",
-    "home.whoComes.item5":
-      "A remote worker in Kyoto who misses nerding out with coworkers",
-
-    "home.languages.title": "Languages",
-    "home.languages.description":
-      "The meetup is English-friendly with a natural mix of English and Japanese. Come as you are; we'll make space.",
 
     "home.locations.title": "Frequent locations",
     "home.locations.note":
@@ -149,9 +129,19 @@ export const ui = {
     "home.hero.primaryCta": "次回のミートアップに参加",
     "home.hero.fallbackCta": "Meetupをフォロー",
     "home.hero.secondaryCta": "イベント一覧を見る",
-    "home.hero.reassurance": "日本語・英語どちらでも歓迎 · 初参加の方もどうぞ",
     "home.hero.imageAlt":
-      "畳の部屋で一緒に作業するKyoto Tech Meetupのメンバー",
+      "畳の部屋で発表を囲むKyoto Tech Meetupのメンバー",
+    "home.firstMeetup.title": "はじめてのミートアップ？",
+    "home.firstMeetup.intro":
+      "ひとりでも友だちとでも大丈夫。席を見つけて声をかけ、自分のペースで参加してください。",
+    "home.firstMeetup.fact1":
+      "多くの回では、発表を聞くだけでなく、会話やものづくりに参加するスタイルを大切にしています。",
+    "home.firstMeetup.fact2":
+      "日本語でも英語でも、話しやすいほうでどうぞ。",
+    "home.firstMeetup.fact3":
+      "プロジェクトや質問、気になっていること。好奇心だけでも十分です。",
+    "home.firstMeetup.imageAlt":
+      "畳の部屋でノートパソコンを囲み、一緒に作業するKyoto Tech Meetupのメンバー",
     "home.header.discordCta": "Discordでチャットする",
     "home.header.githubCta": "GitHubでコードを見る",
     "nav.nextMeetup": "次回のイベント",
@@ -170,19 +160,6 @@ export const ui = {
     "home.quickLinks.github.description": "コミュニティの制作物をチェック。",
     "home.quickLinks.contact.title": "お問い合わせ",
     "home.quickLinks.contact.description": "質問・提携・フィードバックなど。",
-    "home.whyJoin.title": "小規模で意図のある集まり",
-
-    "home.benefit1.title": "話すための場、会議ではない",
-    "home.benefit1.description":
-      "小規模で密度の高い集まり。参加者が実際に、自分が作っているもの・学んでいること・悩んでいることについて話せる場所です。ステージもスライドもプレッシャーもありません。",
-
-    "home.benefit2.title": "コミュニティ",
-    "home.benefit2.description":
-      "地元の人も、海外からの訪問者も。ソフトウェアエンジニア、創業者、デザイナー、研究者、リモートワーカーなど、世界中から来た人たちと出会えます。国際色豊かで、高い情報密度の環境です。",
-
-    "home.benefit3.title": "コラボレーション",
-    "home.benefit3.description":
-      "共同創業者、協力者、勉強仲間を見つけたり、あなたと同じ“ちょっと変わった”技術の話題に興味を持つ仲間とつながることができます。",
 
     "home.communityFeed.title": "メンバーの最新投稿",
     "home.communityFeed.description":
@@ -200,23 +177,6 @@ export const ui = {
     "home.communityFeed.emptyFeed":
       "このフィードの記事はまだ取得できていません。",
     "home.communityFeed.fetchError": "取得に失敗しました",
-
-    "home.whoComes.title": "“作っているところ”をオープンにする人たち",
-    "home.whoComes.intro": "こんな人なら、きっと楽しめます：",
-
-    "home.whoComes.item1":
-      "Web・AI・クリエイティブ系の技術に取り組むエンジニアや研究者",
-    "home.whoComes.item2": "創業者やアーリーステージのスタートアップ関係者",
-    "home.whoComes.item3":
-      "プロダクトの話が好きなデザイナー、PM、DX／DevRel の方",
-    "home.whoComes.item4":
-      "京都に滞在中の大学院生や研究者で、地元のTechコミュニティを探している人",
-    "home.whoComes.item5":
-      "京都に住むリモートワーカーで、同僚と“技術の雑談”を恋しく思っている人",
-
-    "home.languages.title": "対応言語",
-    "home.languages.description":
-      "英語でも日本語でも気軽に参加できます。英語と日本語が自然に混ざるミートアップなので、そのままの自分でどうぞ。みんなで場をつくります。",
 
     "home.locations.title": "よく使う場所",
     "home.locations.note":

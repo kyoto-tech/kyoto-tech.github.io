@@ -1,6 +1,6 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PRs 1–3 merged; PR 4 is next
+Status: Active — PRs 1–3 merged; PR 4 ready for review
 Primary audience: People considering their first Kyoto Tech Meetup  
 Secondary audience: Existing community members looking for events, locations, conversations, and member work
 
@@ -267,11 +267,11 @@ Replace the generic “Small, intentional gatherings” and “People who like t
 
 Working English direction:
 
-> Come by yourself or bring a friend. Grab a drink, join a table, and talk about whatever you are building, learning, or curious about.
+> Come on your own or with a friend—grab a seat, say hello, and take part at your own pace.
 
-- No talks or slide decks
-- English and Japanese are welcome
-- Bring a project, a question, or simply your curiosity
+- Most meetups favor conversation and making together over formal presentations.
+- English and Japanese are both welcome; use whichever feels comfortable.
+- Bring a project, a question, or simply your curiosity.
 
 All statements must be checked against how events actually operate before merge.
 

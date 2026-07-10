@@ -2,7 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
-import WhyJoin from "../components/WhyJoin.astro";
 import Calendar from "../components/Calendar.astro";
 import Footer from "../components/Footer.astro";
 import { FaGithub, FaDiscord, FaMeetup, FaEnvelope } from "react-icons/fa";
@@ -102,21 +101,6 @@ type CompositeFeed = MemberFeed & {
   error?: string;
 };
 
-const benefits = [
-  {
-    title: t("home.benefit1.title"),
-    description: t("home.benefit1.description"),
-  },
-  {
-    title: t("home.benefit2.title"),
-    description: t("home.benefit2.description"),
-  },
-  {
-    title: t("home.benefit3.title"),
-    description: t("home.benefit3.description"),
-  },
-];
-
 const locale = lang === "ja" ? "ja-JP" : "en-US";
 const cachedMeetupEvents = Array.isArray(meetupEventData?.events)
   ? (meetupEventData.events as unknown[]).filter(isMeetupEvent)
@@ -174,7 +158,6 @@ const formatDate = (value: string) => {
       lang={lang}
       now={buildNow}
       primaryCtaLabel={t("home.hero.primaryCta")}
-      reassurance={t("home.hero.reassurance")}
       secondaryCtaLabel={t("home.hero.secondaryCta")}
       title={t("home.header.title")}
       subtitle={t("home.header.subtitle")}
@@ -182,6 +165,68 @@ const formatDate = (value: string) => {
   </div>
 
   <main id="main-content" class="space-y-0">
+    <section
+      id="first-meetup"
+      class="scroll-mt-24 bg-stone-50 px-6 py-14 md:px-12 md:py-20"
+    >
+      <div
+        class="mx-auto grid max-w-5xl overflow-hidden rounded-[2rem] border border-slate-200/80 bg-white shadow-xl shadow-stone-900/8 lg:grid-cols-[0.92fr_1.08fr]"
+      >
+        <div class="order-2 min-h-72 overflow-hidden bg-slate-100 lg:order-1 lg:min-h-full">
+          <img
+            src="/images/kyoto-tech-community-work-session.jpg"
+            alt={t("home.firstMeetup.imageAlt")}
+            width="1080"
+            height="719"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover object-center"
+          />
+        </div>
+
+        <div class="order-1 p-7 sm:p-9 lg:order-2 lg:p-12">
+          <h2 class="text-3xl font-semibold tracking-[-0.025em] text-slate-950 sm:text-4xl">
+            {t("home.firstMeetup.title")}
+          </h2>
+          <p class="mt-4 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
+            {t("home.firstMeetup.intro")}
+          </p>
+
+          <ol class="mt-8 border-y border-slate-200">
+            {
+              [
+                t("home.firstMeetup.fact1"),
+                t("home.firstMeetup.fact2"),
+                t("home.firstMeetup.fact3"),
+              ].map((fact, index) => (
+                <li class="grid grid-cols-[2rem_1fr] gap-3 border-b border-slate-200 py-4 last:border-b-0">
+                  <span
+                    class="pt-0.5 text-sm font-semibold tabular-nums text-(--accent)"
+                    aria-hidden="true"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span class="text-base leading-relaxed text-slate-700">
+                    {fact}
+                  </span>
+                </li>
+              ))
+            }
+          </ol>
+
+          <a
+            href={nextEventUrl}
+            class="mt-8 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-slate-950"
+          >
+            {nextEvent
+              ? t("home.hero.primaryCta")
+              : t("home.hero.fallbackCta")}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <section id="calendar" class="scroll-mt-24 bg-white px-6 py-16 md:px-12">
       <div class="mx-auto max-w-5xl">
         <h2 class="text-3xl font-semibold text-slate-900">
@@ -426,46 +471,6 @@ const formatDate = (value: string) => {
       </div>
     </section>
 
-    <section id="why-join" class="bg-white/95 px-6 py-16 md:px-12">
-      <div class="mx-auto max-w-5xl">
-        <h2 class="text-3xl font-semibold text-slate-900">
-          {t("home.whyJoin.title")}
-        </h2>
-        <WhyJoin items={benefits} />
-      </div>
-    </section>
-
-    <section id="who-comes" class="bg-white/95 px-6 py-16 md:px-12">
-      <div class="mx-auto flex max-w-5xl flex-col gap-10 lg:flex-row">
-        <div class="flex-1">
-          <h2 class="text-3xl font-semibold text-slate-900">
-            {t("home.whoComes.title")}
-          </h2>
-          <p class="mt-4 text-slate-600">{t("home.whoComes.intro")}</p>
-          <ul
-            class="mt-6 list-disc space-y-3 pl-5 text-base leading-relaxed text-slate-600"
-          >
-            <li>{t("home.whoComes.item1")}</li>
-            <li>{t("home.whoComes.item2")}</li>
-            <li>{t("home.whoComes.item3")}</li>
-            <li>{t("home.whoComes.item4")}</li>
-            <li>{t("home.whoComes.item5")}</li>
-          </ul>
-        </div>
-        <div class="flex-1 space-y-4">
-          <div
-            class="rounded-2xl bg-white/90 p-6 shadow-lg shadow-stone-900/10 ring-1 ring-white/70"
-          >
-            <h3 class="text-xl font-semibold text-slate-900">
-              {t("home.languages.title")}
-            </h3>
-            <p class="mt-3 text-base leading-relaxed text-slate-600">
-              {t("home.languages.description")}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <Footer lang={lang} />
