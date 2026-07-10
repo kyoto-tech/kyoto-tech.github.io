@@ -1,6 +1,6 @@
 type SiteLanguage = "en" | "ja";
 
-type HomeSection = "calendar" | "community-hub" | "locations";
+type HomeSection = "calendar" | "community-hub";
 
 export function getLocalizedHomePath(lang: SiteLanguage): "/" | "/ja/" {
   return lang === "ja" ? "/ja/" : "/";

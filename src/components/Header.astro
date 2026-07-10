@@ -18,13 +18,11 @@ const t = useTranslations(lang);
 
 const homeUrl = getLocalizedHomePath(lang);
 const calendarUrl = getLocalizedSectionPath(lang, "calendar");
-const locationsUrl = getLocalizedSectionPath(lang, "locations");
 const communityHubUrl = getLocalizedSectionPath(lang, "community-hub");
 const mobileMenuId = `site-navigation-menu-${lang}`;
 
 const navItems = [
   { href: calendarUrl, label: t("nav.calendar") },
-  { href: locationsUrl, label: t("nav.locations") },
   { href: communityHubUrl, label: t("nav.communityHub") },
 ];
 ---

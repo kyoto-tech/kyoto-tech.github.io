@@ -17,9 +17,6 @@ describe("localized navigation", () => {
 
   it("builds localized section links", () => {
     expect(getLocalizedSectionPath("en", "calendar")).toBe("/#calendar");
-    expect(getLocalizedSectionPath("ja", "locations")).toBe(
-      "/ja/#locations",
-    );
     expect(getLocalizedSectionPath("ja", "community-hub")).toBe(
       "/ja/#community-hub",
     );

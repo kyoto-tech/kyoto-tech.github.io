@@ -31,6 +31,26 @@ export type MeetupEvent = {
   } | null;
 };
 
+export function buildMeetupVenueMapsUrl(
+  venue: MeetupEvent["venue"],
+): string | null {
+  const address = venue?.address?.trim();
+  if (!address) return null;
+
+  const query = [
+    venue?.name,
+    address,
+    venue?.city,
+    venue?.state,
+    venue?.country,
+  ]
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(", ");
+
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+}
+
 type FetchLike = typeof fetch;
 
 type FetchMeetupEventsOptions = {
