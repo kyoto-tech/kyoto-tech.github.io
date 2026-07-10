@@ -19,6 +19,7 @@ import {
   selectUpcomingMeetupEvents,
 } from "../lib/meetup-events";
 import { getMemberMilestone } from "../lib/member-milestone";
+import WebMcpProvider from "../components/WebMcpProvider.astro";
 import { getSafeWebUrl } from "../lib/safe-url";
 
 const { lang = "en" } = Astro.props;
@@ -169,6 +170,33 @@ const feedsWithItems = memberFeedList.map((feed) => {
   };
 });
 
+const webMcpData = {
+  events: events.map((event) => ({
+    ...event,
+    description: "",
+    image: null,
+  })),
+  memberPosts: feedsWithItems.flatMap((feed) =>
+    feed.items.map((item) => ({
+      id: item.id,
+      title: item.title,
+      link: item.link,
+      publishedAt: item.publishedAt,
+      summary: item.summary,
+      sourceName: feed.name,
+      sourceUrl: feed.siteUrl ?? undefined,
+    })),
+  ),
+  links: {
+    meetup: meetupUrl,
+    discord: discordUrl,
+    github: githubUrl,
+    linkedin: linkedinUrl,
+    contact: contactUrl,
+    calendar: "#calendar",
+  },
+};
+
 const formatDate = (value: string) => {
   const date = new Date(value);
   if (Number.isNaN(date.valueOf())) return null;
@@ -187,6 +215,8 @@ const formatDate = (value: string) => {
     lang={lang}
     nextEventUrl={nextEventUrl}
   />
+
+  <WebMcpProvider data={webMcpData} />
 
   <div>
     <Hero

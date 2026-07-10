@@ -1,0 +1,26 @@
+---
+import { serializeJsonLd } from "../lib/structured-data";
+import type { WebMcpData } from "../lib/webmcp-tools";
+
+type Props = {
+  data: WebMcpData;
+};
+
+const { data } = Astro.props as Props;
+const serializedData = serializeJsonLd(data);
+---
+
+<script id="webmcp-data" type="application/json" is:inline set:html={serializedData}></script>
+<script>
+  import { registerWebMcpTools } from "../lib/webmcp-tools";
+
+  const dataElement = document.getElementById("webmcp-data");
+  if (dataElement?.textContent) {
+    try {
+      const data = JSON.parse(dataElement.textContent);
+      void registerWebMcpTools(data);
+    } catch (error) {
+      console.warn("WebMCP data could not be registered.", error);
+    }
+  }
+</script>
