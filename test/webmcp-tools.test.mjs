@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { describe, expect, test } from "vitest";
 import { createWebMcpTools, registerWebMcpTools } from "../src/lib/webmcp-tools.ts";
 
@@ -49,6 +50,21 @@ describe("WebMCP tools", () => {
     expect(tools.find((tool) => tool.name === "search_member_posts").execute({ query: "article" })).toMatchObject({
       posts: [{ id: "post-1" }],
     });
+  });
+
+  test("keeps the maintenance skill aware of the public tool footprint", () => {
+    const skill = fs.readFileSync("public/.well-known/agent-skills/webmcp-maintenance/SKILL.md", "utf8");
+    for (const toolName of [
+      "get_next_meetup",
+      "list_upcoming_meetups",
+      "get_event_details",
+      "get_community_links",
+      "list_member_posts",
+      "get_member_post",
+      "search_member_posts",
+    ]) {
+      expect(skill).toContain(toolName);
+    }
   });
 
   test("registers modern and legacy browser APIs, and fails closed", async () => {
