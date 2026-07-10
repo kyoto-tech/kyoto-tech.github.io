@@ -42,6 +42,7 @@ Everything here is maintained by community members; contributions that make the 
 | `npm run check`    | Runs lint, type-check, Astro check, and Knip in sequence.               |
 | `npm run events:pull` | Refreshes the committed Meetup event cache and fails on errors.      |
 | `npm run events:pull:stale-ok` | Refreshes Meetup events or preserves the last valid cache. |
+| `npm run agent:markdown` | Generates the English and Japanese Markdown responses used for agent content negotiation. |
 | `npm run feeds:notify` | Polls approved member feeds and posts unseen items to configured channels. |
 | `npm run feeds:notify:dry-run` | Shows what the notifier would send without posting or updating state. |
 | `npm run preview`  | Serves the production build locally.                                    |
@@ -98,6 +99,13 @@ public/          # Files served as-is (favicon, images)
 - `npm run events:pull:stale-ok` keeps the last valid snapshot when Meetup is temporarily unavailable. Production builds use this mode.
 - Page rendering reads only the committed snapshot; it does not make live Meetup requests while generating `/` and `/ja/`.
 - Event reminders continue to fetch live Meetup data because they run as a separate operational workflow.
+
+## Markdown for agents
+
+- `npm run agent:markdown` generates ignored build files at `public/agent-home.en.md` and `public/agent-home.ja.md` from the committed event and member-feed snapshots.
+- Production builds run this generator after the stale-safe event/feed refreshes.
+- Cloudflare Pages Functions at `/` and `/ja/` return those files only when the request explicitly accepts `text/markdown`; normal browser requests continue to receive the Astro HTML pages.
+- Verify locally or against a preview with `curl -H 'Accept: text/markdown' -D - https://preview-url/`.
 
 ## Community Feed Notifier
 
