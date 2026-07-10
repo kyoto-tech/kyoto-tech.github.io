@@ -1,5 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import {
+  buildMeetupVenueMapsUrl,
   fetchMeetupEvents,
   isMeetupEvent,
   normalizeMeetupEventTitle,
@@ -53,6 +54,30 @@ test("normalizeMeetupEventTitle keeps non-coffee titles unchanged", () => {
   expect(normalizeMeetupEventTitle("Community Hack Day")).toBe(
     "Community Hack Day",
   );
+});
+
+describe("Meetup venue Maps links", () => {
+  test("builds an encoded Google Maps search URL from a physical venue", () => {
+    expect(
+      buildMeetupVenueMapsUrl({
+        name: "FabCafe Kyoto",
+        address: "554 Motoshiogamacho",
+        city: "Kyoto",
+        state: "",
+        country: "JP",
+      }),
+    ).toBe(
+      "https://www.google.com/maps/search/?api=1&query=FabCafe%20Kyoto%2C%20554%20Motoshiogamacho%2C%20Kyoto%2C%20JP",
+    );
+  });
+
+  test("omits Maps links when an event has no street address", () => {
+    expect(buildMeetupVenueMapsUrl(null)).toBeNull();
+    expect(buildMeetupVenueMapsUrl({ name: "Venue TBA" })).toBeNull();
+    expect(
+      buildMeetupVenueMapsUrl({ name: "Venue TBA", address: "   " }),
+    ).toBeNull();
+  });
 });
 
 test("parseMeetupEventsHtml resolves referenced Meetup event data", () => {

@@ -1,8 +1,8 @@
 # Homepage Redesign Roadmap
 
-Status: Active — PRs 1–3 merged; PR 4 ready for review
+Status: Active — PRs 1–4 merged; calendar event details in progress
 Primary audience: People considering their first Kyoto Tech Meetup  
-Secondary audience: Existing community members looking for events, locations, conversations, and member work
+Secondary audience: Existing community members looking for events, venue details, conversations, and member work
 
 ## Goal
 
@@ -13,7 +13,7 @@ The redesign should replace generic, text-heavy marketing sections with concrete
 ## Audience priority
 
 1. **New visitors:** Understand what the community is, see the next event, resolve first-time concerns, and RSVP.
-2. **Existing members:** Find the calendar, Discord, locations, member posts, GitHub, and organizer contact information.
+2. **Existing members:** Find the calendar, venue details, Discord, member posts, GitHub, and organizer contact information.
 
 Prioritizing new visitors does not mean burying member resources. The homepage should guide new visitors through its visual order while allowing returning members to jump directly to resources from the fixed navigation.
 
@@ -30,13 +30,10 @@ First-meetup expectations
   Practical first-visit facts · Secondary RSVP
 
 Community Hub
-  Events · Discord · Locations · Member posts · GitHub · Contact
+  Events · Discord · Member posts · GitHub · Contact
 
 Upcoming events
-  Mobile event list · Desktop calendar
-
-Frequent locations
-  Address and directions-first venue cards
+  Mobile event list · Desktop calendar · RSVP counts · Maps links
 
 Member feed
   Recent work with source attribution
@@ -63,8 +60,9 @@ Final invitation and footer
 | 2 | Stale-safe Meetup event data | None | Static builds and the future hero have reliable event data |
 | 3 | Event-led hero | PR 2 | New visitors see and can RSVP for the next event immediately |
 | 4 | First-meetup onboarding | PR 3 | Generic end-of-page marketing sections are replaced with practical guidance |
+| 4A | Calendar event details | PR 2 | Calendar events show RSVP counts and direct Maps links without a separate locations section |
 | 5 | Community Hub and page order | PRs 1 and 4 | Returning members have task-based shortcuts and the page has a coherent narrative |
-| 6 | Responsive events and locations | PRs 2 and 5 | Mobile event discovery and venue information become easier and lighter |
+| 6 | Responsive events | PRs 2, 4A, and 5 | Mobile event discovery becomes easier and lighter |
 | 7 | Member feed refinement | PR 5 | Member work becomes authentic community evidence rather than a long set of carousels |
 | 8 | Accessibility, performance, analytics, and final QA | PRs 3–7 | The complete journey is verified and measurable |
 
@@ -301,6 +299,29 @@ All statements must be checked against how events actually operate before merge.
 
 ---
 
+## Interim PR 4A: Calendar event details
+
+### Objective
+
+Make each calendar event more useful at a glance and consolidate venue discovery into the event itself.
+
+### Scope
+
+- Show the cached Meetup RSVP count with a people icon on each event.
+- Add a localized “Open in Maps” link when the event has a validated street address.
+- Generate Maps search URLs from cached venue data without adding another remote request.
+- Remove the separate Frequent locations section, its embedded maps, and its navigation destination.
+- Keep the event title linked to its Meetup detail page.
+
+### Acceptance criteria
+
+- RSVP counts come from `goingCount` and remain understandable to assistive technology.
+- Maps links open the correct physical venue in a new tab and are omitted for missing or TBA addresses.
+- English and Japanese labels remain aligned.
+- No obsolete location data, translations, navigation links, or iframe embeds remain.
+
+---
+
 ## PR 5: Community Hub and page order
 
 ### Objective
@@ -320,7 +341,6 @@ Give existing members fast, task-oriented access to resources without interrupti
 
 - Upcoming events → `#calendar`
 - Discord → community Discord
-- Frequent locations → `#locations`
 - Member posts → `#community-feed`
 - GitHub → community GitHub organization
 - Contact organizers → contact form
@@ -362,11 +382,11 @@ Give existing members fast, task-oriented access to resources without interrupti
 
 ---
 
-## PR 6: Responsive events and locations
+## PR 6: Responsive events
 
 ### Objective
 
-Preserve the detailed calendar for existing members while giving mobile visitors a faster, more legible way to find an event and practical venue information.
+Preserve the detailed calendar for existing members while giving mobile visitors a faster, more legible way to find an event.
 
 ### Mobile event list
 
@@ -385,13 +405,6 @@ Preserve the detailed calendar for existing members while giving mobile visitors
 - Respect `prefers-reduced-motion`; the badge and non-motion styling must communicate the state without relying on animation.
 - Server-render the initial state. Add only a small time-aware client enhancement if needed so the label changes when a visitor keeps the page open across an event start or end; do not reintroduce a fully hydrated event-list component solely for this behavior.
 
-### Location cards
-
-- Extend `src/data/event-locations.json` with structured `address`, `mapsUrl`, and localized transit or access notes where available.
-- Replace always-loaded map iframes with address- and directions-first venue cards.
-- If embedded maps remain desirable, load them only after an explicit visitor action.
-- Keep the warning that event listings are the authority for the actual venue.
-
 ### Acceptance criteria
 
 - A 320px or 390px visitor can discover and open upcoming events without horizontally panning an 864px calendar.
@@ -399,7 +412,7 @@ Preserve the detailed calendar for existing members while giving mobile visitors
 - Mobile visitors do not load an unnecessary calendar client island.
 - Ongoing events use the localized live label and active styling in the hero, mobile list, and desktop calendar without duplicating timing rules.
 - The live state remains understandable with reduced motion enabled.
-- Venue cards provide an address and direct maps link without requiring an embedded map.
+- Calendar event details retain the RSVP counts and direct Maps links delivered in PR 4A.
 - Both locales render dates, labels, and venue guidance correctly.
 
 ### Verification
@@ -408,7 +421,7 @@ Preserve the detailed calendar for existing members while giving mobile visitors
 - Test live-state boundaries for explicit end times and the four-hour fallback window.
 - Confirm list/calendar switching at and around the 768px breakpoint.
 - Verify the active treatment with reduced motion enabled and while crossing a start or end time with the page open.
-- Verify the page with third-party maps blocked.
+- Verify Maps links with physical venues and missing venue data.
 - Run responsive accessibility checks, `npm run check`, and `npm run build`.
 
 ---
@@ -543,7 +556,6 @@ These decisions should not block PR 1 or PR 2, but they must be resolved before 
 - Approve final English hero and onboarding copy.
 - Review the Japanese copy for tone rather than literal equivalence alone.
 - Confirm whether events are consistently free, whether solo attendance should be explicitly encouraged, and what accessibility claims are supportable.
-- Decide whether map embeds should be removed entirely or offered through click-to-load behavior.
 - Confirm the initial number of member posts to display.
 
 ## Non-goals for this roadmap

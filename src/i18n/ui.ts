@@ -12,8 +12,6 @@ export const ui = {
     "a11y.primaryNav": "Primary navigation",
     "a11y.openMenu": "Open navigation menu",
     "a11y.closeMenu": "Close navigation menu",
-    "a11y.mapTitle": "Map of {name}",
-    "a11y.mapLabel": "Embedded map showing the location of {name}",
 
     "home.header.tagline": "Kyoto Tech Meetup",
     "home.header.title": "Meet Kyoto's tech community.",
@@ -39,7 +37,6 @@ export const ui = {
     "nav.meetup": "Meetup",
     "nav.eventsShort": "Events",
     "nav.calendar": "Calendar",
-    "nav.locations": "Locations",
     "nav.communityHub": "Community Hub",
 
     "home.quickLinks.title": "Connect with the community",
@@ -68,11 +65,10 @@ export const ui = {
     "home.communityFeed.emptyFeed": "No posts yet from this feed.",
     "home.communityFeed.fetchError": "Fetch issue",
 
-    "home.locations.title": "Frequent locations",
-    "home.locations.note":
-      "Always check the event listing for actual locations.",
-
     "home.calendar.title": "Our Event Calendar",
+    "home.calendar.rsvpCount": "RSVPs: {count}",
+    "home.calendar.openInMaps": "Open in Maps",
+    "home.calendar.openVenueInMaps": "Open {venue} in Maps",
     "home.calendar.legend.coffee.title": "Tech & Coffee",
     "home.calendar.legend.coffee.description":
       "Weekly casual hangouts",
@@ -117,8 +113,6 @@ export const ui = {
     "a11y.primaryNav": "メインナビゲーション",
     "a11y.openMenu": "ナビゲーションメニューを開く",
     "a11y.closeMenu": "ナビゲーションメニューを閉じる",
-    "a11y.mapTitle": "{name}の地図",
-    "a11y.mapLabel": "{name}の場所を示す埋め込み地図",
 
     "home.header.tagline": "Kyoto Tech Meetup",
     "home.header.title": "京都でテック仲間と\n出会おう。",
@@ -144,7 +138,6 @@ export const ui = {
     "nav.meetup": "Meetup",
     "nav.eventsShort": "イベント",
     "nav.calendar": "カレンダー",
-    "nav.locations": "開催場所",
     "nav.communityHub": "コミュニティハブ",
 
     "home.quickLinks.title": "コミュニティとつながる",
@@ -174,11 +167,10 @@ export const ui = {
       "このフィードの記事はまだ取得できていません。",
     "home.communityFeed.fetchError": "取得に失敗しました",
 
-    "home.locations.title": "よく使う場所",
-    "home.locations.note":
-      "実際の開催場所は、必ず各イベントページで確認してください。",
-
     "home.calendar.title": "イベントカレンダー",
+    "home.calendar.rsvpCount": "参加予定: {count}人",
+    "home.calendar.openInMaps": "地図で開く",
+    "home.calendar.openVenueInMaps": "{venue}を地図で開く",
     "home.calendar.legend.coffee.title": "Tech & Coffee",
     "home.calendar.legend.coffee.description":
       "毎週のカジュアルな交流会",

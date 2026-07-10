@@ -1,7 +1,11 @@
 ---
-import type { MeetupEvent } from "../lib/meetup-events";
+import {
+  buildMeetupVenueMapsUrl,
+  type MeetupEvent,
+} from "../lib/meetup-events";
 import { buildFiveWeekCalendar } from "../lib/calendar-grid";
 import { useTranslations } from "../i18n/utils";
+import { FaLocationDot, FaUserGroup } from "react-icons/fa6";
 
 type Props = {
   events: MeetupEvent[];
@@ -81,17 +85,63 @@ const eventColorClass = (event: MeetupEvent) => {
                     {formatDayNumber(day.dateKey, day.dayNumber)}
                   </time>
                   <div class="mt-2 grid gap-1.5">
-                    {day.events.map((event) => (
-                      <a
-                        href={event.link}
-                        class:list={[
-                          "rounded-md px-2 py-1.5 text-xs font-medium leading-snug text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-700",
-                          eventColorClass(event),
-                        ]}
-                      >
-                        {event.title}
-                      </a>
-                    ))}
+                    {
+                      day.events.map((event) => {
+                        const mapsUrl = buildMeetupVenueMapsUrl(event.venue);
+                        const venueLabel =
+                          event.venue?.name ?? event.venue?.address ?? "";
+
+                        return (
+                          <article
+                            class:list={[
+                              "rounded-lg px-2 py-2 text-xs text-white shadow-sm transition",
+                              eventColorClass(event),
+                            ]}
+                          >
+                            <a
+                              href={event.link}
+                              class="block font-semibold leading-snug underline-offset-2 hover:underline focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                            >
+                              {event.title}
+                            </a>
+                            <div class="mt-2 grid gap-1 text-[0.6875rem] font-medium text-white/90">
+                              <span
+                                class="inline-flex items-center gap-1.5"
+                                aria-label={t("home.calendar.rsvpCount").replace(
+                                  "{count}",
+                                  String(event.goingCount),
+                                )}
+                              >
+                                <FaUserGroup
+                                  className="h-3 w-3 shrink-0"
+                                  aria-hidden="true"
+                                />
+                                <span aria-hidden="true">
+                                  {event.goingCount}
+                                </span>
+                              </span>
+                              {mapsUrl && (
+                                <a
+                                  href={mapsUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  aria-label={t(
+                                    "home.calendar.openVenueInMaps",
+                                  ).replace("{venue}", venueLabel)}
+                                  class="inline-flex items-center gap-1.5 underline decoration-white/50 underline-offset-2 transition hover:text-white hover:decoration-white focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                                >
+                                  <FaLocationDot
+                                    className="h-3 w-3 shrink-0"
+                                    aria-hidden="true"
+                                  />
+                                  <span>{t("home.calendar.openInMaps")}</span>
+                                </a>
+                              )}
+                            </div>
+                          </article>
+                        );
+                      })
+                    }
                   </div>
                 </td>
               ))}
